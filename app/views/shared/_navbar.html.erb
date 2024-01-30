@@ -89,7 +89,13 @@
             <!-- Active: "bg-gray-100", Not Active: "" -->
             <a href="#" class="block px-4 py-2 text-sm text-gray-700" role="menuitem" tabindex="-1" id="user-menu-item-0">Your Profile</a>
             <a href="#" class="block px-4 py-2 text-sm text-gray-700" role="menuitem" tabindex="-1" id="user-menu-item-1">Settings</a>
-            <a href="#" class="block px-4 py-2 text-sm text-gray-700" role="menuitem" tabindex="-1" id="user-menu-item-2">Sign out</a>
+
+            <% if user_signed_in? %>
+              <%= link_to "Sign out", destroy_user_session_path, data: {turbo_method: :delete}, class: "block px-4 py-2 text-sm text-gray-700" %>
+            <% else %>
+              <%= link_to "Sign up", new_user_registration_path, class: "block px-4 py-2 text-sm text-gray-900" %>
+              <%= link_to "Sign in", new_user_session_path, class: "block px-4 py-2 text-sm text-gray-700" %>
+            <% end %>
           </div>
         </div>
       </div>

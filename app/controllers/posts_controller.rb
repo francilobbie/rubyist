@@ -1,24 +1,28 @@
 class PostsController < ApplicationController
   before_action :set_post, only: [:show, :edit, :update, :destroy]
+  before_action :authenticate_user!, only: [:new, :create, :edit, :update, :destroy]
 
   def index
     @posts = Post.order(created_at: :desc)
   end
 
   def new
-    @post = Post.new
+    @post = current_user.posts.build
   end
 
   def edit
-
+    if @post.user != current_user
+      redirect_to root_path
+    end
   end
 
   def show
+    # @comment = Comment.new
+    # @comments = @post.comments.order(created_at: :desc)
   end
 
   def create
-    @post = Post.new(post_params)
-
+    @post = current_user.posts.build(post_params)
     if @post.save
       redirect_to root_path
     else
@@ -51,6 +55,6 @@ class PostsController < ApplicationController
   end
 
   def post_params
-    params.require(:post).permit(:title, :body, :tag_list)
+    params.require(:post).permit(:title, :body, :tag_list, :user_id)
   end
 end

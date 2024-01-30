@@ -4,6 +4,8 @@ class Post < ApplicationRecord
 
   has_many :taggings, dependent: :destroy
   has_many :tags, through: :taggings, dependent: :destroy
+  belongs_to :user
+
 
   def tag_list
     tags.map(&:name).join(", ")
