@@ -51,6 +51,7 @@ gem "bootsnap", require: false
 
 # gem "devise"
 # gem 'pundit'
+  gem "cssbundling-rails", "~> 1.4"
 
 
 ############################ MY GEMS ############################

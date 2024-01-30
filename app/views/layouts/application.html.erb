@@ -12,6 +12,12 @@
   </head>
 
   <body>
+    <%= render "shared/navbar" %>
+    <% if controller_name == "posts" && action_name == "index" %>
+      <%= render "shared/searchbar" %>
+    <% end %>
+
       <%= yield %>
+
   </body>
 </html>
