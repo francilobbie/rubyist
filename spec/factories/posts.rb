@@ -1,7 +1,7 @@
 FactoryBot.define do
   factory :post do
     title { "MyString" }
-    body { "MyText" }
-    tag_list { "MyString" }
+    body { "My post body" }
+    tag_list { "first_tag, second_tag" }
   end
 end

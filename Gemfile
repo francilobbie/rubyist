@@ -49,8 +49,8 @@ gem "bootsnap", require: false
 
 ############################ MY GEMS ############################
 
-# gem "devise"
-# gem 'pundit'
+  gem "devise"
+  gem 'pundit'
   gem "cssbundling-rails", "~> 1.4"
 
 
@@ -66,6 +66,7 @@ group :development, :test do
   gem 'rails-controller-testing'
   gem 'pundit-matchers', '~> 1.6'
   gem 'shoulda-matchers', '~> 6.0'
+  gem "faker", "~> 3.2"
 
 end
 
