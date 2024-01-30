@@ -8,7 +8,9 @@
         <p>
           <strong>Tags:</strong>
           <% @post.tags.each do |tag| %>
+          <p class="bg-orange-200 px-2 py-1 cursor-pointer ">
             <%= tag.name %>
+          </p>
             <%= link_to "delete", tag_path(tag), data: { turbo_method: :delete, turbo_confimr: "Are you sure?" }, class: "bg-red-500 px-4 py-2 mt-5" %>
 
 

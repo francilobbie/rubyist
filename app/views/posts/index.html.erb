@@ -19,7 +19,13 @@
       <div>
         <p>
           <strong>Tags:</strong>
-          <%= post.tags.map(&:name).join(", ") %>
+          <span class="">
+            <% post.tags.each do |tag| %>
+            <span class="bg-orange-400 ml-2 px2 py-1 cursor-pointer">
+              <%= tag.name %>
+            </span>
+            <% end %>
+          </span>
         </p>
 
       </div>
