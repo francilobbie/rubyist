@@ -1,0 +1,15 @@
+<%= form_with(model: @post, class: "", local: true) do |f| %>
+  <div class="field">
+    <%= f.label :title %>
+    <%= f.text_field :title, class: "form-control" %>
+  </div>
+
+  <div class="field">
+    <%= f.label :body %>
+    <%= f.text_area :body, class: "form-control" %>
+  </div>
+
+  <div class="actions">
+    <%= f.submit "Create", class: "btn btn-primary" %>
+  </div>
+<% end %>
