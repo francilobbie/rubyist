@@ -4,6 +4,10 @@ class PostsController < ApplicationController
 
   def index
     @posts = Post.order(created_at: :desc)
+
+    if params[:query].present?
+      @posts = Post.where(title: params[:query])
+    end
   end
 
   def new
