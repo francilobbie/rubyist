@@ -6,6 +6,15 @@ class Post < ApplicationRecord
   has_many :tags, through: :taggings, dependent: :destroy
   belongs_to :user
 
+  include PgSearch::Model
+  pg_search_scope :global_search,
+    against: [ :title, :body ],
+    associated_against: {
+      tags: [ :name ]
+    },
+    using: {
+      tsearch: { prefix: true }
+    }
 
   def tag_list
     tags.map(&:name).join(", ")

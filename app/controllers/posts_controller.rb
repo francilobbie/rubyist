@@ -6,7 +6,7 @@ class PostsController < ApplicationController
     @posts = Post.order(created_at: :desc)
 
     if params[:query].present?
-      @posts = Post.where(title: params[:query])
+      @posts = Post.global_search(params[:query])
     end
   end
 
