@@ -1,20 +1,21 @@
 <div class="flex  justify-center items-center" data-controller="search">
 
   <div class="w-80 ">
-    <label for="search" class="block text-sm font-medium leading-6 text-gray-900">Quick search</label>
-    <div class="relative mt-2 flex items-center">
-      <input
-        data-search-target="input"
-        type="text"
-        name="search"
-        id="search"
-        class="block w-full rounded-md border-0 py-1.5 pr-14 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-      >
-      <div class="absolute inset-y-0 right-0 flex py-1.5 pr-1.5">
-        <%# <kbd class="inline-flex items-center rounded border border-gray-200 px-1 font-sans text-xs text-gray-400">⌘K</kbd> %>
-        <kbd class="inline-flex items-center rounded border border-gray-200 px-1 font-sans text-xs text-gray-400">CtrlK</kbd>
+    <%= form_with url: posts_path, method: :get do %>
+      <label for="search" class="block text-sm font-medium leading-6 text-gray-900">Quick search</label>
+      <div class="relative mt-2 flex items-center">
+        <%= text_field_tag :query,
+          params[:query],
+          data: { search_target: "input" },
+          placeholder: "Search",
+          class: "block w-full rounded-md border-0 py-1.5 pr-14 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+        %>
+        <div class="absolute inset-y-0 right-0 flex py-1.5 pr-1.5">
+          <kbd class="inline-flex items-center rounded border border-gray-200 px-1 font-sans text-xs text-gray-400">CtrlK</kbd>
+        </div>
       </div>
-    </div>
+      <%= submit_tag "Search", name: "", class: "hidden" %>
+    <% end %>
   </div>
 
 </div>

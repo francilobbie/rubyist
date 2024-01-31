@@ -4,6 +4,10 @@ class PostsController < ApplicationController
 
   def index
     @posts = Post.order(created_at: :desc)
+
+    if params[:query].present?
+      @posts = Post.global_search(params[:query])
+    end
   end
 
   def new

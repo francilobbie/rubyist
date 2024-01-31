@@ -17,10 +17,8 @@ export default class extends Controller {
     if (event.ctrlKey && event.key.toLowerCase() === 'k') {
       event.preventDefault();
       this.focus();
-      console.log("Ctrl + K");
     } else if (event.key === 'Escape') {
       event.preventDefault();
-      console.log("Esc");
       this.blur();
     }
   }
