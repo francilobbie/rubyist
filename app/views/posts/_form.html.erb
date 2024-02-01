@@ -16,6 +16,10 @@
 
 
   <div class="actions">
-    <%= f.submit "Create", class: "btn btn-primary" %>
+    <% if action_name == "new" %>
+      <%= f.submit "Create", class: "btn btn-primary" %>
+    <% elsif action_name == "edit" %>
+      <%= f.submit "Update", class: "btn btn-primary" %>
+    <% end %>
   </div>
 <% end %>
