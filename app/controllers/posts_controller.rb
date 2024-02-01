@@ -3,12 +3,21 @@ class PostsController < ApplicationController
   before_action :authenticate_user!, only: [:new, :create, :edit, :update, :destroy]
 
   def index
-    @posts = Post.order(created_at: :desc)
+    @posts = if params[:query].present?
+               Post.global_search(params[:query])
+             else
+               Post.all.order(created_at: :desc)
+             end
 
-    if params[:query].present?
-      @posts = Post.global_search(params[:query])
+    if params[:ajax].present?
+      render partial: 'posts/list', locals: { posts: @posts }
+    else
+      # Normal HTML response
     end
   end
+
+
+
 
   def new
     @post = current_user.posts.build
