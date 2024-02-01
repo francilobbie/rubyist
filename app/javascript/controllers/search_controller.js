@@ -1,12 +1,14 @@
 import { Controller } from "@hotwired/stimulus"
 
+
 // Connects to data-controller="search"
 export default class extends Controller {
-  static targets = [ "input" ]
+  static targets = [ "input", "form", "list" ]
 
   connect() {
     this.handleKeyDown = this.handleKeyDown.bind(this);
     document.addEventListener('keydown', this.handleKeyDown, true);
+    console.log(this.formTarget);
   }
 
   disconnect() {
@@ -29,6 +31,27 @@ export default class extends Controller {
 
   blur() {
     this.inputTarget.blur();
+  }
+
+  perform(event) {
+    event.preventDefault();
+    const url = `${this.formTarget.action}?query=${encodeURIComponent(this.inputTarget.value)}&ajax=true`;
+    fetch(url, {
+      headers: {
+        "Accept": "text/html, application/xhtml+xml"
+      }
+    })
+    .then(response => response.text())
+    .then(html => {
+      this.updatePostsList(html);
+    })
+    .catch(error => console.error("Error fetching posts:", error));
+  }
+
+
+  updatePostsList(html) {
+    const postsContainer = document.querySelector("[data-posts-list]");
+    postsContainer.innerHTML = html;
   }
 
 }
