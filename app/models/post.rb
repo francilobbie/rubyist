@@ -5,6 +5,7 @@ class Post < ApplicationRecord
   has_many :taggings, dependent: :destroy
   has_many :tags, through: :taggings, dependent: :destroy
   belongs_to :user
+  has_rich_text :body
 
   include PgSearch::Model
   pg_search_scope :global_search,
