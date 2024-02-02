@@ -1,0 +1,19 @@
+<div class="contaier mx-auto">
+  <h3>Comments:</h3>
+  <%= form_with(model: [ @post, @comment ], local: true) do |form| %>
+    <div>
+      <%= form.text_area :content %>
+    </div>
+    <%= form.submit "Add Comment" %>
+  <% end %>
+
+  <div id="comments">
+    <% @comments.each do |comment| %>
+      <p>
+        <strong><%= comment.user.email %>:</strong>
+        <%= comment.content %>
+      </p>
+    <% end %>
+  </div>
+
+</div>
