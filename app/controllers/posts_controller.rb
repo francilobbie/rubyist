@@ -29,10 +29,12 @@ class PostsController < ApplicationController
     end
   end
 
+
   def show
-    # @comment = Comment.new
-    # @comments = @post.comments.order(created_at: :desc)
+    @comments = @post.comments.order(created_at: :desc)
+    @comment = Comment.new
   end
+
 
   def create
     @post = current_user.posts.build(post_params)

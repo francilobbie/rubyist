@@ -1,0 +1,19 @@
+<%# app/views/layouts/_flash_messages.html.erb %>
+
+<% if flash[:notice] %>
+  <div data-controller="flash" data-flash-target="notice" id="notice" class="flash-message fixed bottom-5 right-5 bg-green-500 text-white text-sm px-4 py-3 rounded-lg flex items-center justify-between" role="alert">
+    <span><%= flash[:notice] %></span>
+    <button data-action="flash#close" class="text-white ml-4">
+      &#10005; <!-- This is the 'X' character -->
+    </button>
+  </div>
+<% end %>
+
+<% if flash[:alert] %>
+  <div data-controller="flash" data-flash-target="alert" class="flash-message fixed bottom-20 right-5 bg-red-500 text-white text-sm px-4 py-3 rounded-lg flex items-center justify-between" role="alert">
+    <span><%= flash[:alert] %></span>
+    <button data-action="click->flash#close" class="text-white ml-4">
+      &#10005;
+    </button>
+  </div>
+<% end %>
