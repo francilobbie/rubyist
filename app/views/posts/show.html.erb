@@ -25,21 +25,17 @@
 
     </div>
       <div class="">
-        <h3>Comments:</h3>
-        <%= form_with(model: [ @post, @comment ], local: true) do |form| %>
-          <div>
+
+        <%= form_with(model: [@post, Comment.new], local: false) do |form| %>
+          <div class="field">
             <%= form.text_area :content %>
           </div>
           <%= form.submit "Add Comment" %>
         <% end %>
 
         <div id="comments">
-          <% @comments.each do |comment| %>
-            <p>
-              <strong><%= comment.user.email %>:</strong>
-              <%= comment.content %>
-            </p>
-          <% end %>
+          <%= turbo_stream_from @post %>
+          <%= render @post.comments %>
         </div>
       </div>
   </div>
