@@ -1,0 +1,14 @@
+.flash-message {
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.5s ease-in-out, visibility 0.5s ease-in-out;
+  position: fixed;
+  bottom: 5rem;
+  right: 1rem;
+  z-index: 1000;
+}
+
+.flash-message.show {
+  opacity: 1;
+  visibility: visible;
+}

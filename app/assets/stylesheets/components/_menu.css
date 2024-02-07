@@ -1,0 +1,12 @@
+/* Add this to your CSS */
+.transition-enter-active, .transition-leave-active {
+  transition: transform 0.1s, opacity 0.1s;
+}
+.transition-enter-from, .transition-leave-to {
+  opacity: 0;
+  transform: scale(0.95);
+}
+.transition-enter-to, .transition-leave-from {
+  opacity: 1;
+  transform: scale(1);
+}
