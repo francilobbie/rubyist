@@ -1,21 +1,10 @@
-<div class="flex  justify-center items-center" data-controller="search">
-
-  <div class="w-80 ">
-    <%= form_with url: posts_path, data: { search_target: "form", action: "keyup->search#perform"}, method: :get do %>
-      <div class="relative mt-2 flex items-center">
-        <%= text_field_tag :query,
-          params[:query],
-          data: { search_target: "input"},
-          placeholder: "Search",
-          class: "block w-full rounded-md border-0 py-1.5 pr-14 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-        %>
-        <div class="absolute inset-y-0 right-0 flex py-1.5 pr-1.5">
-          <kbd class="inline-flex items-center rounded border border-gray-200 px-1 font-sans text-xs text-gray-400">⌘K</kbd>
-        </div>
+<div class="flex justify-center items-center">
+  <div class="w-80">
+    <div class="relative mt-2 flex items-center cursor-pointer" id="quick-search" data-controller="modal"
+    data-modal-target="quickSearch" data-action="click->modal#showModal" data-modal-trigger-id="search-form">
+      <div class="flex justify-between w-full rounded-md border-0 py-1.5 px-1 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400  sm:text-sm sm:leading-6">
+        <span>Search...</span> <kbd class="ml-2 inline-flex items-center rounded border border-gray-200 px-1 font-sans text-xs text-gray-400">Ctrl K</kbd>
       </div>
-      <%= submit_tag "Search", name: "", class: "hidden" %>
-    <% end %>
+    </div>
   </div>
-
-
 </div>

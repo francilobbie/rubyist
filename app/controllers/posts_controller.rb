@@ -14,6 +14,11 @@ class PostsController < ApplicationController
     else
       # Normal HTML response
     end
+
+    respond_to do |format|
+      format.html # for regular requests
+      format.js { render partial: 'posts/list', locals: { posts: @posts }, content_type: 'text/html' } # for AJAX requests
+    end
   end
 
 

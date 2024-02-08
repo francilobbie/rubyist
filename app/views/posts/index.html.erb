@@ -1,5 +1,4 @@
 <div class="container mt-12 mx-auto ">
-
   <div class="flex justify-between items-center">
     <div>
       <h1 class="mb-10">My Articles</h1>
@@ -8,9 +7,10 @@
       <%= link_to "New Article", new_post_path, class: "bg-green-500 px-4 py-2 mt-10" %>
     </div>
   </div>
-
   <div data-posts-list class="posts-container">
     <%= render "list", posts: @posts %>
   </div>
-
+  <div data-controller="modal" data-modal-trigger-id="search-form">
+    <%= render 'shared/modal', modal_trigger_id: 'search-form', modal_content: 'shared/partials/search_modal', content_params: nil %>
+  </div>
 </div>
