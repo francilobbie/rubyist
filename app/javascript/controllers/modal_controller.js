@@ -56,6 +56,7 @@ export default class extends Controller {
     if (modalPanel.id === 'modal-search-form-panel') {
       // Modify the modal's size classes when the "share flat" content is present
       modalPanel.classList.add('sm:mb-96'); // This will resize the modal
+      modalPanel.classList.add('sm:mt-16'); // This will resize the modal
       modalPanel.classList.remove('sm:my-8'); // Remove this if it exists
     }
   }

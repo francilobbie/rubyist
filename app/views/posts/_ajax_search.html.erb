@@ -1,0 +1,9 @@
+<div id="search-results">
+  <% @posts.each do |post| %>
+    <!-- Render each post -->
+    <div class="post">
+      <h4><%= post.title %></h4>
+      <p><%= post.body %></p>
+    </div>
+  <% end %>
+</div>

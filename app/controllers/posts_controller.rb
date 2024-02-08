@@ -9,19 +9,8 @@ class PostsController < ApplicationController
                Post.all.order(created_at: :desc)
              end
 
-    if params[:ajax].present?
-      render partial: 'posts/list', locals: { posts: @posts }
-    else
-      # Normal HTML response
-    end
-
-    respond_to do |format|
-      format.html # for regular requests
-      format.js { render partial: 'posts/list', locals: { posts: @posts }, content_type: 'text/html' } # for AJAX requests
-    end
+    render partial: 'posts/list', locals: { posts: @posts } if params[:ajax].present?
   end
-
-
 
 
   def new
