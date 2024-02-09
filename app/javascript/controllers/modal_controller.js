@@ -56,10 +56,16 @@ export default class extends Controller {
 
     if (modalPanel.id === 'modal-search-form-panel') {
       // Modify the modal's size classes when the "share flat" content is present
-      modalPanel.classList.add('sm:mb-96'); // This will resize the modal
-      modalPanel.classList.add('sm:mt-16'); // This will resize the modal
-      modalPanel.classList.remove('sm:my-8'); // Remove this if it exists
+      modalPanel.classList.add('sm:mb-38');
+      modalPanel.classList.add('sm:mt-16');
+      modalPanel.classList.add('search-container');
+      modalPanel.classList.remove('sm:my-8');
     }
+
+    // if (wrapper.id === 'modal-search-form-wrapper') {
+    //   // Modify the modal's size classes when the "share flat" content is present
+    //   wrapper.classList.add('modal-container');
+    // }
   }
 
   closeModal(event, triggerId) {
