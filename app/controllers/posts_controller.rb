@@ -4,25 +4,16 @@ class PostsController < ApplicationController
 
   def index
     @posts = if params[:query].present?
-               Post.global_search(params[:query])
-             else
-               Post.all.order(created_at: :desc)
-             end
-
-    if params[:ajax].present?
-      render partial: 'posts/list', locals: { posts: @posts }
-    else
-      # Normal HTML response
-    end
+              Post.global_search(params[:query])
+            else
+              Post.all.order(created_at: :desc)
+            end
 
     respond_to do |format|
-      format.html # for regular requests
-      format.js { render partial: 'posts/list', locals: { posts: @posts }, content_type: 'text/html' } # for AJAX requests
+      format.html
+      format.js { render partial: 'posts/ajax_search', locals: { posts: @posts }, layout: false }
     end
   end
-
-
-
 
   def new
     @post = current_user.posts.build
