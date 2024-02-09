@@ -1,0 +1,16 @@
+/* Add this CSS to your stylesheets */
+.search-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start; /* Align to the top */
+  height: 80vh; /* Adjust the height as needed */
+  max-height: 80vh; /* Ensure it doesn't grow beyond the viewport height */
+  overflow-y: auto; /* Enable scrolling within the container */
+}
+
+
+/* To only grow from the bottom */
+.modal-content-container {
+  overflow-y: auto; /* Enable scrolling */
+  max-height: 80vh; /* Adjust as needed, but should be less than the modal-container to prevent scrolling the whole page */
+}
