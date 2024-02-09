@@ -2,7 +2,7 @@ import { Controller } from "@hotwired/stimulus"
 
 // Connects to data-controller="search"
 export default class extends Controller {
-  static targets = ["input", "form", "list", "quickSearch"]
+  static targets = ["input", "form", "list", "ajax", "results"]
 
   connect() {
     this.handleKeyDown = this.handleKeyDown.bind(this);
@@ -43,25 +43,34 @@ export default class extends Controller {
     // Dispatch custom event to close the modal
     const closeModalEvent = new CustomEvent('close-modal', { detail: { triggerId: "search-form" } });
     window.dispatchEvent(closeModalEvent);
+
+    // Clear the input field
+    if (this.hasInputTarget) {
+      this.inputTarget.value = '';
+    }
+
+    // Optionally, clear the results
+    if (this.hasResultsTarget) {
+      this.resultsTarget.innerHTML = '';
+    }
   }
 
 
-  perform(event) {
-    event.preventDefault();
-    const query = this.inputTarget.value; // Ensure this retrieves the correct value
-    const url = `${this.formTarget.action}?query=${encodeURIComponent(query)}&ajax=true`;
+  search() {
+    const query = this.inputTarget.value;
+    const url = `/posts?query=${encodeURIComponent(query)}&ajax=true`;
 
-    fetch(url, { headers: { "Accept": "text/html" } })
-      .then(response => response.text())
-      .then(html => {
-        document.getElementById("search-results").innerHTML = html;
-      })
-      .catch(error => console.error("Error fetching posts:", error));
+    fetch(url, {
+      headers: {
+        "X-Requested-With": "XMLHttpRequest",
+        "Accept": "text/javascript, application/javascript, application/ecmascript, application/x-ecmascript",
+        "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8"
+      }
+    })
+    .then(response => response.text())
+    .then(html => {
+      this.resultsTarget.innerHTML = html;
+    })
+    .catch(error => console.error("Error fetching search results:", error));
   }
-
-  updatePostsList(html) {
-    const postsContainer = document.querySelector("[data-posts-list]");
-    postsContainer.innerHTML = html;
-  }
-
 }

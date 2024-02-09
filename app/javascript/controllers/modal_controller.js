@@ -11,6 +11,7 @@ export default class extends Controller {
     document.addEventListener('keydown', this.handleKeyDown.bind(this)); // Add this line
     document.getElementById(`modal-${this.element.dataset.modalTriggerId}-wrapper`).addEventListener("click", (event) => {
       this.closeModal(event, this.element.dataset.modalTriggerId)});
+
     this.closeButtonTarget.addEventListener("click", () => {
       leave(document.getElementById(`modal-${this.element.dataset.modalTriggerId}-wrapper`))
       leave(document.getElementById(`modal-${this.element.dataset.modalTriggerId}-backdrop`))

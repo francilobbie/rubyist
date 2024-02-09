@@ -1,9 +1,11 @@
 <div id="search-results">
-  <% @posts.each do |post| %>
+  <% posts.each do |post| %>
     <!-- Render each post -->
     <div class="post">
-      <h4><%= post.title %></h4>
-      <p><%= post.body %></p>
+      <%= link_to post_path(post) do %>
+        <h4><%= post.title %></h4>
+        <p><%= post.body %></p>
+      <% end %>
     </div>
   <% end %>
 </div>
