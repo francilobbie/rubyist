@@ -8,3 +8,4 @@ pin_all_from "app/javascript/controllers", under: "controllers"
 pin "el-transition" # @0.0.7
 pin "trix"
 pin "@rails/actiontext", to: "actiontext.esm.js"
+pin "leaflet" # @1.9.4

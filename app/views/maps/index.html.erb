@@ -1,0 +1,36 @@
+<div class="container mx-auto mt-6">
+  <div class="my-5">
+    <select onchange="dispatchCityChangeEvent(event)">
+      <option value="">Select a City</option>
+      <% @regions_with_cities.each do |region, cities| %>
+        <optgroup label="<%= region %>">
+          <% cities.each do |city| %>
+            <option value="<%= city %>"><%= city %></option>
+          <% end %>
+        </optgroup>
+      <% end %>
+    </select>
+  </div>
+
+  <div data-controller="map" id="map" style="height: 500px;" class="z-10" data-map-companies-value="<%= @companies.to_json(only: [:id, :name, :latitude, :longitude, :city]) %>">
+    <!-- Map will be initialized here -->
+  </div>
+
+  <div>
+    <h1 class="text-2xl font-bold">Companies</h1>
+    <ul>
+      <% @companies.each do |company| %>
+        <li><%= company.name %> - <%= company.city %></li>
+      <% end %>
+    </ul>
+  </div>
+</div>
+
+<script>
+function dispatchCityChangeEvent(event) {
+  const selectedCity = event.target.value;
+  const customEvent = new CustomEvent('cityChange', { detail: { city: selectedCity } });
+  document.dispatchEvent(customEvent);
+}
+
+</script>
