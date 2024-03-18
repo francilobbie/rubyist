@@ -1,13 +1,21 @@
 <div class="container mx-auto mt-6">
-  <div class="my-5">
-    <select id="departmentSelector" onchange="dispatchDepartmentChangeEvent(this.value)">
+  <div class="my-5 w-[17rem]">
+    <select id="departmentSelector" class="department-choice" onchange="dispatchDepartmentChangeEvent(this.value)">
       <option value="">Select a Department</option>
-      <% @departments.each do |code, name| %>
+      <optgroup label="Métropole">
+        <% FrenchGeography::EUROPEAN_DEPARTMENTS.each do |code, name| %>
           <option value="<%= code %>"><%= name %></option>
-      <% end %>
-  </select>
+        <% end %>
+      </optgroup>
+      <optgroup label="DOM-TOM">
+        <% FrenchGeography::NON_EUROPEAN_DEPARTMENTS.each do |code, name| %>
+          <option value="<%= code %>"><%= name %></option>
+        <% end %>
+      </optgroup>
+    </select>
+</div>
 
-  </div>
+
 
 
 <div class="flex items-center justify-center">
@@ -33,9 +41,20 @@
 
 <script>
     function dispatchDepartmentChangeEvent(departmentCode) {
-        if (departmentCode) { // Check if departmentCode is not empty
-            const event = new CustomEvent('departmentChange', { detail: { code: departmentCode } });
-            document.dispatchEvent(event);
-        }
-    }
+    const event = new CustomEvent('departmentChange', { detail: { code: departmentCode } });
+    document.dispatchEvent(event);
+  }
+
+  document.addEventListener('DOMContentLoaded', function() {
+    const element = document.querySelector('.department-choice');
+    const choices = new Choices(element, {
+        searchEnabled: true,
+        shouldSort: false,
+        placeholder: true,
+        placeholderValue: 'Select a Department',
+        itemSelectText: '',
+        searchPlaceholderValue: 'Search departments...'
+    });
+});
+
 </script>

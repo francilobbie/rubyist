@@ -106,7 +106,7 @@ export default class extends Controller {
   handleDepartmentChange(event) {
     const departmentCode = event.detail.code;
     // Check if departmentCode is empty
-    if (!departmentCode) {
+    if (departmentCode === '') {
         // Set the map back to the default center and zoom
         this.map.flyTo({
             center: [2.2137, 46.6276], // Default center coordinates
