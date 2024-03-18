@@ -1,6 +1,6 @@
 # app/models/concerns/french_geography.rb
 module FrenchGeography
-  DEPARTMENTS = {
+  EUROPEAN_DEPARTMENTS = {
     "01" => "Ain",
     "02" => "Aisne",
     "03" => "Allier",
@@ -96,11 +96,18 @@ module FrenchGeography
     "92" => "Hauts-de-Seine",
     "93" => "Seine-Saint-Denis",
     "94" => "Val-de-Marne",
-    "95" => "Val-d'Oise",
+    "95" => "Val-d'Oise"
+  }.freeze
+
+  NON_EUROPEAN_DEPARTMENTS = {
     "971" => "Guadeloupe",
     "972" => "Martinique",
     "973" => "Guyane",
     "974" => "La Réunion",
     "976" => "Mayotte"
+    # Add other non-European departments here
   }.freeze
+
+  # Combined hash for convenience, if needed
+  ALL_DEPARTMENTS = EUROPEAN_DEPARTMENTS.merge(NON_EUROPEAN_DEPARTMENTS).freeze
 end

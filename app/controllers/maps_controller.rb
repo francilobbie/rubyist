@@ -3,7 +3,7 @@ class MapsController < ApplicationController
 
 
   def index
-    @departments = FrenchGeography::DEPARTMENTS
+    @departments = FrenchGeography::ALL_DEPARTMENTS
     @regions_with_cities = Company.regions_with_cities
     @company_counts = Company.company_counts_by_department_code
     @companies = if params[:city].present?
