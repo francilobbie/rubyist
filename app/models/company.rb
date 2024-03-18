@@ -12,4 +12,12 @@ class Company < ApplicationRecord
 
     regions_with_cities
   end
+
+  def self.company_counts_by_region
+    Company.group(:region).count
+  end
+  def self.company_counts_by_department_code
+    # Group companies by 'region' and count them
+    Company.group(:department_code).count
+  end
 end

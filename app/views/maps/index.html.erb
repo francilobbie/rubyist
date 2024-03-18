@@ -12,9 +12,20 @@
     </select>
   </div>
 
-  <div data-controller="map" id="map" style="height: 500px;" class="z-10" data-map-companies-value="<%= @companies.to_json(only: [:id, :name, :latitude, :longitude, :city]) %>">
+  <%# <div data-controller="map" id="map" style="height: 500px;" class="z-10" data-map-companies-value="<%= @companies.to_json(only: [:id, :name, :latitude, :longitude, :city]) %>
     <!-- Map will be initialized here -->
+  <%# </div>  %>
+
+<div class="flex items-center justify-center">
+  <div data-controller="maps"
+      data-maps-access-token-value="pk.eyJ1IjoiZnJhbmNpbG9iYmllIiwiYSI6ImNsdG9nMHRpczBkbXEyanJxd3FsdXRseWcifQ.WflobD8GNh2VbXYo2gS5Vw"
+      data-maps-map-style-value="mapbox://styles/mapbox/streets-v11"
+      data-maps-company-counts-value="<%= @company_counts.to_json %>"
+      id="map" style="width: 800px; height: 620px;">
   </div>
+</div>
+
+
 
   <div>
     <h1 class="text-2xl font-bold">Companies</h1>
@@ -25,12 +36,3 @@
     </ul>
   </div>
 </div>
-
-<script>
-function dispatchCityChangeEvent(event) {
-  const selectedCity = event.target.value;
-  const customEvent = new CustomEvent('cityChange', { detail: { city: selectedCity } });
-  document.dispatchEvent(customEvent);
-}
-
-</script>
