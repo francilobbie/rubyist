@@ -1,20 +1,14 @@
 <div class="container mx-auto mt-6">
   <div class="my-5">
-    <select onchange="dispatchCityChangeEvent(event)">
-      <option value="">Select a City</option>
-      <% @regions_with_cities.each do |region, cities| %>
-        <optgroup label="<%= region %>">
-          <% cities.each do |city| %>
-            <option value="<%= city %>"><%= city %></option>
-          <% end %>
-        </optgroup>
+    <select id="departmentSelector" onchange="dispatchDepartmentChangeEvent(this.value)">
+      <option value="">Select a Department</option>
+      <% @departments.each do |code, name| %>
+          <option value="<%= code %>"><%= name %></option>
       <% end %>
-    </select>
+  </select>
+
   </div>
 
-  <%# <div data-controller="map" id="map" style="height: 500px;" class="z-10" data-map-companies-value="<%= @companies.to_json(only: [:id, :name, :latitude, :longitude, :city]) %>
-    <!-- Map will be initialized here -->
-  <%# </div>  %>
 
 <div class="flex items-center justify-center">
   <div data-controller="maps"
@@ -36,3 +30,12 @@
     </ul>
   </div>
 </div>
+
+<script>
+    function dispatchDepartmentChangeEvent(departmentCode) {
+        if (departmentCode) { // Check if departmentCode is not empty
+            const event = new CustomEvent('departmentChange', { detail: { code: departmentCode } });
+            document.dispatchEvent(event);
+        }
+    }
+</script>
