@@ -53,6 +53,9 @@ gem "image_processing"
   gem 'pundit'
   gem "cssbundling-rails", "~> 1.4"
   gem "pg_search"
+  gem 'cancancan', '~> 3.0'
+  gem 'rolify'
+
 
 
 ############################ MY GEMS ############################

@@ -3,7 +3,7 @@ Rails.application.routes.draw do
   # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
   root "posts#index"
   resources :posts, only: [:index, :show, :new, :create, :edit, :update, :destroy] do
-    resources :comments, only: [:create]
+    resources :comments, only: [:create, :edit, :update, :destroy]
   end
   delete "/tags/:id", to: "tags#destroy", as: :tag
   # get "/page/map", to: "pages#map", as: :map
