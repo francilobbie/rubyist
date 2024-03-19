@@ -11,18 +11,20 @@
             <span class="bg-orange-400 ml-2 px2 py-1 cursor-pointer">
               <%= tag.name %>
             </span>
-            <%= link_to "delete", tag_path(tag), data: { turbo_method: :delete, turbo_confimr: "Are you sure?" }, class: "bg-red-500 px-4 py-2 mt-5" %>
-
-
+            <% if can? :destroy, tag %>
+              <%= link_to "delete", tag_path(tag), method: :delete, data: { confirm: "Are you sure?" }, class: "bg-red-500 px-4 py-2 mt-5" %>
+            <% end %>
           <% end %>
         </p>
-
       </div>
       <div>
-        <%= link_to "edit", edit_post_path(@post), class: "bg-blue-500 px-4 py-2 mt-10 mr-2" %>
-        <%= link_to "delete", post_path(@post), data: { turbo_method: :delete, turbo_confimr: "Are you sure?" }, class: "bg-red-500 px-4 py-2 mt-10" %>
+        <% if can? :update, @post %>
+          <%= link_to "edit", edit_post_path(@post), class: "bg-blue-500 px-4 py-2 mt-10 mr-2" %>
+        <% end %>
+        <% if can? :destroy, @post %>
+          <%= link_to "delete", post_path(@post), method: :delete, data: { confirm: "Are you sure?" }, class: "bg-red-500 px-4 py-2 mt-10" %>
+        <% end %>
       </div>
-
     </div>
       <div class="">
 

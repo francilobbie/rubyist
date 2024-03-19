@@ -1,4 +1,12 @@
 <!-- app/views/comments/_comment.html.erb -->
 <div id="<%= dom_id(comment) %>">
-  <p><%= comment.user.email %>: <%= comment.content %></p>
+  <p><%= comment.user.email %>: <%= comment.content %>
+    <% if can? :update, comment %>
+          <%= link_to 'Edit', edit_post_comment_path(@post, comment) %>
+        <% end %>
+        <% if can? :destroy, comment %>
+          <%= link_to 'Delete', [ @post, comment ],
+                      data: { turbo_method: :delete, turbo_confirm: "Are you sure?" } %>
+        <% end %>
+  </p>
 </div>

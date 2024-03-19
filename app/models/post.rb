@@ -1,4 +1,6 @@
 class Post < ApplicationRecord
+  resourcify
+
 
   validates :title, :body, presence: true
 

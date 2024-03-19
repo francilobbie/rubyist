@@ -1,4 +1,4 @@
-<div class="contaier mx-auto">
+<div class="container mx-auto">
   <h3>Comments:</h3>
   <%= form_with(model: [ @post, @comment ], local: true) do |form| %>
     <div>
@@ -12,8 +12,8 @@
       <p>
         <strong><%= comment.user.email %>:</strong>
         <%= comment.content %>
+
       </p>
     <% end %>
   </div>
-
 </div>
