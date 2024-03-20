@@ -1,0 +1,9 @@
+/* This will remove the default browser dropdown arrow */
+.my-drop::-ms-expand {
+  display: none;
+}
+.my-drop {
+  -moz-appearance: none;
+  -webkit-appearance: none;
+  appearance: none;
+}

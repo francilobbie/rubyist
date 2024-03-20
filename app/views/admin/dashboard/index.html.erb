@@ -1,0 +1,33 @@
+<!-- app/views/admin/dashboard/index.html.erb -->
+<div class="admin-dashboard">
+  <h1>Admin Dashboard</h1>
+
+  <div class="stats">
+    <p>Total Users: <%= @total_users %></p>
+    <p>Total Posts: <%= @total_posts %></p>
+    <p>Total Comments: <%= @total_comments %></p>
+  </div>
+
+  <div class="recent-activity">
+    <h2>Recent Posts</h2>
+    <ul>
+      <% @recent_posts.each do |post| %>
+        <li><%= link_to post.title, [:admin, post] %></li>
+      <% end %>
+    </ul>
+
+    <h2>Recent Comments</h2>
+    <ul>
+      <% @recent_comments.each do |comment| %>
+        <li><%= comment.content %> (by <%= link_to comment.user.email, [:admin, comment.user] %>)</li>
+      <% end %>
+    </ul>
+
+    <h2>Recent Signups</h2>
+    <ul>
+      <% @recent_users.each do |user| %>
+        <li><%= link_to user.email, [:admin, user] %></li>
+      <% end %>
+    </ul>
+  </div>
+</div>

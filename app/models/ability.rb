@@ -8,22 +8,24 @@ class Ability
 
     if user.has_role? :admin
       can :manage, :all
+      can :report, [Post, Comment, User]
     elsif user.has_role? :moderator
       can :read, :all
       can :update, Post
-      can :manage, Comment # Moderators can manage all comments
+      can :manage, Comment
+      can :report, [Post, Comment, User]
     elsif user.has_role? :writer
       can :read, :all
-      can :create, Comment # Writers can create comments
-      can :update, Comment, user_id: user.id # Writers can update their own comments
-      can :destroy, Comment, user_id: user.id # Writers can delete their own comments
+      can :create, Comment
+      can :update, Comment, user_id: user.id
+      can :destroy, Comment, user_id: user.id
       can :create, Post
       can :update, Post, user_id: user.id
+      can :report, [Post, Comment] # Maybe writers can't report Users
     else
-      can :update, Comment, user_id: user.id # Writers can update their own comments
-      can :destroy, Comment, user_id: user.id # Writers can delete their own comments
       can :read, :all
-      can :create, Comment # Normal users can create comments
+      can :create, Comment
+      can :report, [Post, Comment] # Normal users can report posts and comments but not other users
     end
   end
 end

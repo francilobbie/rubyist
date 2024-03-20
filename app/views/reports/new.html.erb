@@ -1,0 +1,10 @@
+<!-- app/views/reports/new.html.erb -->
+<%= form_with model: @report, local: true do |form| %>
+  <%= form.hidden_field :reportable_id %>
+  <%= form.hidden_field :reportable_type %>
+  <div>
+    <%= form.label :content, "Reason for report:" %>
+    <%= form.text_area :content %>
+  </div>
+  <%= form.submit "Submit Report" %>
+<% end %>

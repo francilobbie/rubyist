@@ -1,0 +1,25 @@
+<div data-controller="dropdown" class="max-w-4xl mx-auto mt-8">
+  <h1 class="text-4xl font-bold mb-4">Edit User</h1>
+  <p class="mb-6 text-gray-600">Here you can update the user's role.</p>
+  <%= form_for [:admin, @user], html: { class: 'bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4' } do |f| %>
+    <fieldset class="mb-4">
+      <div class="mb-4 relative">
+        <!-- Display current role -->
+        <div>
+          Current Role: <%= @user.roles.any? ? @user.roles.first.name : 'No Role' %>
+        </div>
+        <%= f.label :role_ids, 'Roles', class: 'block text-gray-700 text-sm font-bold mb-2' %>
+        <div data-action="click->dropdown#toggle" data-dropdown-target="display" class="dropdown-display cursor-pointer border p-2 rounded">Select Role</div>
+        <div data-dropdown-target="list" class="dropdown-list hidden absolute bg-white border rounded mt-1 w-full z-10">
+          <div data-action="click->dropdown#selectNoRole" class="dropdown-item p-2 hover:bg-gray-100 cursor-pointer">No Role</div>
+          <% Role.all.each do |role| %>
+            <div data-action="click->dropdown#select" data-role-id="<%= role.id %>" class="dropdown-item p-2 hover:bg-gray-100 cursor-pointer"><%= role.name %></div>
+          <% end %>
+        </div>
+        <%= f.hidden_field :role_ids, data: { dropdown_target: "selected" }, value: @user.roles.pluck(:id).join(',') %>
+        <%= hidden_field_tag 'user[id]', @user.id %>
+      </div>
+    </fieldset>
+    <%= f.submit 'Update User', class: 'bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded cursor-pointer' %>
+  <% end %>
+</div>
