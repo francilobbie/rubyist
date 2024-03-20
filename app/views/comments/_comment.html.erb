@@ -1,12 +1,15 @@
 <!-- app/views/comments/_comment.html.erb -->
 <div id="<%= dom_id(comment) %>">
   <p><%= comment.user.email %>: <%= comment.content %>
-    <% if can? :update, comment %>
+        <% if can? :update, comment %>
           <%= link_to 'Edit', edit_post_comment_path(@post, comment) %>
         <% end %>
         <% if can? :destroy, comment %>
           <%= link_to 'Delete', [ @post, comment ],
                       data: { turbo_method: :delete, turbo_confirm: "Are you sure?" } %>
+        <% end %>
+        <% if can? :report, comment %>
+          <%= link_to 'Report', new_report_path(reportable_id: comment.id, reportable_type: 'Comment'), class: 'report-link' %>
         <% end %>
   </p>
 </div>
