@@ -1,0 +1,29 @@
+<div class="overflow-x-auto bg-white p-6 rounded-lg shadow" id="moderators_table">
+      <table class="min-w-full table-auto">
+        <thead class="bg-gray-200 text-gray-600 uppercase text-sm leading-normal">
+          <tr>
+            <th class="py-3 px-6 text-left">ID</th>
+            <th class="py-3 px-6 text-left">Email</th>
+            <th class="py-3 px-6 text-center">Actions</th>
+          </tr>
+        </thead>
+        <tbody class="text-gray-600 text-sm font-light">
+          <% @moderators.each do |moderator| %>
+            <tr class="border-b border-gray-200 hover:bg-gray-100">
+              <td class="py-3 px-6 text-left whitespace-nowrap">
+                <%= moderator.id %> <!-- New ID Field -->
+              </td>
+              <td class="py-3 px-6 text-left whitespace-nowrap">
+                <%= link_to moderator.email, [:admin, moderator], class: "text-blue-600 hover:underline" %>
+              </td>
+              <td class="py-3 px-6 text-center">
+                <div class="flex item-center justify-center">
+                  <%= link_to 'Edit', edit_admin_user_path(moderator), class: "text-sm bg-blue-500 hover:bg-blue-700 text-white py-1 px-3 rounded focus:outline-none focus:shadow-outline" %>
+                  <%= link_to 'Delete', admin_user_path(moderator), method: :delete, data: { confirm: 'Are you sure?' }, class: "text-sm bg-red-500 hover:bg-red-700 text-white py-1 px-3 rounded focus:outline-none focus:shadow-outline ml-2" %>
+                </div>
+              </td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+</div>

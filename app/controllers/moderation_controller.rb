@@ -7,7 +7,3 @@ class ModerationController < ApplicationController
     @reports = Report.all
   end
 end
-class ModerationController < ApplicationController
-  def index
-  end
-end
