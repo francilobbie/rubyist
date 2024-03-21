@@ -1,0 +1,4 @@
+<!-- app/views/admin/users/index.turbo_stream.erb -->
+<%= turbo_stream.replace "users_table" do %>
+  <%= render partial: "admin/users/users_table", locals: { users: @users } %>
+<% end %>

@@ -1,4 +1,194 @@
-<div>
-  <h1 class="font-bold text-4xl">Admin::Users#index</h1>
-  <p>Find me in app/views/admin/users/index.html.erb</p>
+<!-- app/views/admin/users/index.html.erb -->
+<div class="max-w-7xl mx-auto py-8" data-controller="admin-sorting">
+  <div class="flex justify-between items-center mb-6">
+    <h1 class="text-4xl font-bold text-gray-800">Users Management</h1>
+    <%= link_to 'Back to Dashboard', admin_root_path, class: "inline-block bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" %>
+  </div>
+  <!-- Statistics -->
+  <div class="stats grid grid-cols-1 sm:grid-cols-4 gap-4 mb-10">
+    <div class="stat bg-blue-100 p-4 rounded-lg shadow hover:shadow-md transition cursor-pointer">
+      <%= link_to admin_users_path, class: 'text-xl block' do %>
+        Total Users: <%= @total_users %>
+      <% end %>
+    </div>
+    <div class="stat bg-green-100 p-4 rounded-lg shadow hover:shadow-md transition">
+      Total Admins: <%= @total_admins %>
+    </div>
+    <div class="stat bg-red-100 p-4 rounded-lg shadow hover:shadow-md transition">
+      Total Writers: <%= @total_writers %>
+    </div>
+    <div class="stat bg-yellow-100 p-4 rounded-lg shadow hover:shadow-md transition">
+      Total Moderators: <%= @total_moderators %>
+    </div>
+  </div>
+
+
+  <!-- User Table -->
+  <div class="mt-10 overflow-x-auto bg-white p-6 rounded-lg shadow">
+    <h2 class="text-3xl font-bold text-gray-800 mb-4">Total Users</h2>
+    <div>
+      <a href="#" data-action="admin-sorting#sort" data-sorting-key="user_date_asc" class="text-sm bg-gray-500 hover:bg-gray-700 text-white py-2 px-4 rounded mr-2">Date Asc</a>
+      <a href="#" data-action="admin-sorting#sort" data-sorting-key="user_date_desc" class="text-sm bg-gray-500 hover:bg-gray-700 text-white py-2 px-4 rounded mr-2">Date Desc</a>
+      <a href="#" data-action="admin-sorting#sort" data-sorting-key="user_email_asc" class="text-sm bg-gray-500 hover:bg-gray-700 text-white py-2 px-4 rounded mr-2">Email Asc</a>
+      <a href="#" data-action="admin-sorting#sort" data-sorting-key="user_email_desc" class="text-sm bg-gray-500 hover:bg-gray-700 text-white py-2 px-4 rounded">Email Desc</a>
+    </div>
+    <div class="overflow-x-auto bg-white p-6 rounded-lg shadow" id="users_table" data-sorting-target="table">
+      <table class="min-w-full table-auto">
+        <thead class="bg-gray-200 text-gray-600 uppercase text-sm leading-normal">
+          <tr>
+            <th class="py-3 px-6 text-left">ID</th> <!-- New ID Header -->
+            <th class="py-3 px-6 text-left">Email</th>
+            <th class="py-3 px-6 text-center">Posts</th>
+            <th class="py-3 px-6 text-center">Comments</th>
+            <th class="py-3 px-6 text-center">Actions</th>
+          </tr>
+        </thead>
+        <tbody class="text-gray-600 text-sm font-light">
+          <% @users.each do |user| %>
+            <tr class="border-b border-gray-200 hover:bg-gray-100">
+              <td class="py-3 px-6 text-left whitespace-nowrap">
+                <%= user.id %> <!-- New ID Field -->
+              </td>
+              <td class="py-3 px-6 text-left whitespace-nowrap">
+                <%= link_to user.email, [:admin, user], class: "text-blue-600 hover:underline" %>
+              </td>
+              <td class="py-3 px-6 text-center">
+                <%= user.posts.count %>
+              </td>
+              <td class="py-3 px-6 text-center">
+                <%= user.comments.count %>
+              </td>
+              <td class="py-3 px-6 text-center">
+                <div class="flex item-center justify-center">
+                  <%= link_to 'Edit', edit_admin_user_path(user), class: "text-sm bg-blue-500 hover:bg-blue-700 text-white py-1 px-3 rounded focus:outline-none focus:shadow-outline" %>
+                  <%= link_to 'Delete', admin_user_path(user), method: :delete, data: { confirm: 'Are you sure?' }, class: "text-sm bg-red-500 hover:bg-red-700 text-white py-1 px-3 rounded focus:outline-none focus:shadow-outline ml-2" %>
+                </div>
+              </td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+
+  <!-- Admins Table -->
+  <div class="mt-10 overflow-x-auto bg-white p-6 rounded-lg shadow">
+    <h2 class="text-3xl font-bold text-gray-800 mb-4">Admins</h2>
+    <div>
+      <a href="#" data-action="admin-sorting#sort" data-table-type="admins" data-sorting-key="admin_date_asc" class="text-sm bg-gray-500 hover:bg-gray-700 text-white py-2 px-4 rounded mr-2">Date Asc</a>
+      <a href="#" data-action="admin-sorting#sort" data-table-type="admins" data-sorting-key="admin_date_desc" class="text-sm bg-gray-500 hover:bg-gray-700 text-white py-2 px-4 rounded mr-2">Date Desc</a>
+      <a href="#" data-action="admin-sorting#sort" data-table-type="admins" data-sorting-key="admin_email_asc" class="text-sm bg-gray-500 hover:bg-gray-700 text-white py-2 px-4 rounded mr-2">Email Asc</a>
+      <a href="#" data-action="admin-sorting#sort" data-table-type="admins" data-sorting-key="admin_email_desc" class="text-sm bg-gray-500 hover:bg-gray-700 text-white py-2 px-4 rounded">Email Desc</a>
+  </div>
+    <div class="overflow-x-auto bg-white p-6 rounded-lg shadow" id="admins_table" data-sorting-target="table">
+      <table class="min-w-full table-auto">
+        <thead class="bg-gray-200 text-gray-600 uppercase text-sm leading-normal">
+          <tr>
+            <th class="py-3 px-6 text-left">ID</th>
+            <th class="py-3 px-6 text-left">Email</th>
+            <th class="py-3 px-6 text-center">Actions</th>
+          </tr>
+        </thead>
+        <tbody class="text-gray-600 text-sm font-light">
+          <% @admins.each do |admin| %>
+            <tr class="border-b border-gray-200 hover:bg-gray-100">
+              <td class="py-3 px-6 text-left whitespace-nowrap">
+                <%= admin.id %> <!-- New ID Field -->
+              </td>
+              <td class="py-3 px-6 text-left whitespace-nowrap">
+                <%= link_to admin.email, [:admin, admin], class: "text-blue-600 hover:underline" %>
+              </td>
+              <td class="py-3 px-6 text-center">
+                <div class="flex item-center justify-center">
+                  <%= link_to 'Edit', edit_admin_user_path(admin), class: "text-sm bg-blue-500 hover:bg-blue-700 text-white py-1 px-3 rounded focus:outline-none focus:shadow-outline" %>
+                  <%= link_to 'Delete', admin_user_path(admin), method: :delete, data: { confirm: 'Are you sure?' }, class: "text-sm bg-red-500 hover:bg-red-700 text-white py-1 px-3 rounded focus:outline-none focus:shadow-outline ml-2" %>
+                </div>
+              </td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- Moderator Table -->
+  <div class="mt-10 overflow-x-auto bg-white p-6 rounded-lg shadow">
+    <h2 class="text-3xl font-bold text-gray-800 mb-4">Moderator</h2>
+    <div>
+      <a href="#" data-action="admin-sorting#sort" data-table-type="moderators" data-sorting-key="moderator_date_asc" class="text-sm bg-gray-500 hover:bg-gray-700 text-white py-2 px-4 rounded mr-2">Date Asc</a>
+      <a href="#" data-action="admin-sorting#sort" data-table-type="moderators" data-sorting-key="moderator_date_desc" class="text-sm bg-gray-500 hover:bg-gray-700 text-white py-2 px-4 rounded mr-2">Date Desc</a>
+      <a href="#" data-action="admin-sorting#sort" data-table-type="moderators" data-sorting-key="moderator_email_asc" class="text-sm bg-gray-500 hover:bg-gray-700 text-white py-2 px-4 rounded mr-2">Email Asc</a>
+      <a href="#" data-action="admin-sorting#sort" data-table-type="moderators" data-sorting-key="moderator_email_desc" class="text-sm bg-gray-500 hover:bg-gray-700 text-white py-2 px-4 rounded">Email Desc</a>
+  </div>
+    <div class="overflow-x-auto bg-white p-6 rounded-lg shadow" id="moderators_table" data-sorting-target="table">
+      <table class="min-w-full table-auto">
+        <thead class="bg-gray-200 text-gray-600 uppercase text-sm leading-normal">
+          <tr>
+            <th class="py-3 px-6 text-left">ID</th>
+            <th class="py-3 px-6 text-left">Email</th>
+            <th class="py-3 px-6 text-center">Actions</th>
+          </tr>
+        </thead>
+        <tbody class="text-gray-600 text-sm font-light">
+          <% @moderators.each do |moderator| %>
+            <tr class="border-b border-gray-200 hover:bg-gray-100">
+              <td class="py-3 px-6 text-left whitespace-nowrap">
+                <%= moderator.id %> <!-- New ID Field -->
+              </td>
+              <td class="py-3 px-6 text-left whitespace-nowrap">
+                <%= link_to moderator.email, [:admin, moderator], class: "text-blue-600 hover:underline" %>
+              </td>
+              <td class="py-3 px-6 text-center">
+                <div class="flex item-center justify-center">
+                  <%= link_to 'Edit', edit_admin_user_path(moderator), class: "text-sm bg-blue-500 hover:bg-blue-700 text-white py-1 px-3 rounded focus:outline-none focus:shadow-outline" %>
+                  <%= link_to 'Delete', admin_user_path(moderator), method: :delete, data: { confirm: 'Are you sure?' }, class: "text-sm bg-red-500 hover:bg-red-700 text-white py-1 px-3 rounded focus:outline-none focus:shadow-outline ml-2" %>
+                </div>
+              </td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- Writers Table -->
+  <div class="mt-10 overflow-x-auto bg-white p-6 rounded-lg shadow">
+    <h2 class="text-3xl font-bold text-gray-800 mb-4">Writers</h2>
+    <div>
+      <a href="#" data-action="admin-sorting#sort" data-table-type="writers" data-sorting-key="writer_date_asc" class="text-sm bg-gray-500 hover:bg-gray-700 text-white py-2 px-4 rounded mr-2">Date Asc</a>
+      <a href="#" data-action="admin-sorting#sort" data-table-type="writers" data-sorting-key="writer_date_desc" class="text-sm bg-gray-500 hover:bg-gray-700 text-white py-2 px-4 rounded mr-2">Date Desc</a>
+      <a href="#" data-action="admin-sorting#sort" data-table-type="writers" data-sorting-key="writer_email_asc" class="text-sm bg-gray-500 hover:bg-gray-700 text-white py-2 px-4 rounded mr-2">Email Asc</a>
+      <a href="#" data-action="admin-sorting#sort" data-table-type="writers" data-sorting-key="writer_email_desc" class="text-sm bg-gray-500 hover:bg-gray-700 text-white py-2 px-4 rounded">Email Desc</a>
+  </div>
+    <div class="overflow-x-auto bg-white p-6 rounded-lg shadow" id="writers_table" data-sorting-target="table">
+      <table class="min-w-full table-auto">
+        <thead class="bg-gray-200 text-gray-600 uppercase text-sm leading-normal">
+          <tr>
+            <th class="py-3 px-6 text-left">ID</th>
+            <th class="py-3 px-6 text-left">Email</th>
+            <th class="py-3 px-6 text-center">Actions</th>
+          </tr>
+        </thead>
+        <tbody class="text-gray-600 text-sm font-light">
+          <% @writers.each do |writer| %>
+            <tr class="border-b border-gray-200 hover:bg-gray-100">
+              <td class="py-3 px-6 text-left whitespace-nowrap">
+                <%= writer.id %> <!-- New ID Field -->
+              </td>
+              <td class="py-3 px-6 text-left whitespace-nowrap">
+                <%= link_to writer.email, [:admin, writer], class: "text-blue-600 hover:underline" %>
+              </td>
+              <td class="py-3 px-6 text-center">
+                <div class="flex item-center justify-center">
+                  <%= link_to 'Edit', edit_admin_user_path(writer), class: "text-sm bg-blue-500 hover:bg-blue-700 text-white py-1 px-3 rounded focus:outline-none focus:shadow-outline" %>
+                  <%= link_to 'Delete', admin_user_path(writer), method: :delete, data: { confirm: 'Are you sure?' }, class: "text-sm bg-red-500 hover:bg-red-700 text-white py-1 px-3 rounded focus:outline-none focus:shadow-outline ml-2" %>
+                </div>
+              </td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+    </div>
+  </div>
 </div>
