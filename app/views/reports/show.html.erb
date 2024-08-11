@@ -1,0 +1,34 @@
+<!-- app/views/reports/show.html.erb -->
+<div class="max-w-4xl mx-auto sm:px-6 lg:px-8 mt-10">
+    <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
+        <div class="p-6 bg-white border-b border-gray-200">
+            <h2 class="text-2xl font-bold mb-4">Report Details</h2>
+            <!-- Report details -->
+            <p><strong>Reported By:</strong> <%= @report.user.email %></p>
+            <p><strong>Reported At:</strong> <%= @report.created_at.strftime("%B %d, %Y %H:%M") %></p>
+            <p><strong>Status:</strong> <%= @report.status.capitalize %></p>
+            <p><strong>Content:</strong> <%= @report.content %></p>
+            <p><strong>Type:</strong> <%= @report.reportable_type %></p>
+            <p><strong>ID of Reported Entity:</strong> <%= @report.reportable_id %></p>
+            <!-- Update status form -->
+            <%= form_with(model: @report, url: report_path(@report), method: :patch, local: true, class: "mt-4") do |form| %>
+                <div class="flex items-center">
+                    <%= form.label :status, 'Update Status:', class: "mr-2" %>
+                    <%= form.select :status, Report.statuses.keys.map { |status| [status.titleize, status] }, {}, class: "select select-bordered w-full max-w-xs" %>
+                    <%= form.submit "Update Status", class: "ml-4 text-white bg-green-500 hover:bg-green-700 focus:ring-4 focus:ring-green-300 font-medium rounded-lg text-sm px-5 py-2.5 focus:outline-none" %>
+                </div>
+            <% end %>
+            <!-- Actions -->
+            <div class="mt-4">
+                <!-- Add specific action buttons based on reportable_type -->
+                <% if @report.reportable_type == 'Comment' %>
+                    <%= link_to 'Delete Comment', destroy_comment_report_path(@report), data: { turbo_method: :delete, turbo_confirm: "Are you sure?" }, class: "text-white bg-red-500 hover:bg-red-700 focus:ring-4 focus:ring-red-300 font-medium rounded-lg text-sm px-5 py-2.5 mr-2 mb-2 dark:bg-red-600 dark:hover:bg-red-700 focus:outline-none dark:focus:ring-red-900" %>
+                <% elsif @report.reportable_type == 'Post' %>
+                    <%= link_to 'Delete Post', post_path(@report.reportable_id), data: { turbo_method: :delete, turbo_confirm: "Are you sure?" }, class: "text-white bg-red-500 hover:bg-red-700 focus:ring-4 focus:ring-red-300 font-medium rounded-lg text-sm px-5 py-2.5 mr-2 mb-2 dark:bg-red-600 dark:hover:bg-red-700 focus:outline-none dark:focus:ring-red-900" %>
+                <% end %>
+                <!-- Back to reports link -->
+                <%= link_to 'Back to Reports', dashboard_show_path, class: "text-white bg-blue-500 hover:bg-blue-700 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 mr-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800" %>
+            </div>
+        </div>
+    </div>
+</div>

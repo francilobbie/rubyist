@@ -1,25 +1,24 @@
-<%= form_with(model: @post, class: "", local: true) do |f| %>
-  <div class="field">
-    <%= f.label :title %>
-    <%= f.text_field :title, class: "form-control" %>
+<%= form_with(model: @post, local: true, class: "max-w-[62rem] mx-auto bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4", data: { controller: "post-form-cancel-button" }) do |f| %>
+  <div class="mb-4">
+    <%= f.label :title, class: "block text-gray-700 text-sm font-bold mb-2" %>
+    <%= f.text_field :title, class: "shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" %>
   </div>
 
-  <div class="field">
-    <%= f.label :body %>
-    <%= f.rich_text_area :body, class: "form-control" %>
+  <div class="mb-4">
+    <%= f.label :body, class: "block text-gray-700 text-sm font-bold mb-2" %>
+    <%= f.rich_text_area :body, class: "form-control shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" %>
   </div>
 
-  <div class="field">
-    <%= f.label :tag_list %>
-    <%= f.text_field :tag_list %>
+  <div class="mb-6">
+    <%= f.label :tag_list, "Tags (separated by commas)", class: "block text-gray-700 text-sm font-bold mb-2" %>
+    <%= f.text_field :tag_list, class: "shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline", placeholder: "tag1, tag2, tag3" %>
   </div>
 
+  <div class="flex items-center justify-between">
+    <%= f.submit @post.new_record? ? "Create" : "Update", class: "bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline" %>
+    <%= link_to "Cancel", :back,
+            class: "bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline",
+            data: { action: "click->form#cancel" } %>
 
-  <div class="actions">
-    <% if action_name == "new" %>
-      <%= f.submit "Create", class: "btn btn-primary" %>
-    <% elsif action_name == "edit" %>
-      <%= f.submit "Update", class: "btn btn-primary" %>
-    <% end %>
   </div>
 <% end %>

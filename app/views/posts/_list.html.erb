@@ -1,36 +1,38 @@
-<div data-search-target="list">
-  <% if params[:query].blank? %>
-    <h1 class="h3"><%= pluralize posts.count, 'post' %> available</h1>
-  <% else %>
-    <h1 class="h3"><%= pluralize posts.count, 'result' %> for <code><%= params[:query] %></code></h1>
-  <% end %>
+<div data-search-target="list" class="my-6">
+  <div class="text-center">
+    <% if params[:query].blank? %>
+      <h1 class="text-3xl font-bold my-4"><%= pluralize posts.count, 'post' %> available</h1>
+    <% else %>
+      <h1 class="text-3xl font-bold my-4"><%= pluralize posts.count, 'result' %> for "<%= params[:query] %>"</h1>
+    <% end %>
+  </div>
 
-  <div class="posts">
+  <div class="posts space-y-6">
     <% posts.each do |post| %>
-      <div class="bg-gray-100 p-4 mx-4 rounded-lg mb-4">
-        <%= link_to post_path(post) do %>
-          <h2 class="text-2xl font-bold mb-4"><%= post.title %></h2>
+      <div class="bg-gray-100 p-6 rounded-lg shadow">
+        <%= link_to post_path(post), class: "hover:underline" do %>
+          <h2 class="text-2xl font-bold mb-2"><%= post.title %></h2>
         <% end %>
-        <p class="text-gray-700 text-base"><%= post.body %></p>
-        <div class="flex justify-between">
-          <div>
-            <p>
-              <strong>Tags:</strong>
-              <span class="">
-                <% post.tags.each do |tag| %>
-                <span class="bg-orange-400 ml-2 px2 py-1 cursor-pointer">
-                  <%= tag.name %>
-                </span>
-                <% end %>
+        <p class="text-gray-700 mb-4"><%= truncate(post.body.to_plain_text, length: 200) %></p>
+        <!-- Owner's email and post creation time -->
+        <div class="mb-4">
+          <p class="text-sm text-gray-500">Posted by <%= post.user.email %> on <%= post.created_at.strftime("%B %d, %Y") %></p>
+        </div>
+        <div class="flex flex-wrap items-center justify-between">
+          <div class="flex flex-wrap">
+            <p class="font-semibold mr-2">Tags:</p>
+            <% post.tags.each do |tag| %>
+              <span class="bg-orange-400 text-white rounded-full ml-2 px-3 py-1 text-sm font-medium cursor-pointer">
+                <%= tag.name %>
               </span>
-            </p>
+            <% end %>
           </div>
-          <div>
+          <div class="flex space-x-2 mt-4 sm:mt-0">
             <% if can? :update, post %>
-              <%= link_to "edit", edit_post_path(post), class: "bg-blue-500 px-4 py-2 mt-10 mr-2" %>
+              <%= link_to "edit", edit_post_path(post), class: "text-sm bg-blue-500 text-white rounded-full px-4 py-2 transition-colors duration-150 hover:bg-blue-600" %>
             <% end %>
             <% if can? :destroy, post %>
-              <%= link_to "delete", post_path(post), data: { turbo_method: :delete, turbo_confirm: "Are you sure?" }, class: "bg-red-500 px-4 py-2 mt-10" %>
+              <%= link_to "delete", post_path(post), method: :delete, data: { confirm: "Are you sure?" }, class: "text-sm bg-red-500 text-white rounded-full px-4 py-2 transition-colors duration-150 hover:bg-red-600" %>
             <% end %>
           </div>
         </div>

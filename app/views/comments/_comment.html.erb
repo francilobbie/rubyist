@@ -1,15 +1,87 @@
 <!-- app/views/comments/_comment.html.erb -->
-<div id="<%= dom_id(comment) %>">
-  <p><%= comment.user.email %>: <%= comment.content %>
-        <% if can? :update, comment %>
-          <%= link_to 'Edit', edit_post_comment_path(@post, comment) %>
+<div id="<%= dom_id(comment) %>" data-controller="post-comments" data-post-comments-target="commentContainer"
+      data-user-id="<%= comment.user_id %>"
+      data-post-user-id="<%= @post&.user_id %>"
+      class="<%= 'bg-gray-200' if comment.parent_id.nil? %> <%= 'bg-gray-100' unless comment.parent_id.nil? %> mb-2 rounded-lg p-4">
+  <div class="flex justify-between">
+    <div class="flex space-x-3">
+      <div class="flex-shrink-0">
+            <img class="inline-block h-10 w-10 rounded-full" src="https://images.unsplash.com/photo-1550525811-e5869dd03032?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80" alt="">
+      </div>
+      <div class="min-w-0 flex-1">
+        <p class="text-sm font-medium text-gray-900">
+          <%= comment.user.email %>
+        </p>
+      </div>
+    </div>
+    <div class="flex items-center">
+        <div class="text-sm text-gray-500">
+          <%= time_ago_in_words(comment.created_at) %> ago
+          <% if comment.created_at != comment.updated_at %>
+            • <span class="text-xs font-semibold">(Edited)</span>
+          <% end %>
+        </div>
+
+      <div class="relative">
+        <button data-action="click->post-comments#toggleMenu" class="p-2 rounded-full hover:bg-gray-200" data-comment-id="<%= dom_id(comment) %>">
+          <svg fill="#000000" height="15px" width="15px" version="1.1" id="Capa_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
+            viewBox="0 0 32.055 32.055" xml:space="preserve">
+          <g>
+            <path d="M3.968,12.061C1.775,12.061,0,13.835,0,16.027c0,2.192,1.773,3.967,3.968,3.967c2.189,0,3.966-1.772,3.966-3.967
+              C7.934,13.835,6.157,12.061,3.968,12.061z M16.233,12.061c-2.188,0-3.968,1.773-3.968,3.965c0,2.192,1.778,3.967,3.968,3.967
+              s3.97-1.772,3.97-3.967C20.201,13.835,18.423,12.061,16.233,12.061z M28.09,12.061c-2.192,0-3.969,1.774-3.969,3.967
+              c0,2.19,1.774,3.965,3.969,3.965c2.188,0,3.965-1.772,3.965-3.965S30.278,12.061,28.09,12.061z"/>
+          </g>
+          </svg>
+        </button>
+
+        <div class="hidden absolute z-10 right-0 w-48 py-1 mt-2 bg-white border rounded shadow-xl" data-post-comments-target="miniMenu" data-comment-id="<%= dom_id(comment) %>">
+          <% if local_assigns[:can_edit] %>
+            <%= link_to 'Edit', "#", class: "block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100",
+              data: { action: "click->post-comments#toggleEdit", comment_id: dom_id(comment) } %>
+          <% end %>
+          <% if local_assigns[:can_destroy] %>
+            <%= link_to 'Delete', [comment.post, comment], data: { turbo_method: :delete, turbo_confirm: "Are you sure?" }, class: 'block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100' %>
+          <% end %>
+          <% if local_assigns[:can_report] %>
+            <%= link_to 'Report', new_report_path(reportable_id: comment.id, reportable_type: 'Comment'), class: 'block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100' %>
+          <% end %>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <div data-post-comments-target="displayContent" data-comment-id="<%= dom_id(comment) %>">
+    <p class="mt-2 text-gray-700"><%= comment.content %></p>
+  </div>
+
+
+  <div class="hidden" data-post-comments-target="editForm" data-comment-id="<%= dom_id(comment) %>">
+    <%= form_with(model: [comment.post, comment], local: true) do |form| %>
+      <%= form.text_area :content, class: "w-full border rounded p-2" %>
+      <%= form.submit "Save", class: "text-white bg-blue-500 hover:bg-blue-600 font-medium py-2 px-4 rounded-full transition-colors duration-150" %>
+      <%= link_to "Cancel", "#", class: "text-gray-500 hover:text-gray-600", data: { action: "click->post-comments#cancelEdit", comment_id: dom_id(comment) } %>
+    <% end %>
+  </div>
+
+  <% if comment.parent_id.nil? %>
+    <%= link_to "Reply", "#", class: "text-xs text-blue-600 hover:underline",
+        data: { action: "post-comments#startReply", comment_id: dom_id(comment) } %>
+
+  <% end %>
+
+  <% if comment.parent_id.nil? %>
+    <div id="replies_for_comment_<%= dom_id(comment) %>" class="mt-2 pl-4 space-y-2 replies-container">
+      <%= render partial: 'comments/comment', collection: comment.replies, as: :comment,
+      locals: { can_edit: can_edit, can_destroy: can_destroy, can_report: can_report } %>
+    </div>
+    <div class="hidden" data-post-comments-target="replyForm" data-comment-id="<%= dom_id(comment) %>">
+      <%= form_with(model: [comment.post, Comment.new(parent_id: comment.id)], local: true) do |form| %>
+          <%= form.hidden_field :parent_id %>
+          <%= form.text_area :content, placeholder: "Write a reply...", rows: 3, class: "w-full rounded-md shadow-sm border-gray-300 focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50" %>
+          <%= form.submit "Post Reply", class: "mt-2 inline-flex items-center px-3 py-2 cursor-pointer border border-transparent text-sm leading-4 font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:border-blue-700 focus:shadow-outline-blue active:bg-blue-700 transition ease-in-out duration-150" %>
         <% end %>
-        <% if can? :destroy, comment %>
-          <%= link_to 'Delete', [ @post, comment ],
-                      data: { turbo_method: :delete, turbo_confirm: "Are you sure?" } %>
-        <% end %>
-        <% if can? :report, comment %>
-          <%= link_to 'Report', new_report_path(reportable_id: comment.id, reportable_type: 'Comment'), class: 'report-link' %>
-        <% end %>
-  </p>
+    </div>
+  <% end %>
 </div>

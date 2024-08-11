@@ -1,0 +1,40 @@
+<!-- app/views/admin/users/_suspended_table.html.erb -->
+<div class="overflow-x-auto bg-white p-6 rounded-lg shadow" id="suspended_table">
+      <table class="min-w-full table-auto">
+          <thead class="bg-gray-200 text-gray-600 uppercase text-sm leading-normal">
+              <tr>
+                  <th class="py-3 px-6 text-left">ID</th>
+                  <th class="py-3 px-6 text-left">Email</th>
+                  <th class="py-3 px-6 text-center">Account Created On</th>
+                  <th class="py-3 px-6 text-center">Suspension End Date</th>
+                  <th class="py-3 px-6 text-center">Actions</th>
+              </tr>
+          </thead>
+          <tbody class="text-gray-600 text-sm font-light">
+              <% @suspended_users.each do |user| %>
+                  <tr class="border-b border-gray-200 hover:bg-gray-100">
+                      <td class="py-3 px-6 text-left whitespace-nowrap"><%= user.id %></td>
+                      <td class="py-3 px-6 text-left whitespace-nowrap"><%= link_to user.email, [:admin, user], class: "text-blue-600 hover:underline" %></td>
+                      <td class="py-3 px-6 text-center"><%= user.created_at.strftime("%B %d, %Y %H:%M") %></td>
+                      <td class="py-3 px-6 text-center">
+                        <% if user.suspended_until %>
+                          <%= user.suspended_until.strftime("%B %d, %Y %H:%M") %>
+                          <div data-controller="ban-countdown"
+                              data-ban-countdown-time-value="<%= user.suspended_until.to_i %>"
+                              data-ban-countdown-target="time">
+                            <!-- This will be filled by the countdown -->
+                          </div>
+                        <% else %>
+                          Indefinite
+                        <% end %>
+                      </td>
+                      <td class="py-3 px-6 text-center">
+                          <div class="flex item-center justify-center">
+                              <%= link_to 'Unsuspend', unsuspend_admin_user_path(user), data: { turbo_method: :patch, turbo_confirm: 'Are you sure you want to lift this user\'s suspension?' }, class: "text-sm bg-green-500 hover:bg-green-700 text-white py-1 px-3 rounded focus:outline-none focus:shadow-outline" %>
+                        </div>
+                    </td>
+                </tr>
+            <% end %>
+        </tbody>
+    </table>
+</div>
