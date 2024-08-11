@@ -10,6 +10,8 @@ class Post < ApplicationRecord
   has_rich_text :body
   has_many :comments, dependent: :destroy
 
+  after_update_commit { broadcast_update_to self }
+
 
   include PgSearch::Model
   pg_search_scope :global_search,

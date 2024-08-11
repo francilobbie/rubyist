@@ -11,61 +11,55 @@ class CommentsController < ApplicationController
     @comment = @post.comments.build(comment_params.merge(user: current_user))
 
     if @comment.save
+      can_edit = can?(:update, @comment)
+      can_destroy = can?(:destroy, @comment)
+      can_report = can?(:report, @comment)
+
       if @comment.parent_id.present?
         parent_comment = Comment.find_by(id: @comment.parent_id)
-        broadcast_reply(@comment, parent_comment) if parent_comment
+        @comment.broadcast_reply(parent_comment, can_edit, can_destroy, can_report) if parent_comment
       else
-        broadcast_new_comment(@comment)
+        @comment.broadcast_new_comment(can_edit, can_destroy, can_report)
       end
-      redirect_to @post, notice: 'Comment was successfully posted.'
+
+      respond_to do |format|
+        format.turbo_stream
+        format.html { redirect_to @post, notice: 'Comment was successfully posted.' }
+      end
     else
       render :new, status: :unprocessable_entity
     end
   end
 
 
+
   def edit
-    # Just display the edit form
     @post = Post.find(params[:post_id])
   end
 
-  # CommentsController
   def update
-    @comment = Comment.find(params[:id])
     authorize! :update, @comment
 
-    respond_to do |format|
-      if @comment.update(comment_params)
-        # Replace the comment directly without broadcast if update is successful
-        format.turbo_stream do
-          render turbo_stream: turbo_stream.replace(@comment,
-                                                    partial: "comments/comment",
-                                                    locals: { comment: @comment,
-                                                              post: @post,
-                                                              current_user: current_user,
-                                                              can_edit: can?(:update, @comment),
-                                                              can_destroy: can?(:destroy, @comment),
-                                                              can_report: can?(:report, @comment)})
-        end
-        format.html { redirect_to @post, notice: 'Comment was successfully updated.' }
-      else
-        format.html { render :edit, status: :unprocessable_entity }
-      end
+    if @comment.update(comment_params)
+      can_edit = can?(:update, @comment)
+      can_destroy = can?(:destroy, @comment)
+      can_report = can?(:report, @comment)
+      @comment.update_and_broadcast(can_edit, can_destroy, can_report)
+      render turbo_stream: turbo_stream.replace(@comment, partial: "comments/comment", locals: comment_locals(@comment))
+    else
+      render :edit, status: :unprocessable_entity
     end
   end
 
 
-
-
-  # DELETE /posts/:post_id/comments/:id
   def destroy
     authorize! :destroy, @comment
     @comment.destroy
+    broadcast_remove_comment(@comment)
     redirect_to @post, notice: 'Comment was successfully deleted.'
   end
 
   def archive
-    @comment = Comment.find(params[:id])
     if @comment.update(archived: true)
       redirect_to root_path, notice: 'Comment was successfully archived.'
     else
@@ -79,7 +73,6 @@ class CommentsController < ApplicationController
     @post = Post.find(params[:post_id])
   end
 
-
   def set_comment
     @comment = @post.comments.find_by(id: params[:id])
     unless @comment
@@ -87,32 +80,52 @@ class CommentsController < ApplicationController
     end
   end
 
-
-  def authorize_modification
-    authorize! :manage, @comment
-  end
-
   def comment_params
     params.require(:comment).permit(:content, :parent_id)
   end
 
-  def broadcast_reply(comment, parent_comment)
-    Turbo::StreamsChannel.broadcast_append_to(
-      [@post, :comments], # Assuming :comments is a stream associated with the post
-      target: "replies_for_comment_#{dom_id(parent_comment)}",
-      partial: "comments/comment",
-      locals: { comment: comment }
-    )
+  def comment_locals(comment)
+    {
+      comment: comment,
+      can_edit: can?(:update, comment),
+      can_destroy: can?(:destroy, comment),
+      can_report: can?(:report, comment)
+    }
   end
 
+
+  def broadcast_reply(comment, parent_comment)
+    Turbo::StreamsChannel.broadcast_append_to(
+      [@post, :comments],
+      target: "replies_for_comment_#{dom_id(parent_comment)}",
+      partial: "comments/comment",
+      locals: comment_locals(comment)
+    )
+  end
 
   def broadcast_new_comment(comment)
     Turbo::StreamsChannel.broadcast_prepend_to(
-      [@post, :comments], # Assuming :comments is a stream associated with the post
+      [@post, :comments],
       target: "comments",
       partial: "comments/comment",
-      locals: { comment: comment, can_edit: can?(:update, comment), can_destroy: can?(:destroy, comment), can_report: can?(:report, comment) }
+      locals: comment_locals(comment)
     )
   end
 
+  def broadcast_replace_comment(comment)
+    Turbo::StreamsChannel.broadcast_replace_to(
+      [comment.post, :comments],
+      target: dom_id(comment),
+      partial: "comments/comment",
+      locals: comment_locals(comment)
+    )
+  end
+
+
+  def broadcast_remove_comment(comment)
+    Turbo::StreamsChannel.broadcast_remove_to(
+      [comment.post, :comments],
+      target: dom_id(comment)
+    )
+  end
 end
