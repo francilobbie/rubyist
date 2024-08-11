@@ -1,29 +1,9 @@
 <%# app/views/posts/show.html.erb %>
 <div class="container mx-auto mt-20">
   <div class="bg-white p-6 rounded-lg shadow-lg">
-    <h2 class="text-3xl font-bold mb-4"><%= @post.title %></h2>
-    <p class="text-gray-800 text-base mb-4"><%= @post.body %></p>
-    <div class="mb-6">
-      <strong>Tags:</strong>
-      <% @post.tags.each do |tag| %>
-        <span class="inline-block bg-orange-400 rounded-full ml-2 px-3 py-1 text-sm font-semibold text-white cursor-pointer">
-          <%= tag.name %>
-        </span>
-        <% if can? :destroy, tag %>
-          <%= link_to "delete", tag_path(tag), method: :delete, data: { confirm: "Are you sure?" }, class: "text-xs bg-red-500 text-white rounded-full px-3 py-1 ml-2" %>
-        <% end %>
-      <% end %>
-    </div>
-    <div class="flex justify-between items-start">
-      <div>
-        <% if can? :update, @post %>
-          <%= link_to "Edit", edit_post_path(@post), class: "inline-block bg-blue-500 text-white rounded-full px-4 py-2" %>
-        <% end %>
-        <% if can? :destroy, @post %>
-          <%= link_to "Delete", post_path(@post), method: :delete, data: { confirm: "Are you sure?" }, class: "inline-block bg-red-500 text-white rounded-full px-4 py-2 ml-2" %>
-        <% end %>
-        <%= link_to 'Report', new_report_path(reportable_id: @post.id, reportable_type: 'Post'), class: "inline-block bg-yellow-500 text-white rounded-full px-4 py-2 ml-2" %>
-      </div>
+    <%= turbo_stream_from @post %>
+    <div id="<%= dom_id(@post) %>">
+      <%= render @post %>
     </div>
     <div class="mt-8">
       <%= form_with(model: [@post, Comment.new], local: true, html: {
@@ -34,19 +14,14 @@
           post_comment_form_target: "form"
         }
       }) do |form| %>
-        <%= form.text_area :content,
-                            class: "w-full p-2 rounded border border-gray-300 focus:ring-blue-500 focus:border-blue-500 transition duration-150 ease-in-out", placeholder: "Add a comment..." ,
-                            data: {
-                              post_comment_form_target: "content"
-                            } %>
-        <%= form.submit "Add Comment",
-                        class: "bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded cursor-pointer" %>
+        <%= form.text_area :content, class: "w-full p-2 rounded border border-gray-300 focus:ring-blue-500 focus:border-blue-500 transition duration-150 ease-in-out", placeholder: "Add a comment..." %>
+        <%= form.submit "Add Comment", class: "bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded cursor-pointer" %>
       <% end %>
     </div>
+    <%= turbo_stream_from [@post, :comments] %>
     <div id="comments" class="mt-8">
-      <%= turbo_stream_from [@post, :comments] %>
-      <% @post.comments.top_level.each do |comment| %>
-        <%= render 'comments/comment', comment: comment, can_edit: can?(:update, comment), can_destroy: can?(:destroy, comment), can_report: can?(:report, comment) %>
+      <% @post.comments.top_level.order(id: :desc).each do |comment| %>
+        <%= render 'comments/comment', comment: comment, can_edit: can?(:update, comment), can_destroy: can?(:destroy, comment), can_report: can?(:report, comment), locals: { parent: nil } %>
       <% end %>
     </div>
   </div>
