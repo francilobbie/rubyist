@@ -26,31 +26,39 @@
   <!-- User Table -->
   <div class="mt-10 overflow-x-auto bg-white p-6 rounded-lg shadow">
     <h2 class="text-3xl font-bold text-gray-800 mb-4">Total Users</h2>
-    <div>
-      <a href="#" data-action="admin-sorting#sort" data-sorting-key="user_date_asc" class="text-sm bg-gray-500 hover:bg-gray-700 text-white py-2 px-4 rounded mr-2">Date Asc</a>
-      <a href="#" data-action="admin-sorting#sort" data-sorting-key="user_date_desc" class="text-sm bg-gray-500 hover:bg-gray-700 text-white py-2 px-4 rounded mr-2">Date Desc</a>
-      <a href="#" data-action="admin-sorting#sort" data-sorting-key="user_email_asc" class="text-sm bg-gray-500 hover:bg-gray-700 text-white py-2 px-4 rounded mr-2">Email Asc</a>
-      <a href="#" data-action="admin-sorting#sort" data-sorting-key="user_email_desc" class="text-sm bg-gray-500 hover:bg-gray-700 text-white py-2 px-4 rounded">Email Desc</a>
+    <div class="flex justify-between">
+      <div>
+        <a href="#" data-action="admin-sorting#sort" data-sorting-key="user_date_asc" class="text-sm bg-gray-500 hover:bg-gray-700 text-white py-2 px-4 rounded mr-2">Date Asc</a>
+        <a href="#" data-action="admin-sorting#sort" data-sorting-key="user_date_desc" class="text-sm bg-gray-500 hover:bg-gray-700 text-white py-2 px-4 rounded mr-2">Date Desc</a>
+        <a href="#" data-action="admin-sorting#sort" data-sorting-key="user_email_asc" class="text-sm bg-gray-500 hover:bg-gray-700 text-white py-2 px-4 rounded mr-2">Email Asc</a>
+        <a href="#" data-action="admin-sorting#sort" data-sorting-key="user_email_desc" class="text-sm bg-gray-500 hover:bg-gray-700 text-white py-2 px-4 rounded">Email Desc</a>
+      </div>
+      <%= link_to 'Create New User', new_admin_user_path, class: "bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded" %>
     </div>
     <div class="overflow-x-auto bg-white p-6 rounded-lg shadow" id="users_table" data-sorting-target="table">
       <table class="min-w-full table-auto">
         <thead class="bg-gray-200 text-gray-600 uppercase text-sm leading-normal">
           <tr>
-            <th class="py-3 px-6 text-left">ID</th> <!-- New ID Header -->
+            <th class="py-3 px-6 text-left">ID</th>
             <th class="py-3 px-6 text-left">Email</th>
+            <th class="py-3 px-6 text-center">Account Created On</th>
             <th class="py-3 px-6 text-center">Posts</th>
             <th class="py-3 px-6 text-center">Comments</th>
+            <th class="py-3 px-6 text-center">Suspended</th>
             <th class="py-3 px-6 text-center">Actions</th>
           </tr>
         </thead>
         <tbody class="text-gray-600 text-sm font-light">
           <% @users.each do |user| %>
-            <tr class="border-b border-gray-200 hover:bg-gray-100">
+            <tr class="<%= 'bg-red-100 hover:bg-red-200' if user.suspended? %> border-b border-gray-200 hover:bg-gray-100">
               <td class="py-3 px-6 text-left whitespace-nowrap">
-                <%= user.id %> <!-- New ID Field -->
+                <%= user.id %>
               </td>
               <td class="py-3 px-6 text-left whitespace-nowrap">
                 <%= link_to user.email, [:admin, user], class: "text-blue-600 hover:underline" %>
+              </td>
+              <td class="py-3 px-6 text-center">
+                <%= user.created_at.strftime("%B %d, %Y %H:%M") %>
               </td>
               <td class="py-3 px-6 text-center">
                 <%= user.posts.count %>
@@ -59,9 +67,20 @@
                 <%= user.comments.count %>
               </td>
               <td class="py-3 px-6 text-center">
+                <% if user.suspended? %>
+                  <% if user.suspended_until %>
+                    Until : <%= user.suspended_until.strftime("%B %d, %Y %H:%M") %>
+                  <% else %>
+                    Indefinite
+                  <% end %>
+                <% else %>
+                  No
+                <% end %>
+              </td>
+              <td class="py-3 px-6 text-center">
                 <div class="flex item-center justify-center">
                   <%= link_to 'Edit', edit_admin_user_path(user), class: "text-sm bg-blue-500 hover:bg-blue-700 text-white py-1 px-3 rounded focus:outline-none focus:shadow-outline" %>
-                  <%= link_to 'Delete', admin_user_path(user), method: :delete, data: { confirm: 'Are you sure?' }, class: "text-sm bg-red-500 hover:bg-red-700 text-white py-1 px-3 rounded focus:outline-none focus:shadow-outline ml-2" %>
+                  <%= link_to 'Delete', admin_user_path(user), data: { turbo_method: :delete, turbo_confirm: "Are you sure?" }, class: "text-sm bg-red-500 hover:bg-red-700 text-white py-1 px-3 rounded focus:outline-none focus:shadow-outline ml-2" %>
                 </div>
               </td>
             </tr>
@@ -87,6 +106,7 @@
           <tr>
             <th class="py-3 px-6 text-left">ID</th>
             <th class="py-3 px-6 text-left">Email</th>
+            <th class="py-3 px-6 text-center">Account Created On</th>
             <th class="py-3 px-6 text-center">Actions</th>
           </tr>
         </thead>
@@ -100,9 +120,12 @@
                 <%= link_to admin.email, [:admin, admin], class: "text-blue-600 hover:underline" %>
               </td>
               <td class="py-3 px-6 text-center">
+                <%= admin.created_at.strftime("%B %d, %Y %H:%M") %>
+              </td>
+              <td class="py-3 px-6 text-center">
                 <div class="flex item-center justify-center">
                   <%= link_to 'Edit', edit_admin_user_path(admin), class: "text-sm bg-blue-500 hover:bg-blue-700 text-white py-1 px-3 rounded focus:outline-none focus:shadow-outline" %>
-                  <%= link_to 'Delete', admin_user_path(admin), method: :delete, data: { confirm: 'Are you sure?' }, class: "text-sm bg-red-500 hover:bg-red-700 text-white py-1 px-3 rounded focus:outline-none focus:shadow-outline ml-2" %>
+                  <%= link_to 'Delete', admin_user_path(admin), data: { turbo_method: :delete, turbo_confirm: "Are you sure?" }, class: "text-sm bg-red-500 hover:bg-red-700 text-white py-1 px-3 rounded focus:outline-none focus:shadow-outline ml-2" %>
                 </div>
               </td>
             </tr>
@@ -127,6 +150,7 @@
           <tr>
             <th class="py-3 px-6 text-left">ID</th>
             <th class="py-3 px-6 text-left">Email</th>
+            <th class="py-3 px-6 text-center">Account Created On</th>
             <th class="py-3 px-6 text-center">Actions</th>
           </tr>
         </thead>
@@ -140,9 +164,12 @@
                 <%= link_to moderator.email, [:admin, moderator], class: "text-blue-600 hover:underline" %>
               </td>
               <td class="py-3 px-6 text-center">
+                <%= moderator.created_at.strftime("%B %d, %Y %H:%M") %>
+              </td>
+              <td class="py-3 px-6 text-center">
                 <div class="flex item-center justify-center">
                   <%= link_to 'Edit', edit_admin_user_path(moderator), class: "text-sm bg-blue-500 hover:bg-blue-700 text-white py-1 px-3 rounded focus:outline-none focus:shadow-outline" %>
-                  <%= link_to 'Delete', admin_user_path(moderator), method: :delete, data: { confirm: 'Are you sure?' }, class: "text-sm bg-red-500 hover:bg-red-700 text-white py-1 px-3 rounded focus:outline-none focus:shadow-outline ml-2" %>
+                  <%= link_to 'Delete', admin_user_path(moderator), data: { turbo_method: :delete, turbo_confirm: "Are you sure?" }, class: "text-sm bg-red-500 hover:bg-red-700 text-white py-1 px-3 rounded focus:outline-none focus:shadow-outline ml-2" %>
                 </div>
               </td>
             </tr>
@@ -160,13 +187,14 @@
       <a href="#" data-action="admin-sorting#sort" data-table-type="writers" data-sorting-key="writer_date_desc" class="text-sm bg-gray-500 hover:bg-gray-700 text-white py-2 px-4 rounded mr-2">Date Desc</a>
       <a href="#" data-action="admin-sorting#sort" data-table-type="writers" data-sorting-key="writer_email_asc" class="text-sm bg-gray-500 hover:bg-gray-700 text-white py-2 px-4 rounded mr-2">Email Asc</a>
       <a href="#" data-action="admin-sorting#sort" data-table-type="writers" data-sorting-key="writer_email_desc" class="text-sm bg-gray-500 hover:bg-gray-700 text-white py-2 px-4 rounded">Email Desc</a>
-  </div>
+    </div>
     <div class="overflow-x-auto bg-white p-6 rounded-lg shadow" id="writers_table" data-sorting-target="table">
       <table class="min-w-full table-auto">
         <thead class="bg-gray-200 text-gray-600 uppercase text-sm leading-normal">
           <tr>
             <th class="py-3 px-6 text-left">ID</th>
             <th class="py-3 px-6 text-left">Email</th>
+            <th class="py-3 px-6 text-center">Account Created On</th>
             <th class="py-3 px-6 text-center">Actions</th>
           </tr>
         </thead>
@@ -180,9 +208,12 @@
                 <%= link_to writer.email, [:admin, writer], class: "text-blue-600 hover:underline" %>
               </td>
               <td class="py-3 px-6 text-center">
+                <%= writer.created_at.strftime("%B %d, %Y %H:%M") %>
+              </td>
+              <td class="py-3 px-6 text-center">
                 <div class="flex item-center justify-center">
                   <%= link_to 'Edit', edit_admin_user_path(writer), class: "text-sm bg-blue-500 hover:bg-blue-700 text-white py-1 px-3 rounded focus:outline-none focus:shadow-outline" %>
-                  <%= link_to 'Delete', admin_user_path(writer), method: :delete, data: { confirm: 'Are you sure?' }, class: "text-sm bg-red-500 hover:bg-red-700 text-white py-1 px-3 rounded focus:outline-none focus:shadow-outline ml-2" %>
+                  <%= link_to 'Delete', admin_user_path(writer), data: { turbo_method: :delete, turbo_confirm: "Are you sure?" }, class: "text-sm bg-red-500 hover:bg-red-700 text-white py-1 px-3 rounded focus:outline-none focus:shadow-outline ml-2" %>
                 </div>
               </td>
             </tr>
@@ -191,4 +222,55 @@
       </table>
     </div>
   </div>
+
+  <!-- Suspended Users Table -->
+  <div class="mt-10 overflow-x-auto bg-white p-6 rounded-lg shadow">
+      <h2 class="text-3xl font-bold text-gray-800 mb-4"><span><%= @suspended_users.count %></span> Suspended Users</h2>
+      <div>
+        <a href="#" data-action="admin-sorting#sort" data-table-type="suspended" data-sorting-key="suspended_date_asc" class="text-sm bg-gray-500 hover:bg-gray-700 text-white py-2 px-4 rounded mr-2">Date Asc</a>
+        <a href="#" data-action="admin-sorting#sort" data-table-type="suspended" data-sorting-key="suspended_date_desc" class="text-sm bg-gray-500 hover:bg-gray-700 text-white py-2 px-4 rounded mr-2">Date Desc</a>
+        <a href="#" data-action="admin-sorting#sort" data-table-type="suspended" data-sorting-key="suspended_email_asc" class="text-sm bg-gray-500 hover:bg-gray-700 text-white py-2 px-4 rounded mr-2">Email Asc</a>
+        <a href="#" data-action="admin-sorting#sort" data-table-type="suspended" data-sorting-key="suspended_email_desc" class="text-sm bg-gray-500 hover:bg-gray-700 text-white py-2 px-4 rounded">Email Desc</a>
+    </div>
+      <div class="overflow-x-auto bg-white p-6 rounded-lg shadow" id="suspended_table" data-sorting-target="table">
+          <table class="min-w-full table-auto">
+              <thead class="bg-gray-200 text-gray-600 uppercase text-sm leading-normal">
+                  <tr>
+                      <th class="py-3 px-6 text-left">ID</th>
+                      <th class="py-3 px-6 text-left">Email</th>
+                      <th class="py-3 px-6 text-center">Account Created On</th>
+                      <th class="py-3 px-6 text-center">Suspension End Date</th>
+                      <th class="py-3 px-6 text-center">Actions</th>
+                  </tr>
+              </thead>
+              <tbody class="text-gray-600 text-sm font-light">
+                  <% @suspended_users.each do |user| %>
+                      <tr class="border-b border-gray-200 hover:bg-gray-100">
+                          <td class="py-3 px-6 text-left whitespace-nowrap"><%= user.id %></td>
+                          <td class="py-3 px-6 text-left whitespace-nowrap"><%= link_to user.email, [:admin, user], class: "text-blue-600 hover:underline" %></td>
+                          <td class="py-3 px-6 text-center"><%= user.created_at.strftime("%B %d, %Y %H:%M") %></td>
+                          <td class="py-3 px-6 text-center">
+                            <% if user.suspended_until %>
+                              <%= user.suspended_until.strftime("%B %d, %Y %H:%M") %>
+                              <div data-controller="ban-countdown"
+                                  data-ban-countdown-time-value="<%= user.suspended_until.to_i %>"
+                                  data-ban-countdown-target="time">
+                                <!-- This will be filled by the countdown -->
+                              </div>
+                            <% else %>
+                              Indefinite
+                            <% end %>
+                          </td>
+                          <td class="py-3 px-6 text-center">
+                              <div class="flex item-center justify-center">
+                                  <%= link_to 'Unsuspend', unsuspend_admin_user_path(user), data: { turbo_method: :patch, turbo_confirm: 'Are you sure you want to lift this user\'s suspension?' }, class: "text-sm bg-green-500 hover:bg-green-700 text-white py-1 px-3 rounded focus:outline-none focus:shadow-outline" %>
+                            </div>
+                        </td>
+                    </tr>
+                <% end %>
+            </tbody>
+        </table>
+    </div>
+  </div>
+
 </div>

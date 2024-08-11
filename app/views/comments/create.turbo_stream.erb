@@ -1,1 +1,19 @@
-<%= turbo_stream.append "comments", partial: "comments/comment", locals: { comment: @comment } %>
+<!-- In your create.turbo_stream.erb -->
+<% if @comment.parent_id.present? %>
+  <%= turbo_stream.append "replies_for_comment_#{dom_id(Comment.find(@comment.parent_id))}", partial: 'comments/comment', locals: {
+    comment: @comment,
+    post: @post,
+    can_edit: can?(:update, @comment),
+    can_destroy: can?(:destroy, @comment),
+    can_report: can?(:report, @comment)
+  } %>
+<% else %>
+  <%= turbo_stream.prepend "comments", partial: "comments/comment", locals: {
+    comment: @comment,
+    post: @post,
+    current_user: current_user,
+    can_edit: can?(:update, @comment),
+    can_destroy: can?(:destroy, @comment),
+    can_report: can?(:report, @comment)
+  } %>
+<% end %>

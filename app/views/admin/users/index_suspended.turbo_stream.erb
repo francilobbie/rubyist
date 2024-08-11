@@ -1,0 +1,4 @@
+<!-- app/views/admin/users/index_suspended.turbo_stream.erb -->
+<%= turbo_stream.replace "suspended_table" do %>
+  <%= render partial: "admin/users/suspended_table", locals: { suspended_users: @suspended_users } %>
+<% end %>

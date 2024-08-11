@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2024_03_20_174550) do
+ActiveRecord::Schema[7.1].define(version: 2024_03_28_093823) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -58,6 +58,9 @@ ActiveRecord::Schema[7.1].define(version: 2024_03_20_174550) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.bigint "user_id", null: false
+    t.boolean "archived"
+    t.integer "parent_id"
+    t.index ["parent_id"], name: "index_comments_on_parent_id"
     t.index ["post_id"], name: "index_comments_on_post_id"
     t.index ["user_id"], name: "index_comments_on_user_id"
   end
@@ -80,6 +83,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_03_20_174550) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.bigint "user_id", null: false
+    t.boolean "archived"
     t.index ["user_id"], name: "index_posts_on_user_id"
   end
 
@@ -90,6 +94,8 @@ ActiveRecord::Schema[7.1].define(version: 2024_03_20_174550) do
     t.bigint "reportable_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string "status", default: "pending"
+    t.string "category"
     t.index ["reportable_type", "reportable_id"], name: "index_reports_on_reportable"
     t.index ["user_id"], name: "index_reports_on_user_id"
   end
@@ -129,6 +135,10 @@ ActiveRecord::Schema[7.1].define(version: 2024_03_20_174550) do
     t.datetime "updated_at", null: false
     t.string "first_name"
     t.string "last_name"
+    t.datetime "suspended_until"
+    t.boolean "suspended"
+    t.integer "suspension_count", default: 0
+    t.integer "report_count", default: 0
     t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
   end

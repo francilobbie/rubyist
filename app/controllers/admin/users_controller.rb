@@ -1,6 +1,6 @@
 # app/controllers/admin/users_controller.rb
 class Admin::UsersController < Admin::BaseController
-  before_action :set_user, only: %i[show edit update destroy]
+  before_action :set_user, only: [:show, :edit, :update, :destroy, :suspend, :unsuspend]
 
   def index
     # Basic users fetching, replace this with more complex logic if needed
@@ -13,10 +13,13 @@ class Admin::UsersController < Admin::BaseController
     @total_writers = User.joins(:roles).where(roles: { name: 'writer' }).count
     @total_moderators = User.joins(:roles).where(roles: { name: 'moderator' }).count
 
+    @suspended_users = User.where(suspended: true).or(User.where('suspended_until > ?', Time.current))
+
     sort_users_by_param(params[:sort])
     sort_admins_by_param(params[:sort])
     sort_writers_by_param(params[:sort])
     sort_moderators_by_param(params[:sort])
+    sort_suspended_users_by_param(params[:sort])
 
     respond_to do |format|
       format.html # for standard HTML responses
@@ -29,6 +32,8 @@ class Admin::UsersController < Admin::BaseController
           render turbo_stream: turbo_stream.replace("writers_table", partial: "writers_table", locals: { writers: @writers })
         elsif params[:table_type] == 'moderators'
           render turbo_stream: turbo_stream.replace("moderators_table", partial: "moderators_table", locals: { moderators: @moderators })
+        elsif params[:table_type] == 'suspended'
+          render turbo_stream: turbo_stream.replace("suspended_table", partial: "suspended_table", locals: { suspended_users: @suspended_users })
         end
       end
     end
@@ -60,16 +65,53 @@ class Admin::UsersController < Admin::BaseController
     end
   end
 
+  def new
+    @user = User.new
+  end
+
+  def create
+    @user = User.new(user_params)
+    if @user.save
+      redirect_to admin_users_path, notice: 'User was successfully created.'
+    else
+      render :new
+    end
+  end
+
+
+  def suspend
+    # Set suspended_until for temporary suspension, set suspended for permanent
+    if params[:duration].present?
+      @user.update(suspended_until: Time.current + params[:duration].to_i.days)
+    else
+      @user.update(suspended: true)
+    end
+
+    # Increment suspension count
+    @user.increment!(:suspension_count)
+    redirect_to admin_users_path, notice: 'User has been suspended.'
+  end
+
+  def unsuspend
+    # Remove suspension
+    @user.update(suspended: false, suspended_until: nil)
+    redirect_to admin_users_path, notice: 'User suspension has been lifted.'
+  end
+
   def destroy
     @user = User.find(params[:id])
     @user.destroy
-    redirect_to admin_users_url, notice: 'User was successfully destroyed.'
+    redirect_to admin_users_url, notice: 'User has been deleted.'
   end
 
   private
 
+  def ensure_admin!
+    redirect_to root_path unless current_user.has_role?(:admin)
+  end
+
   def user_params
-    params.require(:user).permit(:email, :id, :first_name, :last_name, role_ids: [])
+    params.require(:user).permit(:email, :id, :first_name, :last_name, :password, :password_confirmation, role_ids: [])
   end
 
   def update_roles_if_provided
@@ -133,6 +175,21 @@ class Admin::UsersController < Admin::BaseController
       @moderators = @moderators.order(email: :desc)
     end
   end
+
+  def sort_suspended_users_by_param(sort_key)
+    Rails.logger.debug "Sorting suspended users by #{sort_key}"
+    case sort_key
+    when 'suspended_date_asc'
+      @suspended_users = @suspended_users.order(created_at: :asc)
+    when 'suspended_date_desc'
+      @suspended_users = @suspended_users.order(created_at: :desc)
+    when 'suspended_email_asc'
+      @suspended_users = @suspended_users.order(email: :asc)
+    when 'suspended_email_desc'
+      @suspended_users = @suspended_users.order(email: :desc)
+    end
+  end
+
 
   def set_user
     @user = User.find(params[:id])

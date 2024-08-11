@@ -1,0 +1,8 @@
+<%# app/views/comments/update.turbo_stream.erb %>
+<%= turbo_stream.replace dom_id(@comment), partial: "comments/comment", locals: {
+  comment: @comment,
+  post: @post,
+  can_edit: can?(:update, @comment),
+  can_destroy: can?(:destroy, @comment),
+  can_report: can?(:report, @comment)
+} %>
