@@ -1,4 +1,4 @@
-<%# app/views/posts/_post.html.erb %>
+<%# app/views/admin/posts/_post.html.erb %>
 <div>
   <h2 class="text-3xl font-bold mb-4"><%= post.title %></h2>
 
@@ -8,7 +8,7 @@
         <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-9V6a9 9 0 00-9-9v9h9z" />
         </svg>
-        <span><%= time_ago_in_words(post.published_at) %> ago</span> <span>by <%= post.user.email %></span>
+        <span><%= time_ago_in_words(post.published_at) %> ago</span><span>by <%= post.user.email %></span>
       </span>
       <% if post.published_at < post.updated_at %>
         <span class="flex items-center space-x-1" title="Last edited at <%= post.updated_at.strftime('%b %d, %Y %H:%M %p') %>">
@@ -27,10 +27,6 @@
       </span>
     <% end %>
   </div>
-
-
-
-
 
   <p class="text-gray-800 text-base mb-4"><%= post.body %></p>
 

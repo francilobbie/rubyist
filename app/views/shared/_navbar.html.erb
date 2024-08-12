@@ -39,12 +39,19 @@
             <% if user_signed_in? %>
               <%= current_user.email %>
             <% end %>
-            <%= link_to "Acceuil", root_path, class: "text-gray-300 hover:bg-gray-700 hover:text-white rounded-md px-3 py-2 text-sm font-medium" %>
-            <%= link_to 'Dashboard', dashboard_show_path, class: "bg-gray-900 text-white block rounded-md px-3 py-2 text-base font-medium" %>
-            <a href="#" class="text-gray-300 hover:bg-gray-700 hover:text-white rounded-md px-3 py-2 text-sm font-medium">Team</a>
-            <a href="#" class="text-gray-300 hover:bg-gray-700 hover:text-white rounded-md px-3 py-2 text-sm font-medium">Projects</a>
+            <% if user_signed_in? %>
+              <%= link_to "Acceuil", root_path, class: "text-gray-300 hover:bg-gray-700 hover:text-white rounded-md px-3 py-2 text-sm font-medium" %>
+              <% if current_user.has_role?(:admin) || current_user.has_role?(:moderator) %>
+                <%= link_to 'Dashboard', dashboard_show_path, class: "text-gray-300 hover:bg-gray-700 hover:text-white rounded-md px-3 py-2 text-sm font-medium" %>
+              <% end %>
+            <% else %>
+              <%= link_to "Acceuil", root_path, class: "text-gray-300 hover:bg-gray-700 hover:text-white rounded-md px-3 py-2 text-sm font-medium" %>
+            <% end %>
             <%= link_to "Map", maps_path, class: "text-gray-300 hover:bg-gray-700 hover:text-white rounded-md px-3 py-2 text-sm font-medium" %>
             <%= link_to "Princing", "#", class: "text-gray-300 hover:bg-gray-700 hover:text-white rounded-md px-3 py-2 text-sm font-medium" %>
+            <% if user_signed_in? && current_user.has_role?(:admin) %>
+              <%= link_to "Admin", admin_root_path, class: "text-gray-300 hover:bg-gray-700 hover:text-white rounded-md px-3 py-2 text-sm font-medium" %>
+            <% end %>
           </div>
         </div>
       </div>
@@ -92,7 +99,9 @@
             data-header-leave-end="transform opacity-0 scale-95"
           >
             <!-- Active: "bg-gray-100", Not Active: "" -->
-            <a href="#" class="block px-4 py-2 text-sm text-gray-700" role="menuitem" tabindex="-1" id="user-menu-item-0">Your Profile</a>
+            <% if user_signed_in? %>
+              <%= link_to "Your Profile", user_path(current_user), class: "block px-4 py-2 text-sm text-gray-700" %>
+            <% end %>
             <a href="#" class="block px-4 py-2 text-sm text-gray-700" role="menuitem" tabindex="-1" id="user-menu-item-1">Settings</a>
 
             <% if user_signed_in? %>

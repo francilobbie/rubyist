@@ -11,6 +11,10 @@ class Post < ApplicationRecord
   has_rich_text :body
   has_many :comments, dependent: :destroy
 
+  scope :draft, -> { where(published_at: nil)}
+  scope :published, -> { where("published_at <= ?", Time.current) }
+  scope :scheduled, -> { where("published_at > ?", Time.current) }
+
   include PgSearch::Model
   pg_search_scope :global_search,
     against: [:title, :body],
@@ -20,6 +24,18 @@ class Post < ApplicationRecord
     using: {
       tsearch: { prefix: true }
     }
+
+    def draft?
+      published_at.nil?
+    end
+
+    def published?
+      published_at? && published_at <= Time.current
+    end
+
+    def scheduled?
+      published_at? && published_at > Time.current
+    end
 
   def tag_list
     tags.map(&:name).join(", ")

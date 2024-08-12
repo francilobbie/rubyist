@@ -27,9 +27,11 @@ class CommentsController < ApplicationController
         format.html { redirect_to @post, notice: 'Comment was successfully posted.' }
       end
     else
-      render :new, status: :unprocessable_entity
+      flash[:alert] = @comment.errors.full_messages.to_sentence
+      redirect_to @post
     end
   end
+
 
 
 
@@ -51,13 +53,13 @@ class CommentsController < ApplicationController
     end
   end
 
-
   def destroy
     authorize! :destroy, @comment
     @comment.destroy
     broadcast_remove_comment(@comment)
     redirect_to @post, notice: 'Comment was successfully deleted.'
   end
+
 
   def archive
     if @comment.update(archived: true)

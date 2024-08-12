@@ -9,7 +9,13 @@ Rails.application.routes.draw do
     end
   end
 
-  resources :users, only: [:show, :edit, :update]
+  patch '/posts/:id/unpublish', to: 'posts#unpublish', as: :unpublish_post
+
+  resources :users, only: [:show, :edit, :update] do
+    member do
+      get :posts  # This route allows users to manage their posts
+    end
+  end
 
   delete "/tags/:id", to: "tags#destroy", as: :tag
   # get "/page/map", to: "pages#map", as: :map
@@ -29,9 +35,7 @@ Rails.application.routes.draw do
         delete :destroy
       end
     end
-    resources :posts
-  end
-
+    resources :posts, only: [:index, :show, :new, :create, :edit, :update, :destroy]  end
   resources :reports, only: [:index, :show, :edit, :update, :destroy, :new, :create] do
     member do
       delete 'destroy_comment'

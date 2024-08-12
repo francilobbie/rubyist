@@ -1,4 +1,12 @@
 <div>
-  <h1 class="font-bold text-4xl">Users#show</h1>
-  <p>Find me in app/views/users/show.html.erb</p>
+  <h1><%= @user.email %>'s Profile</h1>
+
+  <p>Manage your posts:</p>
+  <ul>
+    <li><%= link_to "All Posts", posts_user_path(@user) %></li>
+    <li><%= link_to "Drafts", posts_user_path(@user, filter: 'draft') %></li>
+    <li><%= link_to "Published", posts_user_path(@user, filter: 'published') %></li>
+    <li><%= link_to "Scheduled", posts_user_path(@user, filter: 'scheduled') %></li>
+  </ul>
+
 </div>

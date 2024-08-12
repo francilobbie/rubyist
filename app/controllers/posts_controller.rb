@@ -5,7 +5,7 @@ class PostsController < ApplicationController
   before_action :authenticate_user!, only: [:new, :create, :edit, :update, :destroy]
 
   def index
-    base_query = params[:query].present? ? Post.global_search(params[:query]) : Post.all
+    base_query = params[:query].present? ? Post.published.global_search(params[:query]) : Post.published
     all_posts = base_query.includes(:user).to_a
 
     @posts = all_posts.select do |post|
@@ -30,6 +30,7 @@ class PostsController < ApplicationController
   end
 
   def show
+
     @can_edit_post = can?(:update, @post)
     @can_destroy_post = can?(:destroy, @post)
     @can_destroy_tag = can?(:destroy, Tag)
@@ -46,12 +47,15 @@ class PostsController < ApplicationController
 
   def create
     @post = current_user.posts.build(post_params)
+
     if @post.save
-      redirect_to root_path
+      redirect_to root_path, notice: 'Post was successfully created.'
     else
-      render :new
+      flash[:alert] = @post.errors.full_messages.to_sentence
+      render :new, status: :unprocessable_entity
     end
   end
+
 
   def update
     if @post.update(post_params)
@@ -76,13 +80,20 @@ class PostsController < ApplicationController
     end
   end
 
+  def unpublish
+    @post = Post.find(params[:id])
+    @post.update(published_at: nil)
+    redirect_to edit_post_path(@post), notice: 'Post has been unpublished and can be edited again.'
+  end
+
+
   private
 
   def set_post
-    @post = Post.find(params[:id])
+      @post = user_signed_in? ? Post.find(params[:id]) : Post.published.find(params[:id])
   end
 
   def post_params
-    params.require(:post).permit(:title, :body, :tag_list, :user_id)
+    params.require(:post).permit(:title, :body, :tag_list, :user_id, :published_at)
   end
 end
