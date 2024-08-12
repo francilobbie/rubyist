@@ -36,15 +36,19 @@
         </button>
 
         <div class="hidden absolute z-10 right-0 w-48 py-1 mt-2 bg-white border rounded shadow-xl" data-post-comments-target="miniMenu" data-comment-id="<%= dom_id(comment) %>">
-          <% if can_edit %>
-            <%= link_to 'Edit', "#", class: "block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100",
-              data: { action: "click->post-comments#toggleEdit", comment_id: dom_id(comment) } %>
-          <% end %>
-          <% if can_destroy %>
-            <%= link_to 'Delete', [comment.post, comment], data: { turbo_method: :delete, turbo_confirm: "Are you sure?" }, class: 'block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100' %>
-          <% end %>
-          <% if can_report %>
-            <%= link_to 'Report', new_report_path(reportable_id: comment.id, reportable_type: 'Comment'), class: 'block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100' %>
+          <% if user_signed_in? %>
+            <% if can_edit %>
+              <%= link_to 'Edit', "#", class: "block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100",
+                data: { action: "click->post-comments#toggleEdit", comment_id: dom_id(comment) } %>
+            <% end %>
+            <% if can_destroy %>
+              <%= link_to 'Delete', [comment.post, comment], data: { turbo_method: :delete, turbo_confirm: "Are you sure?" }, class: 'block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100' %>
+            <% end %>
+            <% if can_report %>
+              <%= link_to 'Report', new_report_path(reportable_id: comment.id, reportable_type: 'Comment'), class: 'block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100' %>
+            <% end %>
+          <% else %>
+              <%= link_to 'Report', new_user_session_path, class: 'block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100' %>
           <% end %>
         </div>
       </div>

@@ -1,0 +1,29 @@
+<h1>This the admin'post view</h1>
+<%# app/views/posts/show.html.erb %>
+<div class="container mx-auto mt-20">
+  <div class="bg-white p-6 rounded-lg shadow-lg">
+    <%= turbo_stream_from @post %>
+    <div id="<%= dom_id(@post) %>">
+      <%= render @post %>
+    </div>
+    <div class="mt-8">
+      <%= form_with(model: [@post, Comment.new], local: true, html: {
+        class: "space-y-4",
+        id: "comment_form",
+        data: {
+          controller: "post-comment-form",
+          post_comment_form_target: "form"
+        }
+      }) do |form| %>
+        <%= form.text_area :content, class: "w-full p-2 rounded border border-gray-300 focus:ring-blue-500 focus:border-blue-500 transition duration-150 ease-in-out", placeholder: "Add a comment..." %>
+        <%= form.submit "Add Comment", class: "bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded cursor-pointer" %>
+      <% end %>
+    </div>
+    <%= turbo_stream_from [@post, :comments] %>
+    <div id="comments" class="mt-8">
+      <% @post.comments.top_level.order(id: :desc).each do |comment| %>
+        <%= render 'comments/comment', comment: comment, can_edit: can?(:update, comment), can_destroy: can?(:destroy, comment), can_report: can?(:report, comment), locals: { parent: nil } %>
+      <% end %>
+    </div>
+  </div>
+</div>

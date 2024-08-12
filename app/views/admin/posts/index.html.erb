@@ -1,0 +1,41 @@
+<div class="admin-posts-page max-w-4xl mx-auto my-10">
+  <h1 class="text-4xl font-bold text-center mb-10">Manage Posts</h1>
+
+  <div class="space-y-6">
+    <div>
+      <h2 class="text-2xl font-semibold mb-3">Published Posts</h2>
+      <ul class="list-disc list-inside bg-white p-4 rounded-lg shadow">
+        <% @published_posts.each do |post| %>
+          <li class="mb-2">
+            <%= link_to post.title, [:admin, post], class: "text-blue-500 hover:text-blue-700" %>
+            - Published at: <%= post.published_at.strftime('%b %d, %Y %H:%M %p') %>
+          </li>
+        <% end %>
+      </ul>
+    </div>
+
+    <div>
+      <h2 class="text-2xl font-semibold mb-3">Draft Posts</h2>
+      <ul class="list-disc list-inside bg-white p-4 rounded-lg shadow">
+        <% @draft_posts.each do |post| %>
+          <li class="mb-2">
+            <%= link_to post.title, [:admin, post], class: "text-blue-500 hover:text-blue-700" %>
+            - Created at: <%= post.created_at.strftime('%b %d, %Y %H:%M %p') %>
+          </li>
+        <% end %>
+      </ul>
+    </div>
+
+    <div>
+      <h2 class="text-2xl font-semibold mb-3">Scheduled Posts</h2>
+      <ul class="list-disc list-inside bg-white p-4 rounded-lg shadow">
+        <% @scheduled_posts.each do |post| %>
+          <li class="mb-2">
+            <%= link_to post.title, [:admin, post], class: "text-blue-500 hover:text-blue-700" %>
+            - Scheduled for: <%= post.published_at.strftime('%b %d, %Y %H:%M %p') %>
+          </li>
+        <% end %>
+      </ul>
+    </div>
+  </div>
+</div>
