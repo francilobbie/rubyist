@@ -1,6 +1,7 @@
 class Post < ApplicationRecord
-  resourcify
+  include ActionView::RecordIdentifier
 
+  resourcify
 
   validates :title, :body, presence: true
 
@@ -10,14 +11,11 @@ class Post < ApplicationRecord
   has_rich_text :body
   has_many :comments, dependent: :destroy
 
-  after_update_commit { broadcast_update_to self }
-
-
   include PgSearch::Model
   pg_search_scope :global_search,
-    against: [ :title, :body ],
+    against: [:title, :body],
     associated_against: {
-      tags: [ :name ]
+      tags: [:name]
     },
     using: {
       tsearch: { prefix: true }
@@ -31,5 +29,22 @@ class Post < ApplicationRecord
     self.tags = names.split(",").map do |n|
       Tag.where(name: n.strip).first_or_create!
     end
+  end
+
+  def broadcast_update_with_permissions(user)
+    ability = Ability.new(user)
+    permissions = {
+      can_edit_post: ability.can?(:update, self),
+      can_destroy_post: ability.can?(:destroy, self),
+      can_destroy_tag: ability.can?(:destroy, Tag),
+      can_report_post: ability.can?(:report, self)
+    }
+
+    broadcast_replace_later_to(
+      self,
+      target: dom_id(self),
+      partial: "posts/post",
+      locals: permissions.merge(post: self)
+    )
   end
 end

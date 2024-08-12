@@ -4,10 +4,8 @@ class PostsController < ApplicationController
   before_action :set_post, only: [:show, :edit, :update, :destroy]
   before_action :authenticate_user!, only: [:new, :create, :edit, :update, :destroy]
 
-
   def index
     base_query = params[:query].present? ? Post.global_search(params[:query]) : Post.all
-
     all_posts = base_query.includes(:user).to_a
 
     @posts = all_posts.select do |post|
@@ -31,23 +29,20 @@ class PostsController < ApplicationController
     redirect_to root_path, alert: 'You are not authorized to perform this action.'
   end
 
-
-
   def show
-    @comments = @post.comments.order(created_at: :asc)
+    @can_edit_post = can?(:update, @post)
+    @can_destroy_post = can?(:destroy, @post)
+    @can_destroy_tag = can?(:destroy, Tag)
+    @can_report_post = can?(:report, @post)
 
+    @comments = @post.comments.order(created_at: :asc)
     @comments.each do |comment|
-      comment.define_singleton_method(:can_edit) { can? :update, comment }
-      comment.define_singleton_method(:can_destroy) { can? :destroy, comment }
-      comment.define_singleton_method(:can_report) { can? :report, comment }
+      comment.define_singleton_method(:can_edit) { can?(:update, comment) }
+      comment.define_singleton_method(:can_destroy) { can?(:destroy, comment) }
+      comment.define_singleton_method(:can_report) { can?(:report, comment) }
     end
     @comment = Comment.new
-    # Check if the post's user is suspended and not the current user
-    if @post.user.suspended? && (!user_signed_in? || current_user.id != @post.user.id)
-      redirect_back(fallback_location: root_path, alert: 'This post is currently unavailable.')
-    end
   end
-
 
   def create
     @post = current_user.posts.build(post_params)
@@ -60,11 +55,11 @@ class PostsController < ApplicationController
 
   def update
     if @post.update(post_params)
+      @post.broadcast_update_with_permissions(current_user)
       redirect_to root_path
     else
       render :edit
     end
-
   end
 
   def destroy
@@ -85,7 +80,6 @@ class PostsController < ApplicationController
 
   def set_post
     @post = Post.find(params[:id])
-
   end
 
   def post_params
