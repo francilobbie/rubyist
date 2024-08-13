@@ -68,6 +68,11 @@
       locals: { can_edit: can_edit, can_destroy: can_destroy, can_report: can_report } %>
     </div>
   <% end %>
+    <div id="<%= dom_id(comment) %>_likes">
+      <%= render 'likes/like', likeable: comment %>
+    </div>
+
+
 
   <!-- Edit Form -->
   <div class="hidden" data-post-comments-target="editForm" data-comment-id="<%= dom_id(comment) %>">

@@ -5,8 +5,10 @@ Rails.application.routes.draw do
   root "posts#index"
   resources :posts, only: [:index, :show, :new, :create, :edit, :update, :destroy] do
     resources :comments, only: [:create, :edit, :update, :destroy] do
+      resources :likes, only: [:create, :destroy], defaults: { likeable: 'Comment' }
       resources :replies, controller: 'comments', only: [:create, :edit, :update, :destroy]
     end
+    resources :likes, only: [:create, :destroy], defaults: { likeable: 'Post' }
   end
 
   patch '/posts/:id/unpublish', to: 'posts#unpublish', as: :unpublish_post

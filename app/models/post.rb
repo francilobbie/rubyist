@@ -10,6 +10,8 @@ class Post < ApplicationRecord
   belongs_to :user
   has_rich_text :body
   has_many :comments, dependent: :destroy
+  has_many :likes, as: :likeable, dependent: :destroy
+
 
   scope :draft, -> { where(published_at: nil)}
   scope :published, -> { where("published_at <= ?", Time.current) }
