@@ -1,0 +1,29 @@
+<%# app/views/likes/_like.html.erb %>
+<div id="<%= dom_id(likeable, :likes) %>">
+  <% if current_user && likeable.likes.exists?(user: current_user) %>
+    <% if likeable.is_a?(Comment) %>
+      <%= button_to 'Unlike', post_comment_like_path(likeable.post, likeable, likeable.likes.find_by(user: current_user)),
+                     method: :delete,
+                     data: { turbo_frame: "_top", turbo_action: "advance" },
+                     class: 'inline-flex items-center px-4 py-2 bg-red-500 text-white' %>
+    <% else %>
+      <%= button_to 'Unlike', post_like_path(likeable, likeable.likes.find_by(user: current_user)),
+                     method: :delete,
+                     data: { turbo_frame: "_top", turbo_action: "advance" },
+                     class: 'inline-flex items-center px-4 py-2 bg-red-500 text-white' %>
+    <% end %>
+  <% else %>
+    <% if likeable.is_a?(Comment) %>
+      <%= button_to 'Like', post_comment_likes_path(likeable.post, likeable),
+                     method: :post,
+                     data: { turbo_frame: "_top", turbo_action: "advance" },
+                     class: 'inline-flex items-center px-4 py-2 bg-blue-500 text-white' %>
+    <% else %>
+      <%= button_to 'Like', post_likes_path(likeable),
+                     method: :post,
+                     data: { turbo_frame: "_top", turbo_action: "advance" },
+                     class: 'inline-flex items-center px-4 py-2 bg-blue-500 text-white' %>
+    <% end %>
+  <% end %>
+  <span class="text-gray-600"><%= likeable.likes.count %> <%= 'Like'.pluralize(likeable.likes.count) %></span>
+</div>

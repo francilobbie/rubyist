@@ -26,6 +26,11 @@
         <span>This post is not published yet</span>
       </span>
     <% end %>
+      <div id="<%= dom_id(post) %>_likes">
+        <%= render 'likes/like', likeable: post %>
+      </div>
+
+
   </div>
 
 
