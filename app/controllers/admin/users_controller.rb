@@ -3,6 +3,16 @@ class Admin::UsersController < Admin::BaseController
   before_action :set_user, only: [:show, :edit, :update, :destroy, :suspend, :unsuspend]
 
   def index
+
+    @query = params[:query]
+
+    if @query.present?
+      @users = User.where("email ILIKE ? OR first_name ILIKE ? OR last_name ILIKE ? OR username ILIKE ? OR id::text ILIKE ?",
+                          "%#{@query}%", "%#{@query}%", "%#{@query}%", "%#{@query}%", "%#{@query}%")
+    else
+      @users = User.all
+    end
+
     # Basic users fetching, replace this with more complex logic if needed
     @users = User.all
     @admins = User.with_role(:admin) # Adjust as per your role management system
@@ -76,6 +86,17 @@ class Admin::UsersController < Admin::BaseController
     else
       render :new
     end
+  end
+
+  def search
+    query = params[:q]
+
+    @users = User.joins(:profile)
+                 .where("users.email ILIKE :query OR profiles.first_name ILIKE :query OR profiles.last_name ILIKE :query OR users.id::text ILIKE :query",
+                        query: "%#{query}%")
+                 .select("users.id, users.email, profiles.first_name, profiles.last_name")
+
+    render json: @users.as_json(only: [:id, :email], methods: [:first_name, :last_name])
   end
 
 

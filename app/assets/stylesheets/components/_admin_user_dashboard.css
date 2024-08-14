@@ -7,3 +7,68 @@
   -webkit-appearance: none;
   appearance: none;
 }
+
+/* General dropdown container */
+#search-results {
+  max-height: 300px; /* Limit the height */
+  overflow-y: auto; /* Scroll if overflow */
+  z-index: 50; /* Ensure it's above other elements */
+  border-radius: 0.5rem; /* Rounded corners */
+  border: 1px solid #ccc; /* Border around the dropdown */
+}
+
+/* List items within the dropdown */
+#search-results ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+#search-results li {
+  padding: 8px 16px;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+#search-results li:hover {
+  background-color: #f0f0f0;
+}
+
+/* Styling the links inside list items */
+#search-results a {
+  display: block;
+  color: #333;
+  text-decoration: none;
+  font-size: 14px;
+}
+
+#search-results a:hover {
+  text-decoration: none;
+  color: #007bff; /* Change color on hover */
+}
+
+#search-results .text-sm {
+  font-weight: bold;
+}
+
+#search-results .text-xs {
+  font-size: 12px;
+  color: #666;
+}
+
+#clear-search {
+  cursor: pointer;
+  background: none;
+  border: none;
+  font-size: 16px;
+  color: #555;
+  visibility: hidden; /* Hidden by default */
+  position: absolute;
+  right: 50px; /* Adjust this value based on the width of your search input */
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+#clear-search:hover {
+  color: #000;
+}

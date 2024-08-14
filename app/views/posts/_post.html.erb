@@ -1,6 +1,8 @@
 <%# app/views/posts/_post.html.erb %>
 <div>
   <h2 class="text-3xl font-bold mb-4"><%= post.title %></h2>
+    <%= render 'save_posts/save', post: post %>
+
 
   <div class="text-sm text-gray-500 flex items-center space-x-2">
     <% if post.published_at.present? %>

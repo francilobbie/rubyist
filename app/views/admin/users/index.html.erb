@@ -4,6 +4,29 @@
     <h1 class="text-4xl font-bold text-gray-800">Users Management</h1>
     <%= link_to 'Back to Dashboard', admin_root_path, class: "inline-block bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" %>
   </div>
+
+  <!-- Search Form -->
+  <div class="relative mb-6" data-controller="admin-sorting">
+    <%= form_with url: admin_users_path, method: :get, local: true, class: "flex" do %>
+      <%= text_field_tag :query, params[:query], placeholder: "Search users...", class: "w-full px-4 py-2 border rounded-l-lg focus:outline-none focus:ring-2 focus:ring-blue-600", data: { admin_sorting_target: "input", action: "keyup->admin-sorting#search" }, id: "search-input" %>
+
+      <!-- Clear Button -->
+      <button type="button" class="absolute inset-y-0 right-16 flex items-center pr-12" data-action="click->admin-sorting#clearSearch" data-admin-sorting-target="clear" id="clear-search">
+        &#10005; <!-- Unicode for X -->
+      </button>
+
+      <%= submit_tag "Search", class: "bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-r-lg" %>
+    <% end %>
+
+    <div id="search-results" class="absolute left-0 right-0 mt-1 bg-white shadow-lg rounded-lg hidden" data-admin-sorting-target="results">
+      <ul class="divide-y divide-gray-200">
+        <!-- This will be dynamically filled with search results -->
+      </ul>
+    </div>
+  </div>
+
+
+
   <!-- Statistics -->
   <div class="stats grid grid-cols-1 sm:grid-cols-4 gap-4 mb-10">
     <div class="stat bg-blue-100 p-4 rounded-lg shadow hover:shadow-md transition cursor-pointer">

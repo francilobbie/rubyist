@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2024_08_13_053557) do
+ActiveRecord::Schema[7.1].define(version: 2024_08_13_072310) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -133,6 +133,16 @@ ActiveRecord::Schema[7.1].define(version: 2024_08_13_053557) do
     t.index ["resource_type", "resource_id"], name: "index_roles_on_resource"
   end
 
+  create_table "save_posts", force: :cascade do |t|
+    t.bigint "user_id", null: false
+    t.bigint "post_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["post_id"], name: "index_save_posts_on_post_id"
+    t.index ["user_id", "post_id"], name: "index_save_posts_on_user_id_and_post_id", unique: true
+    t.index ["user_id"], name: "index_save_posts_on_user_id"
+  end
+
   create_table "taggings", force: :cascade do |t|
     t.bigint "post_id", null: false
     t.bigint "tag_id", null: false
@@ -180,6 +190,8 @@ ActiveRecord::Schema[7.1].define(version: 2024_08_13_053557) do
   add_foreign_key "posts", "users"
   add_foreign_key "profiles", "users"
   add_foreign_key "reports", "users"
+  add_foreign_key "save_posts", "posts"
+  add_foreign_key "save_posts", "users"
   add_foreign_key "taggings", "posts"
   add_foreign_key "taggings", "tags"
 end

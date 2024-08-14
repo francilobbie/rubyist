@@ -10,6 +10,8 @@ class User < ApplicationRecord
   has_many :reports
   has_many :likes, dependent: :destroy
 
+  has_many :save_posts, dependent: :destroy
+  has_many :saved_posts, through: :save_posts, source: :post
   has_one :profile, dependent: :destroy
   after_commit :create_profile, on: [:create]
 
