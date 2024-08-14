@@ -1,0 +1,15 @@
+<div class="max-w-4xl mx-auto mt-10 p-6 bg-white shadow-lg rounded-lg">
+  <h1 class="text-4xl font-bold mb-4">Saved Posts</h1>
+
+  <% if @saved_posts.any? %>
+    <ul class="space-y-4">
+      <% @saved_posts.each do |post| %>
+        <li>
+          <%= link_to post.title, post_path(post), class: 'text-blue-600 hover:underline' %>
+        </li>
+      <% end %>
+    </ul>
+  <% else %>
+    <p class="text-gray-600">You have not saved any posts yet.</p>
+  <% end %>
+</div>

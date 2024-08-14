@@ -9,6 +9,7 @@ Rails.application.routes.draw do
       resources :replies, controller: 'comments', only: [:create, :edit, :update, :destroy]
     end
     resources :likes, only: [:create, :destroy], defaults: { likeable: 'Post' }
+    resource :save_post, only: [:create, :destroy], as: :save, path: 'save'
   end
 
   patch '/posts/:id/unpublish', to: 'posts#unpublish', as: :unpublish_post
@@ -16,11 +17,12 @@ Rails.application.routes.draw do
   resources :users, only: [:show, :edit, :update] do
     member do
       get :posts  # This route allows users to manage their posts
+      get :saved_posts # This route allows users to view their saved posts
     end
+    resource :profile, only: [:show, :edit, :update]
   end
 
   delete "/tags/:id", to: "tags#destroy", as: :tag
-  # get "/page/map", to: "pages#map", as: :map
   resources :maps
 
   authenticated :user do
@@ -31,25 +33,25 @@ Rails.application.routes.draw do
     # put your admin routes here
     root to: "dashboard#index" # Example admin dashboard route
     resources :users do
+      collection do
+        get 'search'
+      end
       member do
         patch :suspend
         patch :unsuspend
         delete :destroy
       end
     end
-    resources :posts, only: [:index, :show, :new, :create, :edit, :update, :destroy]  end
+    resources :posts, only: [:index, :show, :new, :create, :edit, :update, :destroy]
+  end
+
   resources :reports, only: [:index, :show, :edit, :update, :destroy, :new, :create] do
     member do
       delete 'destroy_comment'
     end
   end
 
-
   get 'moderation', to: 'moderation#index'
 
-
-  # Reveal health status on /up that returns 200 if the app boots with no exceptions, otherwise 500.
-  # Can be used by load balancers and uptime monitors to verify that the app is live.
   get "up" => "rails/health#show", as: :rails_health_check
-
 end

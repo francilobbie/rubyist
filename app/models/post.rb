@@ -12,6 +12,8 @@ class Post < ApplicationRecord
   has_many :comments, dependent: :destroy
   has_many :likes, as: :likeable, dependent: :destroy
 
+  has_many :save_posts, dependent: :destroy
+  has_many :saved_by_users, through: :save_posts, source: :user
 
   scope :draft, -> { where(published_at: nil)}
   scope :published, -> { where("published_at <= ?", Time.current) }

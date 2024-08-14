@@ -1,49 +1,45 @@
-# frozen_string_literal: true
-
 class Ability
   include CanCan::Ability
 
   def initialize(user)
-    # Define abilities for the passed in user here. For example:
     user ||= User.new # guest user (not logged in)
 
-    if user.has_role? :admin
-      # Admins can do anything
+    if user.has_role?(:admin)
+      # Admins can manage all profiles and everything else
       can :manage, :all
-    end
-
-    if user.has_role? :moderator
-      # Moderators can read anything and manage posts and comments (create, read, update, delete)
-      # They can also manage reports (create, read, update, delete)
-      can :read, :all
+    elsif user.has_role?(:moderator)
+      # Moderators can manage profiles, except those of admins
+      can :manage, Profile do |profile|
+        !profile.user.has_role?(:admin)
+      end
       can :manage, [Post, Comment, Report]
-    end
-
-    if user.has_role? :writer
-      # Writers can read anything
-      # They can create posts and comments
-      # They can update and delete their own posts and comments
       can :read, :all
-      can :create, [Post, Comment]
-      can [:update, :destroy], [Post, Comment], user_id: user.id
+    else
+      # Writers and other users can manage their own profiles only
+      can [:read, :update], Profile, user_id: user.id
+    end
+    can :view_saved_posts, User, id: user.id
+
+    # Ensure moderators cannot access admin profiles
+    if user.has_role?(:moderator)
+      cannot :manage, Profile do |profile|
+        profile.user.has_role?(:admin)
+      end
     end
 
-    # All users (including guests) can read all content
-    can :read, :all
+    # All users (including guests) can read public content
+    can :read, Post, published: true
 
-    # Registered users (including writers, and possibly others) can report Posts, Comments, and Users
-    # The ability to report is restricted based on not being the owner of the content
+    # Registered users can report posts, comments, and users, but not their own content
     if user.persisted?
       can :report, [Post, Comment, User] do |resource|
         resource.user_id != user.id
       end
     end
 
-    # Specific abilities for updating and destroying one's own comments,
-    # useful for all registered users but defined outside the guest user block
+    # All registered users can update or destroy their own comments
     if user.persisted?
       can [:update, :destroy], Comment, user_id: user.id
     end
-
   end
 end

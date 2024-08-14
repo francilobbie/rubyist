@@ -1,6 +1,6 @@
 class UsersController < ApplicationController
   before_action :authenticate_user!, only: [:show, :posts]
-  before_action :set_user, only: [:show, :posts]
+  before_action :set_user, only: [:show, :edit, :update, :posts, :saved_posts]
 
   def show
     # You can add any additional logic for the user profile here
@@ -18,6 +18,7 @@ class UsersController < ApplicationController
   end
 
   def posts
+    authorize! :read, @user
     @draft_posts = @user.posts.draft.order(created_at: :desc)
     @published_posts = @user.posts.published.order(created_at: :desc)
     @scheduled_posts = @user.posts.scheduled.order(created_at: :desc)
@@ -33,6 +34,12 @@ class UsersController < ApplicationController
     else
       @posts = @all_posts
     end
+  end
+
+
+  def saved_posts
+    authorize! :view_saved_posts, @user
+    @saved_posts = @user.save_posts.includes(:post).map(&:post)
   end
 
   private

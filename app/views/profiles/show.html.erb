@@ -1,0 +1,43 @@
+<div class="max-w-4xl mx-auto mt-10 p-6 bg-white shadow-lg rounded-lg">
+  <div class="flex items-center space-x-4 mb-8">
+    <div class="flex-shrink-0">
+      <div class="w-20 h-20 rounded-full bg-gray-300 flex items-center justify-center text-gray-600 text-2xl">
+        <%= @user.first_name[0] %><%= @user.last_name[0] %>
+      </div>
+    </div>
+    <div>
+      <h1 class="text-4xl font-bold text-gray-800">
+        <%= @user.first_name %> <%= @user.last_name %>
+      </h1>
+      <p class="text-gray-600"><%= @profile.bio.presence || "No bio provided" %></p>
+    </div>
+  </div>
+
+  <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+    <div>
+      <h2 class="text-lg font-semibold text-gray-700">First Name</h2>
+      <p class="text-gray-800"><%= @profile.first_name %></p>
+    </div>
+    <div>
+      <h2 class="text-lg font-semibold text-gray-700">Last Name</h2>
+      <p class="text-gray-800"><%= @profile.last_name %></p>
+    </div>
+    <div class="col-span-2">
+      <h2 class="text-lg font-semibold text-gray-700">User ID</h2>
+      <div class="flex items-center space-x-2 bg-gray-100 p-4 rounded-lg">
+        <svg class="w-6 h-6 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118.6 14H15v3zm-6 0v-3H4.4a2.032 2.032 0 01-1.995-1.595L2 12V9a2 2 0 011.176-1.822l6.82-2.73a2 2 0 011.615 0l6.82 2.73A2 2 0 0120 9v3l-.405 1.605A2.032 2.032 0 0118.6 14H15v3h5l-1.405-1.405A2.032 2.032 0 0118.6 14H15v3H9zm3-12v2m0 4v2m0 4v2m0-12v2m0 4v2m0 4v2"></path></svg>
+        <p class="text-gray-800"><%= @user.id %></p>
+      </div>
+    </div>
+  </div>
+
+  <div class="mt-6 flex space-x-4">
+    <% if current_user == @user || current_user.has_role?(:admin) %>
+      <%= link_to 'Edit Profile', edit_user_profile_path(@user), class: 'inline-block bg-blue-500 hover:bg-blue-600 text-white px-6 py-2 rounded-lg shadow' %>
+    <% end %>
+    <%= link_to 'Saved Posts', saved_posts_user_path(@user), class: 'inline-block bg-yellow-500 hover:bg-yellow-600 text-white px-6 py-2 rounded-lg shadow' %>
+    <% if current_user == @user && (current_user.has_role?(:moderator) || current_user.has_role?(:admin)) %>
+      <%= link_to 'My Posts', posts_user_path(@user), class: 'inline-block bg-green-500 hover:bg-green-600 text-white px-6 py-2 rounded-lg shadow' %>
+    <% end %>
+  </div>
+</div>
