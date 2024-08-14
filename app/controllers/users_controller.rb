@@ -20,7 +20,7 @@ class UsersController < ApplicationController
   def posts
     authorize! :read, @user
     @draft_posts = @user.posts.draft.order(created_at: :desc)
-    @published_posts = @user.posts.published.order(created_at: :desc)
+    @published_posts = @user.posts.published_post.order(created_at: :desc)
     @scheduled_posts = @user.posts.scheduled.order(created_at: :desc)
     @all_posts = @user.posts.order(created_at: :desc)
 
