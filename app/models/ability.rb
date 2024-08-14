@@ -28,8 +28,9 @@ class Ability
     end
 
     # All users (including guests) can read public content
-    can :read, Post, published: true
-
+    can :read, Post do |post|
+      post.published_post?
+    end
     # Registered users can report posts, comments, and users, but not their own content
     if user.persisted?
       can :report, [Post, Comment, User] do |resource|

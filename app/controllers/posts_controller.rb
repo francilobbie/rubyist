@@ -5,7 +5,7 @@ class PostsController < ApplicationController
   before_action :authenticate_user!, only: [:new, :create, :edit, :update, :destroy]
 
   def index
-    base_query = params[:query].present? ? Post.published.global_search(params[:query]) : Post.published
+    base_query = params[:query].present? ? Post.published_post.global_search(params[:query]) : Post.published_post
     all_posts = base_query.includes(:user).to_a
 
     @posts = all_posts.select do |post|
@@ -30,6 +30,7 @@ class PostsController < ApplicationController
   end
 
   def show
+    logger.debug "Post attributes: #{@post.attributes.inspect}"
 
     @can_edit_post = can?(:update, @post)
     @can_destroy_post = can?(:destroy, @post)
@@ -60,11 +61,12 @@ class PostsController < ApplicationController
   def update
     if @post.update(post_params)
       @post.broadcast_update_with_permissions(current_user)
-      redirect_to root_path
+      redirect_to post_path(@post), notice: 'Post was successfully updated.'
     else
-      render :edit
+      render :edit, status: :unprocessable_entity
     end
   end
+
 
   def destroy
     @post.destroy
@@ -72,28 +74,37 @@ class PostsController < ApplicationController
   end
 
   def archive
-    @post = Post.find(params[:id])
     if @post.update(archived: true)
       redirect_to root_path, notice: 'Post was successfully archived.'
     else
-      # Error handling...
+      redirect_to root_path, alert: 'Failed to archive the post.'
     end
   end
 
   def unpublish
-    @post = Post.find(params[:id])
-    @post.update(published_at: nil)
-    redirect_to edit_post_path(@post), notice: 'Post has been unpublished and can be edited again.'
+    if @post.update(published_at: nil)
+      redirect_to edit_post_path(@post), notice: 'Post has been unpublished and can be edited again.'
+    else
+      redirect_to edit_post_path(@post), alert: 'Failed to unpublish the post.'
+    end
   end
+
 
 
   private
 
   def set_post
-      @post = user_signed_in? ? Post.find(params[:id]) : Post.published.find(params[:id])
+    @post = if user_signed_in?
+              Post.find(params[:id])
+            else
+              Post.published_post.find_by(id: params[:id])
+            end
+
+    redirect_to root_path, alert: 'Post not found or not published.' unless @post
   end
 
+
   def post_params
-    params.require(:post).permit(:title, :body, :tag_list, :user_id, :published_at)
+    params.require(:post).permit(:title, :body, :tag_list, :published_at)
   end
 end

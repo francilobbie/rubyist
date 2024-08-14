@@ -6,7 +6,7 @@ module Admin
     before_action :authorize_admin!
 
     def index
-      @published_posts = Post.published.order(published_at: :desc)
+      @published_posts = Post.published_post.order(published_at: :desc)
       @draft_posts = Post.draft.order(created_at: :desc)
       @scheduled_posts = Post.scheduled.order(published_at: :asc)
     end

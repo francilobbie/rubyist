@@ -16,7 +16,7 @@ class Post < ApplicationRecord
   has_many :saved_by_users, through: :save_posts, source: :user
 
   scope :draft, -> { where(published_at: nil)}
-  scope :published, -> { where("published_at <= ?", Time.current) }
+  scope :published_post, -> { where("published_at <= ?", Time.current) }
   scope :scheduled, -> { where("published_at > ?", Time.current) }
 
   include PgSearch::Model
@@ -33,7 +33,7 @@ class Post < ApplicationRecord
       published_at.nil?
     end
 
-    def published?
+    def published_post?
       published_at? && published_at <= Time.current
     end
 
