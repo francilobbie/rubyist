@@ -1,12 +1,16 @@
-// app/javascript/controllers/post_comments_controller.js
 import { Controller } from "@hotwired/stimulus"
 
 // Connects to data-controller="post-comments"
 export default class extends Controller {
-  static targets = ["editForm", "displayContent", "replyForm", "commentContainer"]
+  static targets = ["editForm", "displayContent", "replyForm", "commentContainer", "miniMenu"]
 
   connect() {
     this.checkForAuthor();
+    document.addEventListener("click", this.closeMenuOnClickOutside.bind(this));
+  }
+
+  disconnect() {
+    document.removeEventListener("click", this.closeMenuOnClickOutside.bind(this));
   }
 
   checkForAuthor() {
@@ -55,11 +59,19 @@ export default class extends Controller {
   toggleMenu(event) {
     event.preventDefault();
     const commentId = event.currentTarget.dataset.commentId;
-    const menu = this.element.querySelector(`[data-post-comments-target="miniMenu"][data-comment-id="${commentId}"]`);
+    const menu = this.miniMenuTargets.find(el => el.dataset.commentId === commentId);
 
     if (menu) {
       menu.classList.toggle('hidden');
     }
+  }
+
+  closeMenuOnClickOutside(event) {
+    this.miniMenuTargets.forEach(menu => {
+      if (!menu.classList.contains('hidden') && !menu.contains(event.target) && !event.target.closest(`[data-comment-id="${menu.dataset.commentId}"]`)) {
+        menu.classList.add('hidden');
+      }
+    });
   }
 
   cancelEdit(event) {

@@ -36,14 +36,14 @@
               <div class="mt-4 space-y-2">
                 <div class="flex items-center space-x-2">
                   <%= form.label :duration, 'Suspend for (days):', class: 'block' %>
-                  <%= form.number_field :duration, in: 1..365, step: 1, class: 'block w-20' %>
-                  <%= form.submit 'Suspend Temporarily', class: 'bg-yellow-500 hover:bg-yellow-700 text-white font-bold py-2 px-4 rounded' %>
+                  <%= form.number_field :duration, in: 1..365, step: 1, class: 'block w-20', value: 1 %>
+                  <%= form.submit 'Suspend Temporarily', class: 'bg-yellow-500 hover:bg-yellow-700 text-white font-bold py-2 px-4 rounded cursor-pointer' %>
                 </div>
-                <%= form.submit 'Suspend Permanently', class: 'bg-orange-500 hover:bg-orange-700 text-white font-bold py-2 px-4 rounded', name: 'permanent', value: true %>
+                <%= form.submit 'Suspend Permanently', class: 'bg-orange-500 hover:bg-orange-700 text-white font-bold py-2 px-4 rounded cursor-pointer', name: 'permanent', value: "Suspendre indéfiniment" %>
               </div>
             <% end %>
           <% else %>
-            <%= link_to 'Lift Suspension', unsuspend_admin_user_path(@user), data: { turbo_method: :patch, turbo_confirm: "Are you sure?" }, class: "bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded mt-2" %>
+            <%= link_to 'Lift Suspension', unsuspend_admin_user_path(@user), data: { turbo_method: :patch, turbo_confirm: "Are you sure?" }, class: "bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded mt-2 cursor-pointer" %>
           <% end %>
         </div>
 

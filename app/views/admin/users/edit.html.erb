@@ -1,19 +1,61 @@
+<%# app/views/admin/users/edit.html.erb %>
 <div data-controller="dropdown" class="max-w-4xl mx-auto mt-8">
   <h1 class="text-4xl font-bold mb-4">Edit User</h1>
-  <p class="mb-6 text-gray-600">Here you can update the user's role.</p>
+  <p class="mb-6 text-gray-600">Here you can update the user's information, role, and password.</p>
   <%= form_for [:admin, @user], html: { class: 'bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4' } do |f| %>
     <div class="mb-6">
         <%= f.label :email, 'Email', class: 'block text-gray-700 text-sm font-bold mb-2' %>
         <%= f.email_field :email, class: 'shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline' %>
     </div>
-    <div class="mb-6">
-        <%= f.label :first_name, 'First Name', class: 'block text-gray-700 text-sm font-bold mb-2' %>
-        <%= f.text_field :first_name, class: 'shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline' %>
-    </div>
-    <div class="mb-6">
-        <%= f.label :last_name, 'Last Name', class: 'block text-gray-700 text-sm font-bold mb-2' %>
-        <%= f.text_field :last_name, class: 'shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline' %>
-    </div>
+
+    <!-- Profile fields -->
+    <fieldset>
+      <legend class="text-xl font-semibold mb-2">Profile Information</legend>
+      <%= f.fields_for :profile do |profile_fields| %>
+        <div class="mb-6">
+          <%= profile_fields.label :first_name, 'First Name', class: 'block text-gray-700 text-sm font-bold mb-2' %>
+          <%= profile_fields.text_field :first_name, class: 'shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline' %>
+        </div>
+        <div class="mb-6">
+          <%= profile_fields.label :last_name, 'Last Name', class: 'block text-gray-700 text-sm font-bold mb-2' %>
+          <%= profile_fields.text_field :last_name, class: 'shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline' %>
+        </div>
+        <div class="mb-6">
+          <%= profile_fields.label :bio, 'Bio', class: 'block text-gray-700 text-sm font-bold mb-2' %>
+          <%= profile_fields.text_area :bio, class: 'shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline' %>
+        </div>
+        <div class="mb-6">
+          <%= profile_fields.label :location, 'Location', class: 'block text-gray-700 text-sm font-bold mb-2' %>
+          <%= profile_fields.text_field :location, class: 'shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline' %>
+        </div>
+      <% end %>
+    </fieldset>
+
+    <!-- Password fields -->
+    <fieldset>
+      <legend class="text-xl font-semibold mb-2">Password</legend>
+      <div class="relative mb-4" data-controller="password-toggle">
+        <%= f.label :password, 'Password', class: 'block text-gray-700 text-sm font-bold mb-2' %>
+        <%= f.password_field :password, autocomplete: "new-password", class: 'shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline pr-10', data: { "password-toggle-target": "password" } %>
+        <span class="password-toggle absolute inset-y-0 right-0 pr-3 flex items-center cursor-pointer" data-action="click->password-toggle#toggle">
+          <svg class="sc-llJcti bnyQVC MuiSvgIcon-root MuiSvgIcon-fontSizeMedium" focusable="false" aria-hidden="true" viewBox="0 0 24 24" width="24" height="24" fill="#000000" data-testid="VisibilityIcon">
+            <path d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5M12 17c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5m0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3"></path>
+          </svg>
+        </span>
+      </div>
+
+      <div class="relative mb-4" data-controller="password-toggle">
+        <%= f.label :password_confirmation, 'Confirm Password', class: 'block text-gray-700 text-sm font-bold mb-2' %>
+        <%= f.password_field :password_confirmation, autocomplete: "new-password", class: 'shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline pr-10', data: { "password-toggle-target": "password" } %>
+        <span class="password-toggle absolute inset-y-0 right-0 pr-3 flex items-center cursor-pointer" data-action="click->password-toggle#toggle">
+          <svg class="sc-llJcti bnyQVC MuiSvgIcon-root MuiSvgIcon-fontSizeMedium" focusable="false" aria-hidden="true" viewBox="0 0 24 24" width="24" height="24" fill="#000000" data-testid="VisibilityIcon">
+            <path d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5M12 17c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5m0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3"></path>
+          </svg>
+        </span>
+      </div>
+    </fieldset>
+
+    <!-- Role selection -->
     <fieldset class="mb-4">
       <div class="mb-4 relative">
         <!-- Display current role -->
@@ -36,6 +78,7 @@
         <%= hidden_field_tag 'user[id]', @user.id %>
       </div>
     </fieldset>
+
     <%= f.submit 'Update User', class: 'bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded cursor-pointer' %>
     <%= link_to 'Cancel and go back to users', admin_users_path, class: 'ml-4 bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded cursor-pointer' %>
   <% end %>
