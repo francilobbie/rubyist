@@ -1,4 +1,5 @@
 @import "menu";
 @import "flash";
 @import "search_post_modal";
-@import "admin_user_dashboard"
+@import "admin_user_dashboard";
+@import "password_toggle";

@@ -60,6 +60,15 @@
     <p class="mt-2 text-gray-700"><%= comment.content %></p>
   </div>
 
+  <!-- Edit Form -->
+  <div class="hidden" data-post-comments-target="editForm" data-comment-id="<%= dom_id(comment) %>">
+    <%= form_with(model: [comment.post, comment], local: true) do |form| %>
+      <%= form.text_area :content, class: "w-full border rounded p-2" %>
+      <%= form.submit "Save", class: "text-white bg-blue-500 hover:bg-blue-600 font-medium py-2 px-4 rounded-full transition-colors duration-150" %>
+      <%= link_to "Cancel", "#", class: "text-gray-500 hover:text-gray-600", data: { action: "click->post-comments#cancelEdit", comment_id: dom_id(comment) } %>
+    <% end %>
+  </div>
+
   <% if comment.parent_id.nil? %>
     <%= link_to "Reply", "#", class: "text-xs text-blue-600 hover:underline",
         data: { action: "post-comments#startReply", comment_id: dom_id(comment) } %>
@@ -74,14 +83,6 @@
 
 
 
-  <!-- Edit Form -->
-  <div class="hidden" data-post-comments-target="editForm" data-comment-id="<%= dom_id(comment) %>">
-    <%= form_with(model: [comment.post, comment], local: true) do |form| %>
-      <%= form.text_area :content, class: "w-full border rounded p-2" %>
-      <%= form.submit "Save", class: "text-white bg-blue-500 hover:bg-blue-600 font-medium py-2 px-4 rounded-full transition-colors duration-150" %>
-      <%= link_to "Cancel", "#", class: "text-gray-500 hover:text-gray-600", data: { action: "click->post-comments#cancelEdit", comment_id: dom_id(comment) } %>
-    <% end %>
-  </div>
 
   <!-- Reply Form -->
   <div class="hidden" data-post-comments-target="replyForm" data-comment-id="<%= dom_id(comment) %>">

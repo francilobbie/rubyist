@@ -22,6 +22,7 @@ class Admin::UsersController < Admin::BaseController
     @total_admins = User.joins(:roles).where(roles: { name: 'admin' }).count
     @total_writers = User.joins(:roles).where(roles: { name: 'writer' }).count
     @total_moderators = User.joins(:roles).where(roles: { name: 'moderator' }).count
+    @total_suspended_users = User.where(suspended: true).or(User.where('suspended_until > ?', Time.current)).count
 
     @suspended_users = User.where(suspended: true).or(User.where('suspended_until > ?', Time.current))
 
@@ -55,6 +56,7 @@ class Admin::UsersController < Admin::BaseController
 
   def edit
     @user = User.find(params[:id])
+    @user.build_profile unless @user.profile
   end
 
   def update
@@ -77,6 +79,7 @@ class Admin::UsersController < Admin::BaseController
 
   def new
     @user = User.new
+    @user.build_profile
   end
 
   def create
@@ -132,7 +135,14 @@ class Admin::UsersController < Admin::BaseController
   end
 
   def user_params
-    params.require(:user).permit(:email, :id, :first_name, :last_name, :password, :password_confirmation, role_ids: [])
+    params.require(:user).permit(
+      :email,
+      :id,
+      :password,
+      :password_confirmation,
+      role_ids: [],
+      profile_attributes: %i[first_name last_name bio location]
+    )
   end
 
   def update_roles_if_provided

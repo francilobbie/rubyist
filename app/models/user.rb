@@ -14,6 +14,7 @@ class User < ApplicationRecord
   has_many :saved_posts, through: :save_posts, source: :post
   has_one :profile, dependent: :destroy
   after_commit :create_profile, on: [:create]
+  accepts_nested_attributes_for :profile
 
   delegate :first_name, :last_name, :bio, :location, :avatar, to: :profile, allow_nil: true
 

@@ -2,7 +2,7 @@
 <div class="max-w-7xl mx-auto py-8" data-controller="admin-sorting">
   <div class="flex justify-between items-center mb-6">
     <h1 class="text-4xl font-bold text-gray-800">Users Management</h1>
-    <%= link_to 'Back to Dashboard', admin_root_path, class: "inline-block bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" %>
+    <%= link_to 'Back to Admin Dashboard', admin_root_path, class: "inline-block bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" %>
   </div>
 
   <!-- Search Form -->
@@ -25,31 +25,10 @@
     </div>
   </div>
 
-
-
-  <!-- Statistics -->
-  <div class="stats grid grid-cols-1 sm:grid-cols-4 gap-4 mb-10">
-    <div class="stat bg-blue-100 p-4 rounded-lg shadow hover:shadow-md transition cursor-pointer">
-      <%= link_to admin_users_path, class: 'text-xl block' do %>
-        Total Users: <%= @total_users %>
-      <% end %>
-    </div>
-    <div class="stat bg-green-100 p-4 rounded-lg shadow hover:shadow-md transition">
-      Total Admins: <%= @total_admins %>
-    </div>
-    <div class="stat bg-red-100 p-4 rounded-lg shadow hover:shadow-md transition">
-      Total Writers: <%= @total_writers %>
-    </div>
-    <div class="stat bg-yellow-100 p-4 rounded-lg shadow hover:shadow-md transition">
-      Total Moderators: <%= @total_moderators %>
-    </div>
-  </div>
-
-
   <!-- User Table -->
   <div class="mt-10 overflow-x-auto bg-white p-6 rounded-lg shadow">
-    <h2 class="text-3xl font-bold text-gray-800 mb-4">Total Users</h2>
-    <div class="flex justify-between">
+    <h2 class="text-3xl font-bold text-gray-800 mb-4">Total Users (<%= @total_users %>)</h2>
+    <div class="flex justify-between items-center py-2">
       <div>
         <a href="#" data-action="admin-sorting#sort" data-sorting-key="user_date_asc" class="text-sm bg-gray-500 hover:bg-gray-700 text-white py-2 px-4 rounded mr-2">Date Asc</a>
         <a href="#" data-action="admin-sorting#sort" data-sorting-key="user_date_desc" class="text-sm bg-gray-500 hover:bg-gray-700 text-white py-2 px-4 rounded mr-2">Date Desc</a>
@@ -64,9 +43,9 @@
           <tr>
             <th class="py-3 px-6 text-left">ID</th>
             <th class="py-3 px-6 text-left">Email</th>
-            <th class="py-3 px-6 text-center">Account Created On</th>
-            <th class="py-3 px-6 text-center">Posts</th>
+            <th class="py-3 px-6 text-center">Name</th>
             <th class="py-3 px-6 text-center">Comments</th>
+            <th class="py-3 px-6 text-center">Account Created On</th>
             <th class="py-3 px-6 text-center">Suspended</th>
             <th class="py-3 px-6 text-center">Actions</th>
           </tr>
@@ -81,13 +60,13 @@
                 <%= link_to user.email, [:admin, user], class: "text-blue-600 hover:underline" %>
               </td>
               <td class="py-3 px-6 text-center">
-                <%= user.created_at.strftime("%B %d, %Y %H:%M") %>
-              </td>
-              <td class="py-3 px-6 text-center">
-                <%= user.posts.count %>
+                <%= user.profile.last_name.upcase %> <%= user.profile.first_name %>
               </td>
               <td class="py-3 px-6 text-center">
                 <%= user.comments.count %>
+              </td>
+              <td class="py-3 px-6 text-center">
+                <%= user.created_at.strftime("%B %d, %Y %H:%M") %>
               </td>
               <td class="py-3 px-6 text-center">
                 <% if user.suspended? %>
@@ -116,8 +95,8 @@
 
   <!-- Admins Table -->
   <div class="mt-10 overflow-x-auto bg-white p-6 rounded-lg shadow">
-    <h2 class="text-3xl font-bold text-gray-800 mb-4">Admins</h2>
-    <div>
+    <h2 class="text-3xl font-bold text-gray-800 mb-4">Admins (<%= @total_admins %>)</h2>
+    <div class="py-4">
       <a href="#" data-action="admin-sorting#sort" data-table-type="admins" data-sorting-key="admin_date_asc" class="text-sm bg-gray-500 hover:bg-gray-700 text-white py-2 px-4 rounded mr-2">Date Asc</a>
       <a href="#" data-action="admin-sorting#sort" data-table-type="admins" data-sorting-key="admin_date_desc" class="text-sm bg-gray-500 hover:bg-gray-700 text-white py-2 px-4 rounded mr-2">Date Desc</a>
       <a href="#" data-action="admin-sorting#sort" data-table-type="admins" data-sorting-key="admin_email_asc" class="text-sm bg-gray-500 hover:bg-gray-700 text-white py-2 px-4 rounded mr-2">Email Asc</a>
@@ -129,6 +108,7 @@
           <tr>
             <th class="py-3 px-6 text-left">ID</th>
             <th class="py-3 px-6 text-left">Email</th>
+            <th class="py-3 px-6 text-center">Name</th>
             <th class="py-3 px-6 text-center">Account Created On</th>
             <th class="py-3 px-6 text-center">Actions</th>
           </tr>
@@ -141,6 +121,9 @@
               </td>
               <td class="py-3 px-6 text-left whitespace-nowrap">
                 <%= link_to admin.email, [:admin, admin], class: "text-blue-600 hover:underline" %>
+              </td>
+              <td class="py-3 px-6 text-center">
+                <%= admin.profile.last_name.upcase %> <%= admin.profile.first_name %>
               </td>
               <td class="py-3 px-6 text-center">
                 <%= admin.created_at.strftime("%B %d, %Y %H:%M") %>
@@ -160,8 +143,8 @@
 
   <!-- Moderator Table -->
   <div class="mt-10 overflow-x-auto bg-white p-6 rounded-lg shadow">
-    <h2 class="text-3xl font-bold text-gray-800 mb-4">Moderator</h2>
-    <div>
+    <h2 class="text-3xl font-bold text-gray-800 mb-4">Moderator (<%= @total_moderators %>)</h2>
+    <div class="py-4">
       <a href="#" data-action="admin-sorting#sort" data-table-type="moderators" data-sorting-key="moderator_date_asc" class="text-sm bg-gray-500 hover:bg-gray-700 text-white py-2 px-4 rounded mr-2">Date Asc</a>
       <a href="#" data-action="admin-sorting#sort" data-table-type="moderators" data-sorting-key="moderator_date_desc" class="text-sm bg-gray-500 hover:bg-gray-700 text-white py-2 px-4 rounded mr-2">Date Desc</a>
       <a href="#" data-action="admin-sorting#sort" data-table-type="moderators" data-sorting-key="moderator_email_asc" class="text-sm bg-gray-500 hover:bg-gray-700 text-white py-2 px-4 rounded mr-2">Email Asc</a>
@@ -173,6 +156,7 @@
           <tr>
             <th class="py-3 px-6 text-left">ID</th>
             <th class="py-3 px-6 text-left">Email</th>
+            <th class="py-3 px-6 text-center">Name</th>
             <th class="py-3 px-6 text-center">Account Created On</th>
             <th class="py-3 px-6 text-center">Actions</th>
           </tr>
@@ -185,6 +169,9 @@
               </td>
               <td class="py-3 px-6 text-left whitespace-nowrap">
                 <%= link_to moderator.email, [:admin, moderator], class: "text-blue-600 hover:underline" %>
+              </td>
+              <td class="py-3 px-6 text-center">
+                <%= moderator.profile.last_name.upcase %> <%= moderator.profile.first_name %>
               </td>
               <td class="py-3 px-6 text-center">
                 <%= moderator.created_at.strftime("%B %d, %Y %H:%M") %>
@@ -204,8 +191,8 @@
 
   <!-- Writers Table -->
   <div class="mt-10 overflow-x-auto bg-white p-6 rounded-lg shadow">
-    <h2 class="text-3xl font-bold text-gray-800 mb-4">Writers</h2>
-    <div>
+    <h2 class="text-3xl font-bold text-gray-800 mb-4">Writers (<%= @total_writers %>)</h2>
+    <div class="py-4">
       <a href="#" data-action="admin-sorting#sort" data-table-type="writers" data-sorting-key="writer_date_asc" class="text-sm bg-gray-500 hover:bg-gray-700 text-white py-2 px-4 rounded mr-2">Date Asc</a>
       <a href="#" data-action="admin-sorting#sort" data-table-type="writers" data-sorting-key="writer_date_desc" class="text-sm bg-gray-500 hover:bg-gray-700 text-white py-2 px-4 rounded mr-2">Date Desc</a>
       <a href="#" data-action="admin-sorting#sort" data-table-type="writers" data-sorting-key="writer_email_asc" class="text-sm bg-gray-500 hover:bg-gray-700 text-white py-2 px-4 rounded mr-2">Email Asc</a>
@@ -217,6 +204,7 @@
           <tr>
             <th class="py-3 px-6 text-left">ID</th>
             <th class="py-3 px-6 text-left">Email</th>
+            <th class="py-3 px-6 text-center">Name</th>
             <th class="py-3 px-6 text-center">Account Created On</th>
             <th class="py-3 px-6 text-center">Actions</th>
           </tr>
@@ -229,6 +217,9 @@
               </td>
               <td class="py-3 px-6 text-left whitespace-nowrap">
                 <%= link_to writer.email, [:admin, writer], class: "text-blue-600 hover:underline" %>
+              </td>
+              <td class="py-3 px-6 text-center">
+                <%= writer.profile.last_name.upcase %> <%= writer.profile.first_name %>
               </td>
               <td class="py-3 px-6 text-center">
                 <%= writer.created_at.strftime("%B %d, %Y %H:%M") %>
@@ -248,8 +239,8 @@
 
   <!-- Suspended Users Table -->
   <div class="mt-10 overflow-x-auto bg-white p-6 rounded-lg shadow">
-      <h2 class="text-3xl font-bold text-gray-800 mb-4"><span><%= @suspended_users.count %></span> Suspended Users</h2>
-      <div>
+      <h2 class="text-3xl font-bold text-gray-800 mb-4"> Suspended Users (<span><%= @suspended_users.count %></span>)</h2>
+      <div class="py-4">
         <a href="#" data-action="admin-sorting#sort" data-table-type="suspended" data-sorting-key="suspended_date_asc" class="text-sm bg-gray-500 hover:bg-gray-700 text-white py-2 px-4 rounded mr-2">Date Asc</a>
         <a href="#" data-action="admin-sorting#sort" data-table-type="suspended" data-sorting-key="suspended_date_desc" class="text-sm bg-gray-500 hover:bg-gray-700 text-white py-2 px-4 rounded mr-2">Date Desc</a>
         <a href="#" data-action="admin-sorting#sort" data-table-type="suspended" data-sorting-key="suspended_email_asc" class="text-sm bg-gray-500 hover:bg-gray-700 text-white py-2 px-4 rounded mr-2">Email Asc</a>
@@ -261,6 +252,7 @@
                   <tr>
                       <th class="py-3 px-6 text-left">ID</th>
                       <th class="py-3 px-6 text-left">Email</th>
+                      <th class="py-3 px-6 text-center">Name</th>
                       <th class="py-3 px-6 text-center">Account Created On</th>
                       <th class="py-3 px-6 text-center">Suspension End Date</th>
                       <th class="py-3 px-6 text-center">Actions</th>
@@ -271,6 +263,7 @@
                       <tr class="border-b border-gray-200 hover:bg-gray-100">
                           <td class="py-3 px-6 text-left whitespace-nowrap"><%= user.id %></td>
                           <td class="py-3 px-6 text-left whitespace-nowrap"><%= link_to user.email, [:admin, user], class: "text-blue-600 hover:underline" %></td>
+                          <td class="py-3 px-6 text-center"><%= user.profile.last_name.upcase %> <%= user.profile.first_name %></td>
                           <td class="py-3 px-6 text-center"><%= user.created_at.strftime("%B %d, %Y %H:%M") %></td>
                           <td class="py-3 px-6 text-center">
                             <% if user.suspended_until %>
