@@ -33,10 +33,12 @@ class Ability
     end
     # Registered users can report posts, comments, and users, but not their own content
     if user.persisted?
+      can :create, Report
       can :report, [Post, Comment, User] do |resource|
         resource.user_id != user.id
       end
     end
+
 
     # All registered users can update or destroy their own comments
     if user.persisted?
