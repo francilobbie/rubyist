@@ -1,39 +1,50 @@
-<%= form_with(model: @post, local: true, class: "max-w-[62rem] mx-auto bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4", data: { controller: "post-form-cancel-button" }) do |f| %>
+<%= form_with(model: @post, local: true, class: "max-w-4xl mx-auto bg-white shadow-lg rounded-lg p-8 space-y-6", data: { controller: "post-form" }) do |f| %>
   <!-- Title Field -->
-  <div class="mb-4">
-    <%= f.label :title, class: "block text-gray-700 text-sm font-bold mb-2" %>
-    <%= f.text_field :title, class: "shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" %>
+  <div class="space-y-1">
+    <%= f.label :title, "Title", class: "block text-lg font-semibold text-gray-700" %>
+    <%= f.text_field :title, placeholder: "Enter your post title", class: "shadow-sm border rounded-lg w-full py-3 px-4 text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent" %>
   </div>
 
   <!-- Body Field -->
-  <div class="mb-4">
-    <%= f.label :body, class: "block text-gray-700 text-sm font-bold mb-2" %>
-    <%= f.rich_text_area :body, class: "form-control shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" %>
+  <div class="space-y-1">
+    <%= f.label :body, "Body", class: "block text-lg font-semibold text-gray-700" %>
+    <%= f.rich_text_area :body, class: "form-control shadow-sm border rounded-lg w-full py-3 px-4 text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent", placeholder: "Write your content here..." %>
   </div>
 
   <!-- Tags Field -->
-  <div class="mb-6">
-    <%= f.label :tag_list, "Tags (separated by commas)", class: "block text-gray-700 text-sm font-bold mb-2" %>
-    <%= f.text_field :tag_list, class: "shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline", placeholder: "tag1, tag2, tag3" %>
+  <div class="space-y-1">
+    <%= f.label :tag_list, "Tags (separated by commas)", class: "block text-lg font-semibold text-gray-700" %>
+    <%= f.text_field :tag_list, placeholder: "tag1, tag2, tag3", class: "shadow-sm border rounded-lg w-full py-3 px-4 text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent" %>
   </div>
 
-  <!-- Published At Field -->
-  <div class="mb-4">
-    <%= f.label :published_at, class: "block text-gray-700 text-sm font-bold mb-2" %>
+  <!-- Publish Options -->
+  <div class="space-y-4">
+    <%= f.label :published_at, "Publish Settings", class: "block text-lg font-semibold text-gray-700" %>
 
-    <% if @post.draft? %>
-      <%= f.datetime_select :published_at, include_blank: true, class: "shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" %>
-    <% else %>
-      <p class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
-        <%= @post.published_at.strftime('%b %d, %Y %H:%M %p') %>
-      </p>
-      <p class="text-sm text-gray-500">This post has already been published you cannot edit this part.</p>
-    <% end %>
+    <div class="flex space-x-4">
+      <div>
+        <%= f.radio_button :publish_option, "draft", checked: @post.draft?, id: "draft_option", class: "focus:ring-blue-500 h-4 w-4 text-blue-600 border-gray-300", data: { action: "post-form#toggleScheduleOptions" } %>
+        <%= f.label :publish_option, "Save as Draft", for: "draft_option", class: "ml-2 text-gray-700" %>
+      </div>
+      <div>
+        <%= f.radio_button :publish_option, "publish_now", checked: @post.published_post? && @post.published_at.nil?, id: "publish_now_option", class: "focus:ring-blue-500 h-4 w-4 text-blue-600 border-gray-300", data: { action: "post-form#toggleScheduleOptions" } %>
+        <%= f.label :publish_option, "Publish Now", for: "publish_now_option", class: "ml-2 text-gray-700" %>
+      </div>
+      <div>
+        <%= f.radio_button :publish_option, "schedule", checked: @post.scheduled?, id: "schedule_option", class: "focus:ring-blue-500 h-4 w-4 text-blue-600 border-gray-300", data: { action: "post-form#toggleScheduleOptions" } %>
+        <%= f.label :publish_option, "Schedule", for: "schedule_option", class: "ml-2 text-gray-700" %>
+      </div>
+    </div>
+
+    <!-- Schedule Date/Time Picker -->
+    <div id="schedule_options" data-post-form-target="scheduleOptions" class="<%= @post.scheduled? ? '' : 'hidden' %> mt-4">
+      <%= f.datetime_select :published_at, class: "shadow-sm border rounded-lg w-full py-3 px-4 text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent", include_blank: true %>
+    </div>
   </div>
 
   <!-- Submit and Cancel Buttons -->
   <div class="flex items-center justify-between">
-    <%= f.submit @post.new_record? ? "Create" : "Update", class: "bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline" %>
-    <%= link_to "Cancel", :back, class: "bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline", data: { action: "click->form#cancel" } %>
+    <%= f.submit @post.new_record? ? "Create" : "Update", class: "bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-6 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" %>
+    <%= link_to "Cancel", :back, class: "bg-gray-600 hover:bg-gray-700 text-white font-semibold py-2 px-6 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-500" %>
   </div>
 <% end %>

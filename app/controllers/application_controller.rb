@@ -1,4 +1,5 @@
 class ApplicationController < ActionController::Base
+  before_action :configure_permitted_parameters, if: :devise_controller?
 
   rescue_from CanCan::AccessDenied do |exception|
     respond_to do |format|
@@ -8,6 +9,13 @@ class ApplicationController < ActionController::Base
   end
 
   helper_method :ensure_admin_or_moderator!
+
+
+  protected
+
+  def configure_permitted_parameters
+    devise_parameter_sanitizer.permit(:sign_up, keys: [profile_attributes: [:first_name, :last_name]])
+  end
 
   private
 
