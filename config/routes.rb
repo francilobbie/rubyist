@@ -56,4 +56,10 @@ Rails.application.routes.draw do
   get 'moderation', to: 'moderation#index'
 
   get "up" => "rails/health#show", as: :rails_health_check
+
+  resources :notifications, only: [:index] do
+    member do
+      patch :mark_as_read
+    end
+  end
 end

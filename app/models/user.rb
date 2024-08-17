@@ -18,6 +18,8 @@ class User < ApplicationRecord
 
   delegate :first_name, :last_name, :bio, :location, :avatar, to: :profile, allow_nil: true
 
+  has_many :notifications, as: :recipient, dependent: :destroy, class_name: "Noticed::Notification"
+
 
   def suspended?
     suspended || (suspended_until && suspended_until > Time.current)
