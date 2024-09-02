@@ -1,9 +1,15 @@
 <div class="max-w-4xl mx-auto mt-10 p-6 bg-white shadow-lg rounded-lg">
   <div class="flex items-center space-x-4 mb-8">
     <div class="flex-shrink-0">
-      <div class="w-20 h-20 rounded-full bg-gray-300 flex items-center justify-center text-gray-600 text-2xl">
-        <%= @user.first_name[0].upcase %><%= @user.last_name[0].upcase %>
-      </div>
+      <% if @user.avatar.attached? %>
+        <img class="w-20 h-20 object-cover rounded-full" src="<%= url_for(@user.avatar) %>" alt="User Avatar">
+      <% elsif @user.provider.present? && @user.image.present? %>
+        <img class="w-20 h-20 object-cover rounded-full" src="<%= @user.image %>" alt="User Avatar">
+      <% else %>
+        <div class="w-20 h-20 rounded-full bg-gray-300 flex items-center justify-center text-gray-600 text-2xl">
+          <%= @user.first_name[0].upcase %><%= @user.last_name[0].upcase %>
+        </div>
+      <% end %>
     </div>
     <div>
       <h1 class="text-4xl font-bold text-gray-800">
