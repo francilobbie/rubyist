@@ -1,5 +1,7 @@
 class ApplicationController < ActionController::Base
   before_action :configure_permitted_parameters, if: :devise_controller?
+  before_action :set_notifications, if: :user_signed_in?
+
 
   rescue_from CanCan::AccessDenied do |exception|
     respond_to do |format|
@@ -18,6 +20,10 @@ class ApplicationController < ActionController::Base
   end
 
   private
+
+  def set_notifications
+    @notifications = current_user.notifications.unread
+  end
 
   # Ensures the current user is either an admin or a moderator
   def ensure_admin_or_moderator!

@@ -55,7 +55,9 @@ gem "image_processing"
   gem "pg_search"
   gem 'cancancan', '~> 3.0'
   gem 'rolify'
-  gem 'noticed'
+  gem 'noticed', '~> 1.6'
+
+
 
 
 ############################ MY GEMS ############################

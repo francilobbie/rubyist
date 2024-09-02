@@ -57,7 +57,7 @@ Rails.application.routes.draw do
 
   get "up" => "rails/health#show", as: :rails_health_check
 
-  resources :notifications, only: [:index] do
+  resources :notifications, only: [:index, :destroy] do
     member do
       patch :mark_as_read
     end

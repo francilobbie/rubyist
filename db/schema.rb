@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2024_08_17_144245) do
+ActiveRecord::Schema[7.1].define(version: 2024_08_25_171103) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -77,6 +77,11 @@ ActiveRecord::Schema[7.1].define(version: 2024_08_17_144245) do
     t.string "department_code"
   end
 
+  create_table "custom_notifications", force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
   create_table "likes", force: :cascade do |t|
     t.bigint "user_id", null: false
     t.string "likeable_type", null: false
@@ -115,11 +120,12 @@ ActiveRecord::Schema[7.1].define(version: 2024_08_17_144245) do
   create_table "notifications", force: :cascade do |t|
     t.string "recipient_type", null: false
     t.bigint "recipient_id", null: false
-    t.string "type"
+    t.string "type", null: false
     t.jsonb "params"
     t.datetime "read_at"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.index ["read_at"], name: "index_notifications_on_read_at"
     t.index ["recipient_type", "recipient_id"], name: "index_notifications_on_recipient"
   end
 

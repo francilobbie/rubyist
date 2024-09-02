@@ -10,3 +10,5 @@ pin "trix"
 pin "@rails/actiontext", to: "actiontext.esm.js"
 pin "leaflet" # @1.9.4
 pin "mapbox-gl", to: "https://cdn.skypack.dev/mapbox-gl"
+pin "@rails/actioncable", to: "actioncable.esm.js"
+pin_all_from "app/javascript/channels", under: "channels"
