@@ -1,0 +1,16 @@
+<!-- app/views/notifications/_notification.html.erb -->
+
+<div id="notification-<%= notification.id %>" class="notification p-2 rounded-lg <%= notification.read_at ? 'bg-gray-200' : 'bg-white' %>">
+  <p class="text-gray-800">
+    <%= link_to notification.params[:message], notification.params[:url], class: 'text-blue-600 hover:underline' %>
+  </p>
+  <p class="text-sm text-gray-500">
+    <%= time_ago_in_words(notification.created_at) %> ago
+  </p>
+  <div class="flex items-center justify-between">
+    <% unless notification.read_at %>
+      <%= button_to 'Mark as Read', mark_as_read_notification_path(notification), method: :patch, remote: true, class: 'mt-1 text-xs bg-green-500 text-white px-2 py-1 rounded hover:bg-green-600 transition ease-in-out duration-150' %>
+    <% end %>
+    <%= button_to '✕', notification_path(notification), method: :delete, remote: true, class: 'text-gray-900 ml-2' %>
+  </div>
+</div>

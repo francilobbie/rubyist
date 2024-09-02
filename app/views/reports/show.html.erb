@@ -5,7 +5,7 @@
             <h2 class="text-2xl font-bold mb-4">Report Details</h2>
             <!-- Report details -->
             <p><strong>Reported By:</strong> <%= @report.user.email %></p>
-            <p><strong>Reported At:</strong> <%= @report.created_at.strftime("%B %d, %Y %H:%M") %></p>
+            <p><strong>Reported At:</strong> <%= @report.created_at.strftime("%B %d %Y %H:%M") %> - <%= time_ago_in_words(@report.created_at) %></p>
             <p><strong>Status:</strong> <%= @report.status.capitalize %></p>
             <p><strong>Content:</strong> <%= @report.content %></p>
             <p><strong>Type:</strong> <%= @report.reportable_type %></p>
