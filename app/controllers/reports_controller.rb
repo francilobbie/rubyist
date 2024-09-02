@@ -27,6 +27,7 @@ class ReportsController < ApplicationController
     authorize! :create, @report
 
     if @report.save
+      notify_admins_and_moderators(@report)
       redirect_to root_path, notice: 'The report has been submitted.'
     else
       Rails.logger.debug "Report creation failed: #{@report.errors.full_messages.join(", ")}"
@@ -93,4 +94,11 @@ class ReportsController < ApplicationController
       redirect_to root_path, alert: "You are not authorized to perform this action."
     end
   end
+
+  def notify_admins_and_moderators(report)
+    User.with_role(:admin).or(User.with_role(:moderator)).each do |user|
+      NewReportNotificationNotifier.with(report: report).deliver_later(user)
+    end
+  end
+
 end
