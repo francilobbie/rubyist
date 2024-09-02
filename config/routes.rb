@@ -1,7 +1,8 @@
 Rails.application.routes.draw do
   get 'dashboard/show'
   devise_for :users, controllers: {
-    registrations: 'users/registrations'
+    registrations: 'users/registrations',
+    omniauth_callbacks: 'users/omniauth_callbacks'
   }
   # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
   root "posts#index"

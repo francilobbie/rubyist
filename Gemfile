@@ -56,6 +56,14 @@ gem "image_processing"
   gem 'cancancan', '~> 3.0'
   gem 'rolify'
   gem 'noticed', '~> 1.6'
+  gem 'omniauth'
+  gem 'omniauth-google-oauth2'
+  gem 'omniauth-facebook'
+  gem 'omniauth-twitter'
+  gem 'omniauth-github'
+  gem 'omniauth-rails_csrf_protection'
+  gem "aws-sdk-s3", require: false
+
 
 
 
@@ -94,3 +102,5 @@ group :test do
   gem "capybara"
   gem "selenium-webdriver"
 end
+
+gem "dotenv-rails", "~> 3.1"

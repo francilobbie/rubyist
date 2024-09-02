@@ -141,7 +141,7 @@ class Admin::UsersController < Admin::BaseController
       :password,
       :password_confirmation,
       role_ids: [],
-      profile_attributes: %i[first_name last_name bio location]
+      profile_attributes: %i[first_name last_name bio location avatar]
     )
   end
 
