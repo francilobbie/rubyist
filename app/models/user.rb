@@ -63,7 +63,7 @@ class User < ApplicationRecord
   end
 
   def full_name
-    [profile&.first_name, profile&.last_name].compact.join(' ')
+    [profile&.first_name.capitalize, profile&.last_name.upcase].compact.join(' ')
   end
 
   private
