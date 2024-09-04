@@ -6,12 +6,19 @@ class Comment < ApplicationRecord
   belongs_to :parent, class_name: 'Comment', optional: true
   has_many :replies, class_name: 'Comment', foreign_key: :parent_id, dependent: :destroy
   has_many :likes, as: :likeable, dependent: :destroy
+  has_many :mentions, as: :mentionable, dependent: :destroy
+
 
 
   validates :content, presence: true
 
   after_create_commit :broadcast_prepend_comment
   after_destroy_commit :broadcast_remove_comment
+
+  before_save :process_content
+  after_save :update_mentions
+
+
 
   scope :top_level, -> { where(parent_id: nil) }
 
@@ -92,5 +99,29 @@ class Comment < ApplicationRecord
       partial: "comments/comment",
       locals: locals
     )
+  end
+
+  def process_content
+    self.content = process_content_with_mentions(content)
+  end
+
+  def process_content_with_mentions(content)
+    content.gsub(/@(\w+)/) do |mention|
+      username = mention.delete('@')
+      user = User.find_by(username: username)
+
+      if user
+        # Create a new Mention record
+        mentions.build(user: user, content: content)
+        "@[#{username}](#{user.id})"
+      else
+        mention
+      end
+    end
+  end
+
+  def update_mentions
+    mentions.destroy_all # Clear existing mentions
+    process_content_with_mentions(content) # Reprocess the content
   end
 end

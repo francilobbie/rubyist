@@ -6,20 +6,22 @@
   <div class="flex justify-between">
     <div class="flex space-x-3">
       <div class="flex-shrink-0">
-        <img class="inline-block h-10 w-10 rounded-full object-cover"
-          src="
-            <% if comment.user.avatar.attached? %>
-              <%= url_for(comment.user.avatar) %>
-            <% else %>
-              <%= image_path('blank_pic.png') %>
-            <% end %>
-            "
+        <%= link_to user_profile_path(comment.user) do %>
+          <img class="inline-block h-10 w-10 rounded-full object-cover ring-2 ring-gray-400"
+            src="
+              <% if comment.user.avatar.attached? %>
+                <%= url_for(comment.user.avatar) %>
+              <% else %>
+                <%= image_path('blank_pic.png') %>
+              <% end %>
+              "
           alt=""
         >
+        <% end %>
       </div>
       <div class="min-w-0 flex-1">
-        <p class="text-sm font-medium text-gray-900">
-          <%= comment.user.email %>
+        <p class="text-sm font-medium text-gray-900 hover:underline">
+          <%= link_to comment.user.username, user_profile_path(comment.user) %>
         </p>
       </div>
     </div>
@@ -66,7 +68,7 @@
   </div>
 
   <div data-post-comments-target="displayContent" data-comment-id="<%= dom_id(comment) %>">
-    <p class="mt-2 text-gray-700"><%= comment.content %></p>
+    <p class="mt-2 text-gray-700"><%= parse_mentions(comment.content) %></p>
   </div>
 
   <!-- Edit Form -->

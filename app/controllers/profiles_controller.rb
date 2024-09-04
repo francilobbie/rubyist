@@ -13,7 +13,7 @@ class ProfilesController < ApplicationController
 
   def update
     authorize! :update, @profile
-    if @profile.update(profile_params)
+    if @user.update(user_params) && @profile.update(profile_params)
       redirect_to user_profile_path(@user), notice: 'Profile was successfully updated.'
     else
       render :edit, status: :unprocessable_entity
@@ -33,5 +33,9 @@ class ProfilesController < ApplicationController
 
   def profile_params
     params.require(:profile).permit(:first_name, :last_name, :bio, :avatar)
+  end
+
+  def user_params
+    params.require(:user).permit(:username)
   end
 end
