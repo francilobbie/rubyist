@@ -8,9 +8,18 @@
   overflow-y: auto; /* Enable scrolling within the container */
 }
 
-
 /* To only grow from the bottom */
 .modal-content-container {
   overflow-y: auto; /* Enable scrolling */
   max-height: 80vh; /* Adjust as needed, but should be less than the modal-container to prevent scrolling the whole page */
+}
+
+.mention-link {
+  color: #3490dc !important;
+  font-weight: bold !important;
+  text-decoration: none !important;
+}
+
+.mention-link:hover {
+  text-decoration: underline !important;
 }

@@ -16,6 +16,7 @@ class Ability
       can :read, :all
     else
       # Writers and other users can manage their own profiles only
+      can :read, Profile
       can [:read, :update], Profile, user_id: user.id
     end
     can :view_saved_posts, User, id: user.id

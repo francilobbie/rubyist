@@ -10,6 +10,7 @@ class CommentsController < ApplicationController
   def create
     @comment = @post.comments.build(comment_params.merge(user: current_user))
 
+
     if @comment.save
       can_edit = can?(:update, @comment)
       can_destroy = can?(:destroy, @comment)
@@ -41,6 +42,7 @@ class CommentsController < ApplicationController
 
   def update
     authorize! :update, @comment
+
 
     if @comment.update(comment_params)
       can_edit = can?(:update, @comment)
