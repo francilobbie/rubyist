@@ -69,4 +69,12 @@ class Post < ApplicationRecord
       locals: permissions.merge(post: self)
     )
   end
+
+  def reading_time
+    words_per_minute = 200
+    word_count = body.to_plain_text.split.size
+    time = (word_count / words_per_minute.to_f).ceil
+    [time, 1].max # Ensures at least 1 minute reading time
+  end
+
 end
