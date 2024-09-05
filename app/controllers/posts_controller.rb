@@ -37,6 +37,8 @@ class PostsController < ApplicationController
     @can_destroy_tag = can?(:destroy, Tag)
     @can_report_post = can?(:report, @post)
 
+    track_post_view
+
     @comments = @post.comments.order(created_at: :asc)
     @comments.each do |comment|
       comment.define_singleton_method(:can_edit) { can?(:update, comment) }
@@ -92,6 +94,23 @@ class PostsController < ApplicationController
 
 
   private
+
+  def track_post_view
+    return track_guest_view unless current_user
+
+    # Only track view if user hasn't viewed this post before
+    unless PostView.exists?(user_id: current_user.id, post_id: @post.id)
+      PostView.create(user: current_user, post: @post)
+    end
+  end
+
+  def track_guest_view
+    session[:viewed_posts] ||= []
+    return if session[:viewed_posts].include?(@post.id)
+
+    @post.post_views.create(user: nil)
+    session[:viewed_posts] << @post.id
+  end
 
   def set_post
     @post = if user_signed_in?

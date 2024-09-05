@@ -11,6 +11,8 @@ class Post < ApplicationRecord
   has_rich_text :body
   has_many :comments, dependent: :destroy
   has_many :likes, as: :likeable, dependent: :destroy
+  has_many :post_views, dependent: :destroy
+
 
   has_many :save_posts, dependent: :destroy
   has_many :saved_by_users, through: :save_posts, source: :user

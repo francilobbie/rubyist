@@ -12,3 +12,5 @@ pin "leaflet" # @1.9.4
 pin "mapbox-gl", to: "https://cdn.skypack.dev/mapbox-gl"
 pin "@rails/actioncable", to: "actioncable.esm.js"
 pin_all_from "app/javascript/channels", under: "channels"
+pin "chartkick", to: "chartkick.js"
+pin "Chart.bundle", to: "Chart.bundle.js"
