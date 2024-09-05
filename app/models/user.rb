@@ -58,6 +58,10 @@ class User < ApplicationRecord
     [profile&.first_name.capitalize, profile&.last_name.upcase].compact.join(' ')
   end
 
+  def comment_name
+    "#{full_name} (@#{username})"
+  end
+
   private
 
   def create_profile

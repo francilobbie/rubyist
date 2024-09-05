@@ -21,7 +21,4 @@ class Report < ApplicationRecord
         ).deliver_later(recipient)
       end
   end
-
-
-
 end
