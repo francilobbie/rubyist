@@ -18,6 +18,18 @@ class Comment < ApplicationRecord
   before_save :process_content
   after_save :update_mentions
 
+  after_create_commit :notify_mentioned_users
+  after_create_commit :notify_comment_or_reply
+
+  def notify_reply
+    if parent_id.present? # Notify only if this is a reply
+      notify_reply_user(self.user, self.parent)
+    end
+  end
+
+  def notify_comment
+    notify_post_user(self.user, self.post) if parent_id.nil? # Notify only for top-level comments
+  end
 
 
   scope :top_level, -> { where(parent_id: nil) }
@@ -124,4 +136,46 @@ class Comment < ApplicationRecord
     mentions.destroy_all # Clear existing mentions
     process_content_with_mentions(content) # Reprocess the content
   end
+
+  def mentioned_users
+    mentioned_usernames = content.scan(/@\[(.*?)\]\((\d+)\)/).map { |username, id| User.find_by(id: id) }
+    mentioned_usernames.compact
+  end
+
+  def notify_mentioned_users
+    mentioned_users.each do |mentioned_user|
+      MentionNotification.with(
+        message: "#{user.full_name} mentioned you in a comment",
+        url: Rails.application.routes.url_helpers.post_path(post, anchor: "comment-#{id}")
+      ).deliver_later(mentioned_user)
+    end
+  end
+
+  def notify_comment_or_reply
+    if parent_id.present?
+      notify_reply
+    else
+      notify_comment
+    end
+  end
+
+  def notify_reply
+    parent_comment = Comment.find_by(id: parent_id)
+    if parent_comment && parent_comment.user != user
+      ReplyNotification.with(
+        message: "#{user.full_name} replied to your comment",
+        url: Rails.application.routes.url_helpers.post_comment_path(parent_comment.post, parent_comment, anchor: "comment-#{parent_comment.id}")
+      ).deliver_later(parent_comment.user)
+    end
+  end
+
+  def notify_comment
+    if post.user != user
+      CommentNotification.with(
+        message: "#{user.full_name} commented on your post",
+        url: Rails.application.routes.url_helpers.post_path(post, anchor: "comment-#{id}")
+      ).deliver_later(post.user)
+    end
+  end
+
 end
