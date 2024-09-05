@@ -9,6 +9,9 @@ class LikeNotification < Noticed::Base
 
   param :message, :url
 
+  after_deliver :broadcast_notification
+
+
   def to_database
     {
       message: params[:message],
@@ -20,7 +23,8 @@ class LikeNotification < Noticed::Base
     {
       title: "New Like",
       message: params[:message],
-      url: params[:url]
+      url: params[:url],
+      id: record.id
     }
   end
 
@@ -36,5 +40,21 @@ class LikeNotification < Noticed::Base
     else
       root_path
     end
+  end
+
+  def broadcast_notification
+    recipient.broadcast_prepend_later_to(
+      "notifications_#{recipient.id}_dropdown_list",
+      target: "notification-dropdown-list",
+      partial: "notifications/notification",
+      locals: { notification: self.record }
+    )
+
+    recipient.broadcast_replace_later_to(
+      "notifications_#{recipient.id}_counter",
+      target: "notification-counter",
+      partial: "notifications/counter",
+      locals: { user: recipient }
+    )
   end
 end

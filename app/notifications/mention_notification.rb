@@ -9,6 +9,9 @@ class MentionNotification < Noticed::Base
 
   param :message, :url
 
+  after_deliver :broadcast_notification
+
+
   def to_database
     {
       message: params[:message],
@@ -20,7 +23,8 @@ class MentionNotification < Noticed::Base
     {
       title: "You've been mentioned",
       message: params[:message],
-      url: params[:url]
+      url: params[:url],
+      id: record.id
     }
   end
 
@@ -33,6 +37,24 @@ class MentionNotification < Noticed::Base
     else
       root_path # Fallback if mentionable is not a post or comment
     end
+  end
+
+  private
+
+  def broadcast_notification
+    recipient.broadcast_prepend_later_to(
+      "notifications_#{recipient.id}_dropdown_list",
+      target: "notification-dropdown-list",
+      partial: "notifications/notification",
+      locals: { notification: self.record }
+    )
+
+    recipient.broadcast_replace_later_to(
+      "notifications_#{recipient.id}_counter",
+      target: "notification-counter",
+      partial: "notifications/counter",
+      locals: { user: recipient }
+    )
   end
 
 end
