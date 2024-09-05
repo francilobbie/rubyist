@@ -51,6 +51,14 @@ class PostsController < ApplicationController
   def create
     @post = current_user.posts.build(post_params)
 
+    # Handle publish option logic
+    case params[:post][:publish_option]
+    when "publish_now"
+      @post.published_at = Time.current
+    when "draft"
+      @post.published_at = nil
+    end
+
     if @post.save
       redirect_to root_path, notice: 'Post was successfully created.'
     else
@@ -61,6 +69,15 @@ class PostsController < ApplicationController
 
 
   def update
+
+    # Handle publish option logic
+    case params[:post][:publish_option]
+    when "publish_now"
+      @post.published_at = Time.current
+    when "draft"
+      @post.published_at = nil
+    end
+
     if @post.update(post_params)
       @post.broadcast_update_with_permissions(current_user)
       redirect_to post_path(@post), notice: 'Post was successfully updated.'

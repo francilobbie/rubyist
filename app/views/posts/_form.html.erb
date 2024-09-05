@@ -27,7 +27,7 @@
         <%= f.label :publish_option, "Save as Draft", for: "draft_option", class: "ml-2 text-gray-700" %>
       </div>
       <div>
-        <%= f.radio_button :publish_option, "publish_now", checked: @post.published_post? && @post.published_at.nil?, id: "publish_now_option", class: "focus:ring-blue-500 h-4 w-4 text-blue-600 border-gray-300", data: { action: "post-form#toggleScheduleOptions" } %>
+        <%= f.radio_button :publish_option, "publish_now", checked: @post.published_post? && @post.published_at.present?, id: "publish_now_option", class: "focus:ring-blue-500 h-4 w-4 text-blue-600 border-gray-300", data: { action: "post-form#toggleScheduleOptions" } %>
         <%= f.label :publish_option, "Publish Now", for: "publish_now_option", class: "ml-2 text-gray-700" %>
       </div>
       <div>
@@ -35,6 +35,7 @@
         <%= f.label :publish_option, "Schedule", for: "schedule_option", class: "ml-2 text-gray-700" %>
       </div>
     </div>
+
 
     <!-- Schedule Date/Time Picker -->
     <div id="schedule_options" data-post-form-target="scheduleOptions" class="<%= @post.scheduled? ? '' : 'hidden' %> mt-4">

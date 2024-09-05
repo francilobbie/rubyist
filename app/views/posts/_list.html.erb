@@ -17,6 +17,7 @@
         <!-- Owner's email and post creation time -->
         <div class="mb-4">
           <p class="text-sm text-gray-500">Posted by <%= post.user.email %> on <%= post.published_at.strftime("%B %d, %Y") %></p>
+          <p><strong>Estimated Reading Time:</strong> <%= post.reading_time %> minutes</p>
         </div>
         <div class="flex flex-wrap items-center justify-between">
           <div class="flex flex-wrap">
