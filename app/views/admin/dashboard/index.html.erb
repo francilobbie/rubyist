@@ -41,5 +41,24 @@
         <% end %>
       </ul>
     </div>
+
+    <div>
+      <h2>User Signups</h2>
+      <%= line_chart @monthly_signups %>
+    </div>
+
+    <div>
+      <h2>Monthly Visitors</h2>
+      <%= line_chart @monthly_visitors %>
+    </div>
+
+    <div>
+      <h2>Most Viewed Posts</h2>
+      <ul>
+        <% @most_viewed_posts.each do |post| %>
+          <li><%= post.title %>: <%= post.post_views.count %> views</li>
+        <% end %>
+      </ul>
+    </div>
   </div>
 </div>

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2024_09_03_083142) do
+ActiveRecord::Schema[7.1].define(version: 2024_09_05_144156) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -140,6 +140,15 @@ ActiveRecord::Schema[7.1].define(version: 2024_09_03_083142) do
     t.index ["recipient_type", "recipient_id"], name: "index_notifications_on_recipient"
   end
 
+  create_table "post_views", force: :cascade do |t|
+    t.bigint "post_id", null: false
+    t.bigint "user_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["post_id"], name: "index_post_views_on_post_id"
+    t.index ["user_id"], name: "index_post_views_on_user_id"
+  end
+
   create_table "posts", force: :cascade do |t|
     t.string "title"
     t.text "body"
@@ -244,6 +253,8 @@ ActiveRecord::Schema[7.1].define(version: 2024_09_03_083142) do
   add_foreign_key "comments", "users"
   add_foreign_key "likes", "users"
   add_foreign_key "mentions", "users"
+  add_foreign_key "post_views", "posts"
+  add_foreign_key "post_views", "users"
   add_foreign_key "posts", "users"
   add_foreign_key "profiles", "users"
   add_foreign_key "reports", "users"

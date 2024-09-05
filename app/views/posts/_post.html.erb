@@ -30,6 +30,9 @@
     <div id="<%= dom_id(post) %>_likes">
       <%= render 'likes/like', likeable: post %>
     </div>
+    <div>
+      <p><strong>Views:</strong> <%= @post.post_views.count %></p>
+    </div>
   </div>
 
   <p class="text-gray-800 text-base mb-4"><%= post.body %></p>

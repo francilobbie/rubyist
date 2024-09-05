@@ -13,6 +13,13 @@ class Admin::DashboardController < Admin::BaseController
     @draft_posts = Post.draft.order(created_at: :desc)
     @scheduled_posts = Post.scheduled.order(published_at: :asc)
 
+    @monthly_signups = User.group_by_month(:created_at).count
+    @monthly_visitors = PostView.group_by_month(:created_at).count # If tracking visitors via post views
+    @most_viewed_posts = Post.joins(:post_views)
+                             .group(:id)
+                             .order('COUNT(post_views.id) DESC')
+                             .limit(10)
+
     # Add more as needed for your dashboard
   end
 end
