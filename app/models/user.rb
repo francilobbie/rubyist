@@ -4,6 +4,8 @@ class User < ApplicationRecord
   rolify
   devise :database_authenticatable, :registerable,
          :recoverable, :rememberable, :validatable,
+        #  :confirmable, :trackable, :lockable,
+         :lockable,
          :omniauthable, omniauth_providers: %i[google_oauth2 facebook github]
 
   has_many :posts, dependent: :destroy
@@ -13,6 +15,7 @@ class User < ApplicationRecord
   has_many :save_posts, dependent: :destroy
   has_many :saved_posts, through: :save_posts, source: :post
   has_one :profile, dependent: :destroy
+  has_many :post_views, dependent: :destroy
 
   after_commit :create_profile, on: [:create]
   after_commit :set_default_username, on: [:create]
@@ -32,9 +35,33 @@ class User < ApplicationRecord
     user.email = auth.info.email if user.email.blank?
     user.password = Devise.friendly_token[0, 20] if user.encrypted_password.blank?
     user.username = auth.info.name || auth.info.email.split('@').first if user.username.blank?
-    user.save
+
+    # Assign profile details
+    user.build_profile unless user.profile.present?
+
+    if auth.info.name.present?
+      name_parts = auth.info.name.split(" ")
+      user.profile.first_name = name_parts.first
+      user.profile.last_name = name_parts[1..].join(' ')
+    end
+
+    # Attach avatar using ActiveStorage
+    if user.profile.avatar.blank? && auth.info.image.present?
+      avatar_url = auth.info.image
+      avatar_file = URI.open(avatar_url) # Open the remote URL
+      user.profile.avatar.attach(io: avatar_file, filename: "avatar-#{user.username}.jpg")
+    end
+
+    is_new_user = user.new_record?
+
+    if user.save
+      # Send welcome email if the user is new
+      UserMailer.welcome_email(user).deliver_now if is_new_user
+    end
+
     user
   end
+
 
   def suspended?
     suspended || (suspended_until && suspended_until > Time.current)
@@ -55,8 +82,11 @@ class User < ApplicationRecord
   end
 
   def full_name
-    [profile&.first_name.capitalize, profile&.last_name.upcase].compact.join(' ')
+    first_name = profile&.first_name&.capitalize || "First Name"
+    last_name = profile&.last_name&.upcase || "LAST NAME"
+    [first_name, last_name].compact.join(' ')
   end
+
 
   def comment_name
     "#{full_name} (@#{username})"

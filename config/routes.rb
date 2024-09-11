@@ -17,6 +17,8 @@ Rails.application.routes.draw do
 
   patch '/posts/:id/unpublish', to: 'posts#unpublish', as: :unpublish_post
 
+  get 'signup', to: 'users#new', as: 'signup'
+
   resources :users, only: [:show, :edit, :update] do
     member do
       get :posts  # This route allows users to manage their posts
