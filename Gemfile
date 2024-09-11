@@ -65,6 +65,7 @@ gem "image_processing"
   gem "aws-sdk-s3", require: false
   gem 'chartkick'
   gem 'groupdate'
+  gem 'sidekiq'
 
 
 
@@ -105,3 +106,7 @@ group :test do
 end
 
 gem "dotenv-rails", "~> 3.1"
+
+gem "sendgrid-ruby", "~> 6.7"
+
+gem "mailgun-ruby", "~> 1.2"
