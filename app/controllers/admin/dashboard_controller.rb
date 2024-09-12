@@ -20,6 +20,9 @@ class Admin::DashboardController < Admin::BaseController
                              .order('COUNT(post_views.id) DESC')
                              .limit(10)
 
+    @donations = Donation.includes(:user).all
+    @weekly_donations = Donation.group_by_week(:created_at, format: "%d %B %Y").sum(:amount)
+    @total_donations = Donation.sum(:amount)
     # Add more as needed for your dashboard
   end
 end

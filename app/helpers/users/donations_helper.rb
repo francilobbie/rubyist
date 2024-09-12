@@ -1,0 +1,2 @@
+module Users::DonationsHelper
+end

@@ -25,6 +25,7 @@ Rails.application.routes.draw do
       get :saved_posts # This route allows users to view their saved posts
     end
     resource :profile, only: [:show, :edit, :update]
+    resources :donations, only: [:index], module: :users
   end
 
   delete "/tags/:id", to: "tags#destroy", as: :tag
@@ -65,4 +66,7 @@ Rails.application.routes.draw do
       patch :mark_as_read
     end
   end
+
+  resources :donations, only: [:new, :create]
+  post 'webhooks/stripe', to: 'webhooks#stripe'
 end

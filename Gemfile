@@ -110,3 +110,5 @@ gem "dotenv-rails", "~> 3.1"
 gem "sendgrid-ruby", "~> 6.7"
 
 gem "mailgun-ruby", "~> 1.2"
+
+gem "stripe", "~> 12.5"

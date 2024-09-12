@@ -45,6 +45,9 @@
     <% if current_user == @user || current_user.has_role?(:admin) %>
       <%= link_to 'Edit Profile', edit_user_profile_path(@user), class: 'inline-block bg-blue-500 hover:bg-blue-600 text-white px-6 py-2 rounded-lg shadow' %>
     <% end %>
+    <% if current_user == @user || current_user.has_role?(:admin) %>
+      <%= link_to 'Mes Dons', user_donations_path(@user), class: 'inline-block bg-blue-500 hover:bg-blue-600 text-white px-6 py-2 rounded-lg shadow' %>
+    <% end %>
     <% if current_user == @user || (current_user.has_role?(:moderator) || current_user.has_role?(:admin)) %>
       <%= link_to 'Saved Posts', saved_posts_user_path(@user), class: 'inline-block bg-yellow-500 hover:bg-yellow-600 text-white px-6 py-2 rounded-lg shadow' %>
     <% end %>

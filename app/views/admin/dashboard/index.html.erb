@@ -53,6 +53,11 @@
     </div>
 
     <div>
+      <h2>Donations mensuelles</h2>
+      <%= line_chart @weekly_donations  %>
+    </div>
+
+    <div>
       <h2>Most Viewed Posts</h2>
       <ul>
         <% @most_viewed_posts.each do |post| %>
@@ -61,4 +66,31 @@
       </ul>
     </div>
   </div>
+
+  <!-- app/views/admin/dashboard/index.html.erb -->
+  <div class="donations-section">
+    <h2 class="text-2xl font-semibold mb-3">Tous les dons (<%= @total_donations %>)</h2>
+
+    <table class="min-w-full bg-white">
+      <thead>
+        <tr>
+          <th class="py-2 px-4">Utilisateur</th>
+          <th class="py-2 px-4">Montant</th>
+          <th class="py-2 px-4">Date</th>
+          <th class="py-2 px-4">Statut</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% @donations.each do |donation| %>
+          <tr>
+            <td class="border px-4 py-2"><%= link_to donation.user.email, admin_user_path(donation.user) %></td>
+            <td class="border px-4 py-2"><%= donation.amount %> €</td>
+            <td class="border px-4 py-2"><%= donation.created_at.strftime("%d %B %Y") %></td>
+            <td class="border px-4 py-2"><%= donation.status.capitalize %></td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  </div>
+
 </div>
