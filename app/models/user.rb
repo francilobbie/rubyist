@@ -16,6 +16,8 @@ class User < ApplicationRecord
   has_many :saved_posts, through: :save_posts, source: :post
   has_one :profile, dependent: :destroy
   has_many :post_views, dependent: :destroy
+  has_many :donations, dependent: :destroy
+
 
   after_commit :create_profile, on: [:create]
   after_commit :set_default_username, on: [:create]
