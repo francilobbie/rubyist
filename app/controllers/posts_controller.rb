@@ -8,15 +8,18 @@ class PostsController < ApplicationController
     base_query = params[:query].present? ? Post.published_post.global_search(params[:query]) : Post.published_post
     all_posts = base_query.includes(:user).to_a
 
-    @posts = all_posts.select do |post|
+    @pagy, @posts = pagy_array(all_posts.select do |post|
       !post.user.suspended? || (post.user.suspended? && post.user.suspended_until.present? && post.user.suspended_until < Time.current)
-    end
+    end, items: 10)
     @posts = @posts.sort_by(&:created_at).reverse
 
     respond_to do |format|
       format.html
       format.js { render partial: 'posts/ajax_search', locals: { posts: @posts }, layout: false }
     end
+
+  rescue Pagy::OverflowError
+    redirect_to root_path(page: 1), alert: 'Cette page n\'existe pas.'
   end
 
   def new
