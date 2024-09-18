@@ -2,13 +2,17 @@
 <div class="max-w-lg mx-auto my-10">
   <h2 class="text-3xl font-bold mb-6">Mes dons</h2>
 
-  <ul class="space-y-4">
-    <% @donations.each do |donation| %>
-      <li class="bg-white p-4 rounded-lg shadow">
-        <p><strong>Montant :</strong> <%= donation.amount %> €</p>
-        <p><strong>Date :</strong> <%= donation.created_at.strftime("%d %B %Y") %></p>
-        <p><strong>Statut :</strong> <%= donation.status.capitalize %></p>
-      </li>
-    <% end %>
-  </ul>
+  <% if @donations.any? %>
+    <ul class="space-y-4">
+      <% @donations.each do |donation| %>
+        <li class="bg-white p-4 rounded-lg shadow">
+          <p><strong>Montant :</strong> <%= number_to_currency(donation.amount / 100.0, unit: "€", format: "%n %u") %></p>
+          <p><strong>Date :</strong> <%= donation.created_at.strftime("%d %B %Y") %></p>
+          <p><strong>Statut :</strong> <%= donation.status.present? ? donation.status.capitalize : "Non défini" %></p>
+        </li>
+      <% end %>
+    </ul>
+  <% else %>
+    <p>Vous n'avez effectué aucun don pour l'instant.</p>
+  <% end %>
 </div>

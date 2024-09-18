@@ -4,11 +4,6 @@ class UserMailer < ApplicationMailer
   default from: ENV['EMAIL_ADDRESS']
 
 
-  # def new_report_notification
-  #   @report = params[:report]
-  #   mail(to: params[:recipient].email, subject: "New Report Submitted")
-  # end
-
   def new_report_notification
     @report = params[:report]
     Rails.logger.info "Sending email to: #{params[:recipient].email}"

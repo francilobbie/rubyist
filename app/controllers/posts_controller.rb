@@ -6,18 +6,24 @@ class PostsController < ApplicationController
 
   def index
     base_query = params[:query].present? ? Post.published_post.global_search(params[:query]) : Post.published_post
-    all_posts = base_query.includes(:user).to_a
+    all_posts = base_query.includes(:user).sort_by(&:created_at).reverse
 
-    @posts = all_posts.select do |post|
+    @pagy, @posts = pagy_array(all_posts.select do |post|
       !post.user.suspended? || (post.user.suspended? && post.user.suspended_until.present? && post.user.suspended_until < Time.current)
-    end
-    @posts = @posts.sort_by(&:created_at).reverse
+    end, items: 10)
+
+    Rails.logger.info "Pagination items per page: #{@pagy.vars[:items]}"
+    Rails.logger.info "Number of posts being shown: #{@posts.count}"
 
     respond_to do |format|
       format.html
       format.js { render partial: 'posts/ajax_search', locals: { posts: @posts }, layout: false }
     end
+
+  rescue Pagy::OverflowError
+    redirect_to root_path(page: 1), alert: 'Cette page n\'existe pas.'
   end
+
 
   def new
     @post = current_user.posts.build
