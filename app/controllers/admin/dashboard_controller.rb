@@ -14,15 +14,33 @@ class Admin::DashboardController < Admin::BaseController
     @scheduled_posts = Post.scheduled.order(published_at: :asc)
 
     @monthly_signups = User.group_by_month(:created_at).count
-    @monthly_visitors = PostView.group_by_month(:created_at).count # If tracking visitors via post views
+    @monthly_visitors = PostView.group_by_month(:created_at).count
+
     @most_viewed_posts = Post.joins(:post_views)
                              .group(:id)
                              .order('COUNT(post_views.id) DESC')
                              .limit(10)
 
-    @donations = Donation.includes(:user).all
-    @weekly_donations = Donation.group_by_week(:created_at, format: "%d %B %Y").sum(:amount)
-    @total_donations = Donation.sum(:amount)
-    # Add more as needed for your dashboard
+    # Adjust donations calculations to avoid PG grouping errors
+    @weekly_donations = Donation.group_by_week(:created_at, format: "%d %B %Y").sum(:amount).transform_values { |amount| amount / 100.0 }
+    @total_donations = Donation.sum(:amount) / 100.0 # Convert from cents to euros
+
+    @donations = Donation.includes(:user) # This can be fetched without any group-by clauses
   end
+
+  def weekly_donations
+    week_offset = params[:week_offset].to_i
+    start_date = week_offset.weeks.ago.beginning_of_week
+    end_date = start_date.end_of_week
+
+    donations = Donation.where(created_at: start_date..end_date)
+                        .group_by_day(:created_at, format: "%d %B %Y")
+                        .sum(:amount)
+
+    render json: {
+      labels: donations.keys,  # Human-readable dates
+      values: donations.values # Donation amounts
+    }
+  end
+
 end
