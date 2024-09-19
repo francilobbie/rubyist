@@ -52,6 +52,10 @@ Rails.application.routes.draw do
     resources :posts, only: [:index, :show, :new, :create, :edit, :update, :destroy]
   end
 
+  # config/routes.rb
+  resources :series, only: [:index, :new, :create, :edit, :update, :show]
+
+
   resources :reports, only: [:index, :show, :edit, :update, :destroy, :new, :create] do
     member do
       delete 'destroy_comment'
