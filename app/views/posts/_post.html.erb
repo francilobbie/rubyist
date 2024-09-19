@@ -34,6 +34,10 @@
       <p><strong>Views:</strong> <%= @post.post_views.count %></p>
       <p><strong>Estimated Reading Time:</strong> <%= @post.reading_time %> minutes</p>
     </div>
+
+    <% if @post.series %>
+      <p>Part of the <%= link_to @post.series.title, series_path(@post.series) %> series.</p>
+    <% end %>
   </div>
 
   <p class="text-gray-800 text-base mb-4"><%= post.body %></p>

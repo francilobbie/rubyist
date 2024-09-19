@@ -1,0 +1,26 @@
+<!-- app/views/series/new.html.erb -->
+
+<div class="max-w-4xl mx-auto my-10">
+  <h1 class="text-3xl font-bold mb-6">Create New Series</h1>
+
+  <%= form_with(model: @series, local: true, class: "bg-white shadow-lg rounded-lg p-8 space-y-6") do |f| %>
+
+    <!-- Series Title -->
+    <div class="space-y-1">
+      <%= f.label :title, "Series Title", class: "block text-lg font-semibold text-gray-700" %>
+      <%= f.text_field :title, placeholder: "Enter series title", class: "shadow-sm border rounded-lg w-full py-3 px-4 text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent" %>
+    </div>
+
+    <!-- Series Description -->
+    <div class="space-y-1">
+      <%= f.label :description, "Description", class: "block text-lg font-semibold text-gray-700" %>
+      <%= f.text_area :description, placeholder: "Write a brief description of the series", class: "shadow-sm border rounded-lg w-full py-3 px-4 text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent", rows: 5 %>
+    </div>
+
+    <!-- Submit Button -->
+    <div class="flex items-center justify-between">
+      <%= f.submit "Create Series", class: "bg-green-600 hover:bg-green-700 text-white font-semibold py-2 px-6 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500" %>
+      <%= link_to "Cancel", series_index_path, class: "bg-gray-600 hover:bg-gray-700 text-white font-semibold py-2 px-6 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-500" %>
+    </div>
+  <% end %>
+</div>

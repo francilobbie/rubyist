@@ -17,6 +17,7 @@ class User < ApplicationRecord
   has_one :profile, dependent: :destroy
   has_many :post_views, dependent: :destroy
   has_many :donations, dependent: :destroy
+  has_many :series, dependent: :destroy
 
 
   after_commit :create_profile, on: [:create]
