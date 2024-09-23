@@ -24,7 +24,6 @@ class PostsController < ApplicationController
     redirect_to root_path(page: 1), alert: 'Cette page n\'existe pas.'
   end
 
-
   def new
     @post = current_user.posts.build
   end
@@ -32,7 +31,7 @@ class PostsController < ApplicationController
   def edit
     authorize! :edit, @post
   rescue CanCan::AccessDenied
-    redirect_to root_path, alert: 'You are not authorized to perform this action.'
+    redirect_to root_path, alert: 'Vous n\'êtes pas autorisé à effectuer cette action.'
   end
 
   def show
@@ -66,16 +65,17 @@ class PostsController < ApplicationController
     end
 
     if @post.save
-      redirect_to root_path, notice: 'Post was successfully created.'
+      # Use Sidekiq to send the newsletter asynchronously
+      NewsletterWorkerJob.perform_async(@post.id)
+
+      redirect_to root_path, notice: 'L\'article a été créé avec succès.'
     else
       flash[:alert] = @post.errors.full_messages.to_sentence
       render :new, status: :unprocessable_entity
     end
   end
 
-
   def update
-
     # Handle publish option logic
     case params[:post][:publish_option]
     when "publish_now"
@@ -86,35 +86,32 @@ class PostsController < ApplicationController
 
     if @post.update(post_params)
       @post.broadcast_update_with_permissions(current_user)
-      redirect_to post_path(@post), notice: 'Post was successfully updated.'
+      redirect_to post_path(@post), notice: 'L\'article a été mis à jour avec succès.'
     else
       render :edit, status: :unprocessable_entity
     end
   end
 
-
   def destroy
     @post.destroy
-    redirect_to root_path
+    redirect_to root_path, notice: 'L\'article a été supprimé avec succès.'
   end
 
   def archive
     if @post.update(archived: true)
-      redirect_to root_path, notice: 'Post was successfully archived.'
+      redirect_to root_path, notice: 'L\'article a été archivé avec succès.'
     else
-      redirect_to root_path, alert: 'Failed to archive the post.'
+      redirect_to root_path, alert: 'Échec de l\'archivage de l\'article.'
     end
   end
 
   def unpublish
     if @post.update(published_at: nil)
-      redirect_to edit_post_path(@post), notice: 'Post has been unpublished and can be edited again.'
+      redirect_to edit_post_path(@post), notice: 'L\'article a été dépublié et peut être modifié à nouveau.'
     else
-      redirect_to edit_post_path(@post), alert: 'Failed to unpublish the post.'
+      redirect_to edit_post_path(@post), alert: 'Échec de la dépublication de l\'article.'
     end
   end
-
-
 
   private
 
@@ -142,9 +139,8 @@ class PostsController < ApplicationController
               Post.published_post.find_by(id: params[:id])
             end
 
-    redirect_to root_path, alert: 'Post not found or not published.' unless @post
+    redirect_to root_path, alert: 'Article introuvable ou non publié.' unless @post
   end
-
 
   def post_params
     params.require(:post).permit(:title, :body, :tag_list, :published_at, :series_id)

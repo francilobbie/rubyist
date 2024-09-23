@@ -55,4 +55,10 @@
       <%= link_to 'My Posts', posts_user_path(@user), class: 'inline-block bg-green-500 hover:bg-green-600 text-white px-6 py-2 rounded-lg shadow' %>
     <% end %>
   </div>
+
+  <div class="flex justify-end items-end my-7">
+    <% if current_user == @user || current_user.has_role?(:admin) %>
+      <%= link_to 'Paramètre', edit_user_registration_path, class: 'inline-block bg-red-500 hover:bg-red-600 text-white px-6 py-2 rounded-lg shadow' %>
+    <% end %>
+  </div>
 </div>

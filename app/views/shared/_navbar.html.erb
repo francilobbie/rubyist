@@ -144,8 +144,6 @@
             <% if user_signed_in? %>
               <%= link_to "Your Profile", user_profile_path(current_user), class: "block px-4 py-2 text-sm text-gray-700" %>
             <% end %>
-            <a href="#" class="block px-4 py-2 text-sm text-gray-700" role="menuitem" tabindex="-1" id="user-menu-item-1">Settings</a>
-
             <% if user_signed_in? %>
               <%= link_to "Sign out", destroy_user_session_path, data: {turbo_method: :delete}, class: "block px-4 py-2 text-sm text-gray-700" %>
             <% else %>

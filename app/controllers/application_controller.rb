@@ -6,6 +6,7 @@ class ApplicationController < ActionController::Base
 
   before_action :configure_permitted_parameters, if: :devise_controller?
   before_action :set_notifications, if: :user_signed_in?
+  before_action :set_subscription, if: :user_signed_in?
 
 
   rescue_from CanCan::AccessDenied do |exception|
@@ -16,6 +17,7 @@ class ApplicationController < ActionController::Base
   end
 
   helper_method :ensure_admin_or_moderator!
+
 
 
   protected
@@ -38,6 +40,14 @@ class ApplicationController < ActionController::Base
   # Checks if the current user has an admin or moderator role
   def user_is_admin_or_moderator?
     user_signed_in? && (current_user.has_role?(:admin) || current_user.has_role?(:moderator))
+  end
+
+  def set_subscription
+    if current_user
+      @subscription = Subscription.find_by(email: current_user.email) || Subscription.new(email: current_user.email)
+    else
+      @subscription = Subscription.new
+    end
   end
 
 end
