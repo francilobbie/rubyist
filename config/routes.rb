@@ -52,7 +52,6 @@ Rails.application.routes.draw do
     resources :posts, only: [:index, :show, :new, :create, :edit, :update, :destroy]
   end
 
-  # config/routes.rb
   resources :series, only: [:index, :new, :create, :edit, :update, :show]
 
 
@@ -75,12 +74,15 @@ Rails.application.routes.draw do
   resources :donations, only: [:new, :create]
   post 'webhooks/stripe', to: 'webhooks#stripe'
 
-  # config/routes.rb
   resources :donations do
     collection do
       get 'success'
       get 'cancel'
     end
   end
+
+  post 'newsletter/subscribe', to: 'newsletters#subscribe', as: 'newsletter_subscribe'
+  get 'newsletter/unsubscribe', to: 'newsletters#confirm_unsubscribe', as: 'confirm_unsubscribe_newsletter'
+  delete 'newsletter/unsubscribe', to: 'newsletters#unsubscribe', as: 'unsubscribe_newsletter'
 
 end
