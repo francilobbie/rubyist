@@ -61,18 +61,10 @@
             </ul>
           </div>
           <div class="mt-10 md:mt-0">
-            <h3 class="text-sm font-semibold leading-6 text-white">Legal</h3>
-            <ul role="list" class="mt-6 space-y-4">
-              <li>
-                <a href="#" class="text-sm leading-6 text-gray-300 hover:text-white">Claim</a>
-              </li>
-              <li>
-                <a href="#" class="text-sm leading-6 text-gray-300 hover:text-white">Privacy</a>
-              </li>
-              <li>
-                <a href="#" class="text-sm leading-6 text-gray-300 hover:text-white">Terms</a>
-              </li>
-            </ul>
+            <h3 class="text-sm font-semibold leading-6 text-white">Nous faire part d'un retour</h3>
+            <div class="mt-6 space-y-4">
+              <%= link_to 'Envoyer un retour', new_feedback_path, class: 'flex w-full items-center cursor-pointer justify-center rounded-md bg-indigo-500 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-500"' %>
+            </div>
           </div>
         </div>
       </div>
