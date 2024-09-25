@@ -81,6 +81,9 @@ Rails.application.routes.draw do
     end
   end
 
+  resources :feedbacks, only: [:new, :create]
+
+
   post 'newsletter/subscribe', to: 'newsletters#subscribe', as: 'newsletter_subscribe'
   get 'newsletter/unsubscribe', to: 'newsletters#confirm_unsubscribe', as: 'confirm_unsubscribe_newsletter'
   delete 'newsletter/unsubscribe', to: 'newsletters#unsubscribe', as: 'unsubscribe_newsletter'

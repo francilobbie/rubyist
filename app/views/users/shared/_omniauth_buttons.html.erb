@@ -1,3 +1,4 @@
+<%# app/views/users/shared/_omniauth_buttons.html.erb %>
 <% if devise_mapping.omniauthable? %>
   <div class="mt-4 space-y-2">
     <% resource_class.omniauth_providers.each do |provider| %>
@@ -14,7 +15,7 @@
 
       <%= button_to omniauth_authorize_path(resource_name, provider), method: :post, class: "w-full flex items-center justify-center bg-white border border-gray-800 text-gray-800 font-bold py-2 px-4 rounded-full hover:bg-gray-100 shadow", data: { turbo: false } do %>
         <img src="<%= asset_path("#{provider}-logo.svg") %>" alt="<%= provider_display_name %> Logo" class="w-5 h-5 mr-2" />
-        <span>Sign in with <%= provider_display_name %></span>
+        <span>Se connecter avec <%= provider_display_name %></span>
       <% end %>
     <% end %>
   </div>
