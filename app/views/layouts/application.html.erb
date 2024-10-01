@@ -6,27 +6,37 @@
     <%= csrf_meta_tags %>
     <%= csp_meta_tag %>
     <%= stylesheet_link_tag "tailwind", "inter-font", "data-turbo-track": "reload" %>
-     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css"
-    integrity="sha512-xodZBNTC5n17Xt2atTPuE1HxjVMSvLVW9ocqUKLsCC5CXdbqCmblAshOMAS6/keqq/sMZMZ19scR4PsZChSR7A=="
-    crossorigin=""/>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css"
+          integrity="sha512-xodZBNTC5n17Xt2atTPuE1HxjVMSvLVW9ocqUKLsCC5CXdbqCmblAshOMAS6/keqq/sMZMZ19scR4PsZChSR7A=="
+          crossorigin="" />
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/choices.js/public/assets/styles/choices.min.css" />
     <link href='https://api.mapbox.com/mapbox-gl-js/v2.6.1/mapbox-gl.css' rel='stylesheet' />
     <%= stylesheet_link_tag "application", "data-turbo-track": "reload" %>
     <%= javascript_importmap_tags %>
-
     <meta name="current-user-id" content="<%= current_user&.id %>">
   </head>
 
-  <body>
+  <!-- Add flexbox utilities to the body -->
+  <body class="flex flex-col min-h-screen">
+    <!-- Navbar -->
     <%= render "shared/navbar" %>
+
+    <!-- Flash Messages -->
     <%= render 'layouts/flash_messages' %>
-    <% if controller_name == "posts" && action_name == "index" %>
-      <%= render "shared/searchbar" %>
-    <% end %>
 
+    <!-- Content Wrapper -->
+    <main class="flex-grow min-h-screen">
+      <% if controller_name == "posts" && action_name == "index" %>
+        <%= render "shared/searchbar" %>
+      <% end %>
+
+      <!-- Main content goes here -->
       <%= yield %>
+    </main>
 
+    <!-- Footer -->
     <%= render "shared/footer" %>
+
     <script src='https://api.mapbox.com/mapbox-gl-js/v2.6.1/mapbox-gl.js'></script>
     <script src="https://cdn.jsdelivr.net/npm/choices.js/public/assets/scripts/choices.min.js"></script>
   </body>

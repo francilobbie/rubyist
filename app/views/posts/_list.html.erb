@@ -23,8 +23,8 @@
           <div class="flex flex-wrap">
             <p class="font-semibold mr-2">Tags:</p>
             <% post.tags.each do |tag| %>
-              <span class="bg-orange-400 text-white rounded-full ml-2 px-3 py-1 text-sm font-medium cursor-pointer">
-                <%= tag.name %>
+              <span class="inline-block hover:underline mr-1 text-sm font-semibold text-blue-700 cursor-pointer">
+                <%= "#" + tag.name %>
               </span>
             <% end %>
           </div>

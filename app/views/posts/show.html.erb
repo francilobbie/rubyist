@@ -1,11 +1,12 @@
-<%# app/views/posts/show.html.erb %>
-<div class="container mx-auto mt-20">
-  <div class="bg-white p-6 rounded-lg shadow-lg">
+<div class="container flex justify-center mx-auto mt-6 px-4 sm:px-6 lg:px-8">
+  <div class="bg-white p-6 rounded-lg w-full max-w-2xl ">
     <%= turbo_stream_from @post %>
-    <div id="<%= dom_id(@post) %>">
+    <div id="<%= dom_id(@post) %>" class="">
       <%= render @post %>
     </div>
+
     <div class="mt-8">
+      <h3 class="text-lg font-semibold mb-4">Laissez un commentaire</h3>
       <%= form_with(model: [@post, Comment.new], local: true, html: {
         class: "space-y-4",
         id: "comment_form",
@@ -14,10 +15,11 @@
           post_comment_form_target: "form"
         }
       }) do |form| %>
-        <%= form.text_area :content, class: "w-full p-2 rounded border border-gray-300 focus:ring-blue-500 focus:border-blue-500 transition duration-150 ease-in-out", placeholder: "Add a comment..." %>
-        <%= form.submit "Add Comment", class: "bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded cursor-pointer" %>
+        <%= form.text_area :content, class: "w-full p-2 rounded border border-gray-300 focus:ring-blue-500 focus:border-blue-500 transition duration-150 ease-in-out", placeholder: "Ajouter un commentaire..." %>
+        <%= form.submit "Ajouter un commentaire", class: "bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded cursor-pointer" %>
       <% end %>
     </div>
+
     <%= turbo_stream_from [@post, :comments] %>
     <div id="comments" class="mt-8">
       <% @post.comments.top_level.order(id: :desc).each do |comment| %>
@@ -27,4 +29,4 @@
   </div>
 </div>
 
-<%= render "shared/modal",modal_trigger_id: "share-modal-trigger" ,modal_content: "shared/partials/share_post", content_params: { post: @post } %>
+<%= render "shared/modal", modal_trigger_id: "share-modal-trigger", modal_content: "shared/partials/share_post", content_params: { post: @post } %>
