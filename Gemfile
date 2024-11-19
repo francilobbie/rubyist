@@ -66,6 +66,8 @@ gem "image_processing"
   gem 'chartkick'
   gem 'groupdate'
   gem 'sidekiq'
+  gem 'sassc-rails'
+  gem 'font-awesome-sass'
 
 
 
