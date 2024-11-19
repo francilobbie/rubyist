@@ -8,28 +8,14 @@
                     method: :delete,
                     data: { turbo_frame: "_top", turbo_action: "advance" },
                     class: 'inline-flex items-center px-4 py-2' do %>
-        <svg width="24px" height="24px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <rect width="24" height="24" fill="none"/>
-          <path d="M21 8.99998C21 12.7539 15.7156 17.9757 12.5857 20.5327C12.2416 20.8137 11.7516 20.8225 11.399 20.5523C8.26723 18.1523 3 13.1225 3 8.99998C3 2.00001 12 2.00002 12 8C12 2.00001 21 1.99999 21 8.99998Z"
-            stroke="#000000"
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            fill="red" />
-        </svg>
+        <i class="fa-solid fa-thumbs-up text-xl text-blue-500"></i> <!-- Filled thumb for liked -->
       <% end %>
     <% else %>
       <%= button_to post_comment_likes_path(likeable.post, likeable),
                     method: :post,
                     data: { turbo_frame: "_top", turbo_action: "advance" },
                     class: 'inline-flex items-center px-4 py-2' do %>
-        <svg width="24px" height="24px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <rect width="24" height="24" fill="none"/>
-          <path d="M21 8.99998C21 12.7539 15.7156 17.9757 12.5857 20.5327C12.2416 20.8137 11.7516 20.8225 11.399 20.5523C8.26723 18.1523 3 13.1225 3 8.99998C3 2.00001 12 2.00002 12 8C12 2.00001 21 1.99999 21 8.99998Z"
-            stroke="#000000"
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            fill="none" />
-        </svg>
+        <i class="fa-regular fa-thumbs-up text-xl"></i> <!-- Outline thumb for not liked -->
       <% end %>
     <% end %>
   <% else %>
@@ -38,28 +24,14 @@
                     method: :delete,
                     data: { turbo_frame: "_top", turbo_action: "advance" },
                     class: 'inline-flex items-center px-4 py-2' do %>
-        <svg width="24px" height="24px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <rect width="24" height="24" fill="none"/>
-          <path d="M21 8.99998C21 12.7539 15.7156 17.9757 12.5857 20.5327C12.2416 20.8137 11.7516 20.8225 11.399 20.5523C8.26723 18.1523 3 13.1225 3 8.99998C3 2.00001 12 2.00002 12 8C12 2.00001 21 1.99999 21 8.99998Z"
-            stroke="#000000"
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            fill="red" />
-        </svg>
+        <i class="fa-solid fa-heart text-2xl text-red-500"></i> <!-- Filled thumb for liked -->
       <% end %>
     <% else %>
       <%= button_to post_likes_path(likeable),
                     method: :post,
                     data: { turbo_frame: "_top", turbo_action: "advance" },
                     class: 'inline-flex items-center px-4 py-2' do %>
-        <svg width="24px" height="24px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <rect width="24" height="24" fill="none"/>
-          <path d="M21 8.99998C21 12.7539 15.7156 17.9757 12.5857 20.5327C12.2416 20.8137 11.7516 20.8225 11.399 20.5523C8.26723 18.1523 3 13.1225 3 8.99998C3 2.00001 12 2.00002 12 8C12 2.00001 21 1.99999 21 8.99998Z"
-            stroke="#000000"
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            fill="none" />
-        </svg>
+        <i class="fa-regular fa-heart text-2xl"></i> <!-- Outline thumb for not liked -->
       <% end %>
     <% end %>
   <% end %>

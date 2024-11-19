@@ -1,9 +1,7 @@
 <div data-search-target="list" class="my-6">
   <div class="text-center">
-    <% if params[:query].blank? %>
-      <h1 class="text-3xl font-bold my-4"><%= pluralize posts.count, 'post' %> available</h1>
-    <% else %>
-      <h1 class="text-3xl font-bold my-4"><%= pluralize posts.count, 'result' %> for "<%= params[:query] %>"</h1>
+    <% if !params[:query].blank? %>
+      <h1 class="text-3xl font-bold my-4"><%= pluralize posts.count, 'resultat' %> pour "<%= params[:query] %>"</h1>
     <% end %>
   </div>
 
@@ -16,8 +14,8 @@
         <p class="text-gray-700 mb-4"><%= truncate(post.body.to_plain_text, length: 200) %></p>
         <!-- Owner's email and post creation time -->
         <div class="mb-4">
-          <p class="text-sm text-gray-500">Posted by <%= post.user.email %> on <%= post.published_at.strftime("%B %d, %Y") %></p>
-          <p><strong>Estimated Reading Time:</strong> <%= post.reading_time %> minutes</p>
+          <p class="text-sm text-gray-500">Par <%= post.user.full_name %> - <%= post.published_at.strftime("%d %B %Y") %></p>
+          <p><strong>Temps de lecture :</strong> <%= post.reading_time %> minutes</p>
         </div>
         <div class="flex flex-wrap items-center justify-between">
           <div class="flex flex-wrap">
@@ -30,10 +28,14 @@
           </div>
           <div class="flex space-x-2 mt-4 sm:mt-0">
             <% if can? :update, post %>
-              <%= link_to "edit", edit_post_path(post), class: "text-sm bg-blue-500 text-white rounded-full px-4 py-2 transition-colors duration-150 hover:bg-blue-600" %>
+              <%= link_to edit_post_path(post), class: "inline-block bg-blue-500 text-white rounded-full px-4 py-2" do %>
+                <i class="fas fa-edit mr-2"></i> Modifier
+              <% end %>
             <% end %>
             <% if can? :destroy, post %>
-              <%= link_to "delete", post_path(post), method: :delete, data: { confirm: "Are you sure?" }, class: "text-sm bg-red-500 text-white rounded-full px-4 py-2 transition-colors duration-150 hover:bg-red-600" %>
+              <%= link_to post_path(post), method: :delete, data: { confirm: "Êtes-vous sûr ?" }, class: "inline-block bg-red-500 text-white rounded-full px-4 py-2 ml-2" do %>
+                <i class="fas fa-trash-alt mr-2"></i> Supprimer
+              <% end %>
             <% end %>
           </div>
         </div>

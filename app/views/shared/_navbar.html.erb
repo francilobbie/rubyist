@@ -1,9 +1,9 @@
-<nav class="bg-gray-800 sticky top-0 z-40" data-controller="header">
+<nav class="bg-white sticky top-0 z-40" data-controller="header">
   <div class="mx-auto max-w-7xl px-2 sm:px-6 lg:px-8">
     <div class="relative flex h-16 items-center justify-between">
       <div class="absolute inset-y-0 left-0 flex items-center sm:hidden">
         <!-- Mobile menu button-->
-        <button data-header-target="openMobileUserMenu" type="button" class="relative inline-flex items-center justify-center rounded-md p-2 text-gray-400 hover:bg-gray-700 hover:text-white focus:outline-none focus:ring-2 focus:ring-inset focus:ring-white" aria-controls="mobile-menu" aria-expanded="false">
+        <button data-header-target="openMobileUserMenu" type="button" class="relative inline-flex items-center justify-center rounded-md p-2 text-gray-900 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-white" aria-controls="mobile-menu" aria-expanded="false">
           <span class="absolute -inset-0.5"></span>
           <span class="sr-only">Open main menu</span>
           <!--
@@ -27,7 +27,8 @@
       <div class="flex flex-1 items-center justify-between sm:items-stretch sm:justify-between">
         <%= link_to root_path do  %>
           <div class="flex flex-shrink-0 items-center">
-            <img class="h-8 w-auto" src="https://tailwindui.com/img/logos/mark.svg?color=indigo&shade=500" alt="Your Company">
+            <img class="h-12 w-auto" src="<%= image_path('captainruby-logo.png') %>" alt="Logo Captain Ruby">
+            <%# <img class="h-8 w-auto" src="https://tailwindui.com/img/logos/mark.svg?color=indigo&shade=500" alt="Your Company"> %>
           </div>
         <% end %>
         <div
@@ -41,17 +42,17 @@
               <p class="text-white"><%= current_user.full_name %></p>
             <% end %>
             <% if user_signed_in? %>
-              <%= link_to "Acceuil", root_path, class: "text-gray-300 hover:bg-gray-700 hover:text-white rounded-md px-3 py-2 text-sm font-medium" %>
+              <%= link_to "Acceuil", root_path, class: "text-gray-900 rounded-md px-3 py-2 text-sm font-medium" %>
               <% if current_user.has_role?(:admin) || current_user.has_role?(:moderator) %>
-                <%= link_to 'Dashboard', dashboard_show_path, class: "text-gray-300 hover:bg-gray-700 hover:text-white rounded-md px-3 py-2 text-sm font-medium" %>
+                <%= link_to 'Dashboard', dashboard_show_path, class: "text-gray-900 rounded-md px-3 py-2 text-sm font-medium" %>
               <% end %>
             <% else %>
-              <%= link_to "Acceuil", root_path, class: "text-gray-300 hover:bg-gray-700 hover:text-white rounded-md px-3 py-2 text-sm font-medium" %>
+              <%= link_to "Acceuil", root_path, class: "text-gray-900 rounded-md px-3 py-2 text-sm font-medium" %>
             <% end %>
-            <%= link_to "Map", maps_path, class: "text-gray-300 hover:bg-gray-700 hover:text-white rounded-md px-3 py-2 text-sm font-medium" %>
-            <%= link_to "Faire un don", new_donation_path, class: "text-gray-300 hover:bg-gray-700 hover:text-white rounded-md px-3 py-2 text-sm font-medium" %>
+            <%= link_to "Map", maps_path, class: "text-gray-900 rounded-md px-3 py-2 text-sm font-medium" %>
+            <%= link_to "Faire un don", new_donation_path, class: "text-gray-900 rounded-md px-3 py-2 text-sm font-medium" %>
             <% if user_signed_in? && current_user.has_role?(:admin) %>
-              <%= link_to "Admin", admin_root_path, class: "text-gray-300 hover:bg-gray-700 hover:text-white rounded-md px-3 py-2 text-sm font-medium" %>
+              <%= link_to "Admin", admin_root_path, class: "text-gray-900 rounded-md px-3 py-2 text-sm font-medium" %>
             <% end %>
           </div>
         </div>
@@ -60,8 +61,8 @@
 
       <% if user_signed_in? %>
         <div data-controller="notifications" class="relative">
-          <button id="notification-bell" type="button" class="relative rounded-full bg-gray-800 p-1 text-gray-400 hover:text-white focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800" data-action="click->notifications#toggle">
-            <span class="sr-only">View notifications</span>
+          <button id="notification-bell" type="button" class="relative rounded-full  p-1 text-gray-900 focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800" data-action="click->notifications#toggle">
+            <span class="sr-only">Voir mes notifications</span>
             <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true">
               <path stroke-linecap="round" stroke-linejoin="round" d="M14.857 17.082a23.848 23.848 0 005.454-1.31A8.967 8.967 0 0118 9.75v-.7V9A6 6 0 006 9v.75a8.967 8.967 0 01-2.312 6.022c1.733.64 3.56 1.085 5.455 1.31m5.714 0a24.255 24.255 0 01-5.714 0m5.714 0a3 3 0 11-5.714 0" />
             </svg>
@@ -77,7 +78,7 @@
             <div class="p-4">
               <div class="flex items-center justify-between">
                 <h2 class="text-lg font-semibold text-gray-700">Notifications</h2>
-                <%= link_to "View All", notifications_path, class: "text-gray-700" %>
+                <%= link_to "Tout voir", notifications_path, class: "text-gray-700" %>
               </div>
               <hr class="my-2">
               <div id="notification-dropdown-list" class="space-y-2 max-h-[30rem] overflow-y-auto">
@@ -141,13 +142,13 @@
           >
             <!-- Active: "bg-gray-100", Not Active: "" -->
             <% if user_signed_in? %>
-              <%= link_to "Your Profile", user_profile_path(current_user), class: "block px-4 py-2 text-sm text-gray-700" %>
+              <%= link_to "Mon Profile", user_profile_path(current_user), class: "block px-4 py-2 text-sm text-gray-700" %>
             <% end %>
             <% if user_signed_in? %>
-              <%= link_to "Sign out", destroy_user_session_path, data: {turbo_method: :delete}, class: "block px-4 py-2 text-sm text-gray-700" %>
+              <%= link_to "Déconnexion", destroy_user_session_path, data: {turbo_method: :delete}, class: "block px-4 py-2 text-sm text-gray-700" %>
             <% else %>
-              <%= link_to "Sign up", new_user_registration_path, class: "block px-4 py-2 text-sm text-gray-900" %>
-              <%= link_to "Sign in", new_user_session_path, class: "block px-4 py-2 text-sm text-gray-700" %>
+              <%= link_to "S'inscrire", new_user_registration_path, class: "block px-4 py-2 text-sm text-gray-900" %>
+              <%= link_to "Se connecter", new_user_session_path, class: "block px-4 py-2 text-sm text-gray-700" %>
             <% end %>
           </div>
         </div>

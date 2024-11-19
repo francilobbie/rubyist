@@ -25,6 +25,8 @@ module Rubyist
     # config.eager_load_paths << Rails.root.join("extras")
     #
     config.active_job.queue_adapter = :sidekiq
+    config.i18n.default_locale = :fr
+
 
   end
 end
