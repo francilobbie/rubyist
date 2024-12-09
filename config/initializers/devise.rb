@@ -279,7 +279,9 @@ Devise.setup do |config|
     prompt: 'select_account',
     skip_jwt: true
   }
-  config.omniauth :github, ENV['GITHUB_CLIENT_ID'], ENV['GITHUB_CLIENT_SECRET'], {}
+  config.omniauth :github, ENV['GITHUB_CLIENT_ID'], ENV['GITHUB_CLIENT_SECRET'], {
+    scope: 'user,public_repo'
+  }
   config.omniauth :facebook, ENV['FACEBOOK_APP_ID'], ENV['FACEBOOK_APP_SECRET'], {}
 
 
