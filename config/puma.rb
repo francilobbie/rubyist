@@ -10,37 +10,31 @@
 # Puma configuration file.
 
 # Puma can serve each request in a thread from an internal thread pool.
+# Puma configuration file.
+
+# Threads configuration
 max_threads_count = ENV.fetch("RAILS_MAX_THREADS") { 5 }
 min_threads_count = ENV.fetch("RAILS_MIN_THREADS") { max_threads_count }
 threads min_threads_count, max_threads_count
 
-# Specifies the worker count in production based on the number of processors.
+# Worker configuration for production
 if ENV["RAILS_ENV"] == "production"
   require "concurrent-ruby"
   worker_count = Integer(ENV.fetch("WEB_CONCURRENCY") { Concurrent.physical_processor_count })
   workers worker_count if worker_count > 1
 end
 
-# Use SSL in development for HTTPS support.
-if Rails.env.development?
-  ssl_bind '0.0.0.0', '3000', {
-    key: Rails.root.join("config/ssl/server.key").to_s,
-    cert: Rails.root.join("config/ssl/server.crt").to_s,
-    verify_mode: 'none'
-  }
-else
-  # Use a regular HTTP port for environments other than development.
-  port ENV.fetch("PORT") { 3000 }
-end
+# Bind to port 3000 using HTTP
+bind "tcp://0.0.0.0:3000"
 
-# Worker timeout threshold.
+# Worker timeout for development
 worker_timeout 3600 if Rails.env.development?
 
-# Specifies the `environment` that Puma will run in.
+# Set the environment
 environment ENV.fetch("RAILS_ENV") { "development" }
 
-# Specifies the `pidfile` that Puma will use.
+# PID file location
 pidfile ENV.fetch("PIDFILE") { "tmp/pids/server.pid" }
 
-# Allow puma to be restarted by `bin/rails restart` command.
+# Allow Puma to be restarted by `bin/rails restart` command
 plugin :tmp_restart

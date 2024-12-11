@@ -1,10 +1,15 @@
 // Configure your import map in config/importmap.rb. Read more: https://github.com/rails/importmap-rails
 import "@hotwired/turbo-rails";
-import "controllers";
+import "./controllers";
 
 import "trix";
 import "@rails/actiontext";
-import "channels";
+import "./channels";
 
 import "chartkick";
-import "Chart.bundle";
+// import "Chart.bundle";
+import Chart from "chart.js/auto";
+
+
+import "trix"
+import "@rails/actiontext"

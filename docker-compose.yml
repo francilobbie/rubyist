@@ -1,0 +1,62 @@
+version: '3.9'
+
+services:
+  app:
+    build:
+      context: .
+    command: bundle exec rails server -b 0.0.0.0 -p 3000
+    ports:
+      - "3001:3000"
+    depends_on:
+      - db
+      - redis
+    volumes:
+      - .:/rails
+      - bundle_data:/usr/local/bundle
+    env_file:
+      - .env
+    environment:
+      RAILS_ENV: production
+      DATABASE_URL: postgres://rubyist:password@db:5432/rubyist_production
+      REDIS_URL: redis://:password@redis:6379/0
+
+  worker:
+    build:
+      context: .
+    command: bundle exec sidekiq
+    depends_on:
+      - redis
+      - db
+    volumes:
+      - .:/rails
+      - bundle_data:/usr/local/bundle
+    env_file:
+      - .env
+    environment:
+      RAILS_ENV: production
+      DATABASE_URL: postgres://rubyist:password@db:5432/rubyist_production
+      REDIS_URL: redis://:password@redis:6379/0
+
+  db:
+    image: postgres:14
+    environment:
+      POSTGRES_USER: rubyist
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: rubyist_production
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+  redis:
+    image: redis:7
+    command: ["redis-server", "--requirepass", "password"]
+    environment:
+      REDIS_PASSWORD: password
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+
+volumes:
+  bundle_data:
+  postgres_data:
+  redis_data:

@@ -30,7 +30,7 @@ gem "tailwindcss-rails"
 gem "jbuilder"
 
 # Use Redis adapter to run Action Cable in production
-# gem "redis", ">= 4.0.1"
+gem "redis", ">= 4.0.1"
 
 # Use Kredis to get higher-level data types in Redis [https://github.com/rails/kredis]
 # gem "kredis"
@@ -68,6 +68,9 @@ gem "image_processing"
   gem 'sidekiq'
   gem 'cloudinary'
   gem 'activestorage-cloudinary-service'
+  gem 'jsbundling-rails'
+  gem 'sassc-rails'
+
 
 
 
@@ -92,7 +95,7 @@ end
 group :development do
   # Use console on exceptions pages [https://github.com/rails/web-console]
   gem "web-console"
-  gem 'foreman'
+  # gem 'foreman'
 
 
   # Add speed badges [https://github.com/MiniProfiler/rack-mini-profiler]

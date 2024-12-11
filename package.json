@@ -1,0 +1,19 @@
+{
+  "name": "rubyiste",
+  "private": true,
+  "dependencies": {
+    "@hotwired/stimulus": "^3.2.2",
+    "@hotwired/turbo-rails": "^8.0.12",
+    "@rails/actiontext": "^8.0.0",
+    "autoprefixer": "^10.4.20",
+    "chart.js": "^4.4.7",
+    "chartkick": "^5.0.1",
+    "postcss": "^8.4.49",
+    "tailwindcss": "^3.4.16",
+    "trix": "^2.1.10"
+  },
+  "scripts": {
+  "build:css": "tailwindcss -i ./app/assets/stylesheets/application.tailwind.css -o ./app/assets/builds/application.css --minify",
+  "build": "esbuild app/javascript/application.js --bundle --outdir=app/assets/builds --external:@hotwired/stimulus-loading"
+}
+}
