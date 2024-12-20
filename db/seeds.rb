@@ -9,12 +9,26 @@ require 'faker'
 
 users = User.with_role(:writer).or(User.with_role(:admin))
 
+# Create admin and writer users if they don't exist
+admin = User.find_or_create_by!(email: "franci@mail.com") do |user|
+  user.password = "azerty"
+  user.add_role(:admin)
+end
+
+writer = User.find_or_create_by!(email: "augustin@mail.com") do |user|
+  user.password = "azerty"
+  user.add_role(:writer)
+end
+
+puts "Admin and Writer users created."
+
+
 100.times do
   Post.create!(
     title: Faker::Book.title,
     body: Faker::Lorem.paragraph(sentence_count: 5),
     published_at: Time.current,
-    user: users.sample
+    user: users.sample,
   )
 end
 
