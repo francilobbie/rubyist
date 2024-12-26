@@ -106,8 +106,4 @@ development:
 
 production:
   <<: *default
-  database: rubyist_production
-  username: francilobbie
-  password: <%= ENV["RUBYIST_DATABASE_PASSWORD"] %>
-  host: 127.0.0.1
-  port: 5432
+    url: <%= ENV["DATABASE_URL"] %>
