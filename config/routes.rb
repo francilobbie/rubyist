@@ -37,6 +37,7 @@ Rails.application.routes.draw do
 
   namespace :admin do
     # put your admin routes here
+    get 'dashboard/weekly_donations', to: 'dashboard#weekly_donations'
     root to: "dashboard#index" # Example admin dashboard route
     resources :users do
       collection do
@@ -50,6 +51,9 @@ Rails.application.routes.draw do
     end
     resources :posts, only: [:index, :show, :new, :create, :edit, :update, :destroy]
   end
+
+  resources :series, only: [:index, :new, :create, :edit, :update, :show]
+
 
   resources :reports, only: [:index, :show, :edit, :update, :destroy, :new, :create] do
     member do
@@ -69,4 +73,19 @@ Rails.application.routes.draw do
 
   resources :donations, only: [:new, :create]
   post 'webhooks/stripe', to: 'webhooks#stripe'
+
+  resources :donations do
+    collection do
+      get 'success'
+      get 'cancel'
+    end
+  end
+
+  resources :feedbacks, only: [:new, :create]
+
+
+  post 'newsletter/subscribe', to: 'newsletters#subscribe', as: 'newsletter_subscribe'
+  get 'newsletter/unsubscribe', to: 'newsletters#confirm_unsubscribe', as: 'confirm_unsubscribe_newsletter'
+  delete 'newsletter/unsubscribe', to: 'newsletters#unsubscribe', as: 'unsubscribe_newsletter'
+
 end

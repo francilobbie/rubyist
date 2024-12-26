@@ -1,0 +1,122 @@
+fr:
+  datetime:
+    distance_in_words:
+      half_a_minute: "moins d'une minute"
+      less_than_x_seconds:
+        one: "moins de 1 seconde"
+        other: "moins de %{count} secondes"
+      x_seconds:
+        one: "1 seconde"
+        other: "%{count} secondes"
+      less_than_x_minutes:
+        one: "moins d'une minute"
+        other: "moins de %{count} minutes"
+      x_minutes:
+        one: "1 minute"
+        other: "%{count} minutes"
+      about_x_hours:
+        one: "environ 1 heure"
+        other: "environ %{count} heures"
+      x_days:
+        one: "1 jour"
+        other: "%{count} jours"
+      about_x_months:
+        one: "environ 1 mois"
+        other: "environ %{count} mois"
+      x_months:
+        one: "1 mois"
+        other: "%{count} mois"
+      about_x_years:
+        one: "environ 1 an"
+        other: "environ %{count} ans"
+      over_x_years:
+        one: "plus de 1 an"
+        other: "plus de %{count} ans"
+  pundit:
+    default: "Action non autorisée."
+    not_authorized: "Vous n'êtes pas autorisé à accéder à cette page."
+    policy:
+      show?: "Vous n'avez pas la permission de voir cet élément."
+      create?: "Vous n'avez pas la permission de créer cet élément."
+      update?: "Vous n'avez pas la permission de modifier cet élément."
+      destroy?: "Vous n'avez pas la permission de supprimer cet élément."
+  activerecord: &activerecord
+    errors:
+      messages:
+        record_invalid: "La validation a échoué : %{errors}"
+        restrict_dependent_destroy:
+          has_many: "Impossible de supprimer cet enregistrement car il est associé à %{record}."
+          has_one: "Impossible de supprimer cet enregistrement car il est associé à %{record}."
+        taken: "a déjà été pris"
+        too_long:
+          one: "est trop long (pas plus de 1 caractère)"
+          other: "est trop long (pas plus de %{count} caractères)"
+        too_short:
+          one: "est trop court (au moins 1 caractère)"
+          other: "est trop court (au moins %{count} caractères)"
+        wrong_length:
+          one: "n'est pas de la bonne longueur (doit être de 1 caractère)"
+          other: "n'est pas de la bonne longueur (doit être de %{count} caractères)"
+        blank: "ne peut pas être vide"
+        empty: "ne peut pas être vide"
+        present: "doit être vide"
+        confirmation: "ne correspond pas à la confirmation"
+        accepted: "doit être accepté"
+        not_a_number: "n'est pas un nombre"
+        not_an_integer: "doit être un entier"
+        greater_than: "doit être supérieur à %{count}"
+        greater_than_or_equal_to: "doit être supérieur ou égal à %{count}"
+        equal_to: "doit être égal à %{count}"
+        less_than: "doit être inférieur à %{count}"
+        less_than_or_equal_to: "doit être inférieur ou égal à %{count}"
+        odd: "doit être impair"
+        even: "doit être pair"
+      template:
+        header:
+          one: "Impossible de sauvegarder cet enregistrement : 1 erreur"
+          other: "Impossible de sauvegarder cet enregistrement : %{count} erreurs"
+        body: "Veuillez vérifier les champs suivants :"
+  activemodel: &activemodel
+    errors:
+      messages:
+        inclusion: "n'est pas inclus dans la liste"
+        exclusion: "est réservé"
+        invalid: "n'est pas valide"
+        confirmation: "ne correspond pas à la confirmation"
+        accepted: "doit être accepté"
+        empty: "ne peut pas être vide"
+        blank: "ne peut pas être vide"
+        present: "doit être vide"
+        too_long:
+          one: "est trop long (pas plus de 1 caractère)"
+          other: "est trop long (pas plus de %{count} caractères)"
+        too_short:
+          one: "est trop court (au moins 1 caractère)"
+          other: "est trop court (au moins %{count} caractères)"
+        wrong_length:
+          one: "n'est pas de la bonne longueur (doit être de 1 caractère)"
+          other: "n'est pas de la bonne longueur (doit être de %{count} caractères)"
+        not_a_number: "n'est pas un nombre"
+        not_an_integer: "doit être un entier"
+        greater_than: "doit être supérieur à %{count}"
+        greater_than_or_equal_to: "doit être supérieur ou égal à %{count}"
+        equal_to: "doit être égal à %{count}"
+        less_than: "doit être inférieur à %{count}"
+        less_than_or_equal_to: "doit être inférieur ou égal à %{count}"
+        odd: "doit être impair"
+        even: "doit être pair"
+      template:
+        header:
+          one: "Impossible de sauvegarder cet enregistrement : 1 erreur"
+          other: "Impossible de sauvegarder cet enregistrement : %{count} erreurs"
+        body: "Veuillez vérifier les champs suivants :"
+  errors: &errors
+    messages:
+      already_confirmed: "a déjà été confirmé, essayez de vous connecter"
+      confirmation_period_expired: "doit être confirmé dans %{period}, veuillez en demander un nouveau"
+      expired: "a expiré, veuillez en demander un nouveau"
+      not_found: "non trouvé"
+      not_locked: "n'était pas verrouillé"
+      not_saved:
+        one: "1 erreur a empêché la sauvegarde de %{resource} :"
+        other: "%{count} erreurs ont empêché la sauvegarde de %{resource} :"

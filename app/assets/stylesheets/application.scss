@@ -12,5 +12,9 @@
  *
  *= require_tree .
  *= require_self
+
  */
-  @import "components"
+  @import "components";
+  @import "application.tailwind";
+  @import "font-awesome";
+  // app/assets/stylesheets/application.scss

@@ -1,0 +1,11 @@
+<p>Bonjour,</p>
+
+<p>Un nouvel article vient d'être publié sur notre blog : "<%= @post.title %>".</p>
+<p>Vous pouvez le lire en cliquant sur le lien ci-dessous :</p>
+
+<p><%= link_to 'Lire l\'article', post_url(@post) %></p>
+
+<p>Pour vous désinscrire de la newsletter, <%= link_to 'cliquez ici', confirm_unsubscribe_newsletter_url(email: @subscriber_email) %>.</p>
+
+
+<p>Merci de suivre notre blog !</p>

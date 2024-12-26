@@ -1,0 +1,27 @@
+<% if user_signed_in? %>
+  <% if @subscription.present? && @subscription.persisted? && @subscription.subscribed? %>
+    <%= form_with url: unsubscribe_newsletter_path, method: :delete, local: true, class: "mt-6 sm:flex sm:max-w-md" do |f| %>
+      <label for="email-address" class="sr-only">Email address</label>
+      <%= f.hidden_field :email, value: @subscription.email %>
+      <div class="mt-4 sm:ml-4 sm:mt-0 sm:flex-shrink-0">
+        <%= f.submit "Se désabonner", class: "flex w-full items-center cursor-pointer justify-center rounded-md bg-red-500 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-red-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-red-500" %>
+      </div>
+    <% end %>
+  <% else %>
+    <%= form_with url: newsletter_subscribe_path, method: :post, local: true, class: "mt-6 sm:flex sm:max-w-md" do |f| %>
+      <label for="email-address" class="sr-only">Email address</label>
+      <%= f.email_field :email, value: current_user.email, placeholder: "Entrez votre email", class: "w-full min-w-0 appearance-none rounded-md border-0 bg-white/5 px-3 py-1.5 text-base text-white shadow-sm ring-1 ring-inset ring-white/10 placeholder:text-gray-500 focus:ring-2 focus:ring-inset focus:ring-indigo-500 sm:w-64 sm:text-sm sm:leading-6 xl:w-full", required: true %>
+      <div class="mt-4 sm:ml-4 sm:mt-0 sm:flex-shrink-0">
+        <%= f.submit "S'abonner", class: "flex w-full items-center cursor-pointer justify-center rounded-md bg-indigo-500 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-500" %>
+      </div>
+    <% end %>
+  <% end %>
+<% else %>
+  <%= form_with url: new_user_session_path, method: :get, local: true, class: "mt-6 sm:flex sm:max-w-md" do |f| %>
+    <label for="email-address" class="sr-only">Email address</label>
+    <%= f.email_field :email, placeholder: "Entrez votre email", class: "w-full min-w-0 appearance-none rounded-md border-0 bg-white/5 px-3 py-1.5 text-base text-white shadow-sm ring-1 ring-inset ring-white/10 placeholder:text-gray-500 focus:ring-2 focus:ring-inset focus:ring-indigo-500 sm:w-64 sm:text-sm sm:leading-6 xl:w-full", required: true %>
+    <div class="mt-4 sm:ml-4 sm:mt-0 sm:flex-shrink-0">
+      <%= f.submit "S'abonner", class: "flex w-full items-center cursor-pointer justify-center rounded-md bg-indigo-500 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-500" %>
+    </div>
+  <% end %>
+<% end %>

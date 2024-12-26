@@ -1,0 +1,32 @@
+
+pre {
+  background: #2d2d2d;
+  color: #f8f8f2;
+  padding: 1rem;
+  border-radius: 0.5rem;
+  overflow: auto;
+  position: relative; /* To position the copy button */
+}
+
+pre code {
+  font-family: 'Courier New', Courier, monospace;
+  font-size: 0.9rem;
+}
+
+.copy-button {
+  position: absolute;
+  right: 10px;
+  bottom: 10px;
+  background-color: #1a202c;
+  color: white;
+  font-size: 12px;
+  padding: 5px;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+
+.trix-content pre {
+  background-color: #1a202c;
+  padding: 1rem;
+}

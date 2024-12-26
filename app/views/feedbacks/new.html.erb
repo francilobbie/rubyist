@@ -1,0 +1,28 @@
+<div class="flex items-center justify-center min-h-screen bg-gray-100">
+  <div class="w-full max-w-2xl bg-white shadow-md rounded-lg p-8">
+  <h2 class="text-xl font-semibold mb-4">Envoyer un retour</h2>
+
+  <%= form_with model: @feedback, local: true, class: "space-y-6" do |f| %>
+    <div class="field">
+      <%= f.label :name, "Nom", class: "block text-sm font-medium text-gray-700" %>
+      <%= f.text_field :name, required: true, class: "mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" %>
+    </div>
+
+    <div class="field">
+      <%= f.label :category, "Catégorie", class: "block text-sm font-medium text-gray-700" %>
+      <%= f.select :category, ['Problème', 'Suggestion', 'Autre'], prompt: 'Sélectionnez une catégorie', class: "mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" %>
+    </div>
+
+    <div class="field">
+      <%= f.label :content, "Description", class: "block text-sm font-medium text-gray-700" %>
+      <%= f.text_area :content, rows: 5, class: "mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" %>
+    </div>
+
+    <div class="actions">
+      <%= f.submit "Envoyer", class: "mt-4 cursor-pointer bg-indigo-600 text-white px-4 py-2 rounded-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500" %>
+    </div>
+  <% end %>
+
+
+  </div>
+</div>

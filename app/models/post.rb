@@ -12,6 +12,7 @@ class Post < ApplicationRecord
   has_many :comments, dependent: :destroy
   has_many :likes, as: :likeable, dependent: :destroy
   has_many :post_views, dependent: :destroy
+  belongs_to :series, optional: true
 
 
   has_many :save_posts, dependent: :destroy

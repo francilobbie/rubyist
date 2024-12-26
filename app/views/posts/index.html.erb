@@ -1,4 +1,10 @@
-<div class="container mt-12 mx-auto px-4 sm:px-6 lg:px-8">
+<div class="container mt-12 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+  <% if @pagy.count > @pagy.vars[:items] %>
+<div class="pagination-controls my-10 mx-auto">
+    <%== pagy_nav(@pagy) %>
+  </div>
+  <% end %>
+
   <div class="flex justify-between items-center flex-wrap">
     <div class="mb-4 lg:mb-0">
       <h1 class="text-3xl font-extrabold leading-tight text-gray-900">My Articles</h1>
@@ -15,4 +21,12 @@
   <div data-controller="modal" data-modal-trigger-id="search-form">
     <%= render 'shared/modal', modal_trigger_id: 'search-form', modal_content: 'shared/partials/search_modal', content_params: nil %>
   </div>
+  <% if @pagy.count > @pagy.vars[:items] %>
+  <div class=" mx-auto my-10 ">
+    <%== pagy_nav(@pagy) %>
+  </div>
+  <% end %>
+
+
+
 </div>

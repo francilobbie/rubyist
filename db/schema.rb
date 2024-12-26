@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2024_09_11_162610) do
+ActiveRecord::Schema[7.1].define(version: 2024_09_23_162858) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -77,11 +77,6 @@ ActiveRecord::Schema[7.1].define(version: 2024_09_11_162610) do
     t.string "department_code"
   end
 
-  create_table "custom_notifications", force: :cascade do |t|
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-  end
-
   create_table "donations", force: :cascade do |t|
     t.bigint "user_id", null: false
     t.integer "amount"
@@ -90,7 +85,18 @@ ActiveRecord::Schema[7.1].define(version: 2024_09_11_162610) do
     t.string "status"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string "stripe_checkout_session_id"
     t.index ["user_id"], name: "index_donations_on_user_id"
+  end
+
+  create_table "feedbacks", force: :cascade do |t|
+    t.bigint "user_id", null: false
+    t.text "content"
+    t.string "category"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.string "name"
+    t.index ["user_id"], name: "index_feedbacks_on_user_id"
   end
 
   create_table "likes", force: :cascade do |t|
@@ -168,6 +174,8 @@ ActiveRecord::Schema[7.1].define(version: 2024_09_11_162610) do
     t.bigint "user_id", null: false
     t.boolean "archived"
     t.datetime "published_at"
+    t.bigint "series_id"
+    t.index ["series_id"], name: "index_posts_on_series_id"
     t.index ["user_id"], name: "index_posts_on_user_id"
   end
 
@@ -213,6 +221,22 @@ ActiveRecord::Schema[7.1].define(version: 2024_09_11_162610) do
     t.index ["post_id"], name: "index_save_posts_on_post_id"
     t.index ["user_id", "post_id"], name: "index_save_posts_on_user_id_and_post_id", unique: true
     t.index ["user_id"], name: "index_save_posts_on_user_id"
+  end
+
+  create_table "series", force: :cascade do |t|
+    t.string "title"
+    t.text "description"
+    t.bigint "user_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["user_id"], name: "index_series_on_user_id"
+  end
+
+  create_table "subscriptions", force: :cascade do |t|
+    t.string "email"
+    t.boolean "subscribed"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
   end
 
   create_table "taggings", force: :cascade do |t|
@@ -272,15 +296,18 @@ ActiveRecord::Schema[7.1].define(version: 2024_09_11_162610) do
   add_foreign_key "comments", "posts"
   add_foreign_key "comments", "users"
   add_foreign_key "donations", "users"
+  add_foreign_key "feedbacks", "users"
   add_foreign_key "likes", "users"
   add_foreign_key "mentions", "users"
   add_foreign_key "post_views", "posts"
   add_foreign_key "post_views", "users"
+  add_foreign_key "posts", "series"
   add_foreign_key "posts", "users"
   add_foreign_key "profiles", "users", on_delete: :cascade
   add_foreign_key "reports", "users"
   add_foreign_key "save_posts", "posts"
   add_foreign_key "save_posts", "users"
+  add_foreign_key "series", "users"
   add_foreign_key "taggings", "posts"
   add_foreign_key "taggings", "tags"
 end

@@ -1,70 +1,78 @@
-<%# app/views/posts/_post.html.erb %>
 <div>
   <h2 class="text-3xl font-bold mb-4"><%= post.title %></h2>
+
   <%= render 'save_posts/save', post: post %>
 
-  <div class="text-sm text-gray-500 flex items-center space-x-2">
+  <div class="text-sm text-gray-500 flex flex-wrap items-center space-x-2">
     <% if post.published_at.present? %>
-      <span class="flex items-center space-x-1" title="Published on <%= post.published_at.strftime('%b %d, %Y %H:%M %p') %>">
-        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-9V6a9 9 0 00-9-9v9h9z" />
-        </svg>
-        <span><%= time_ago_in_words(post.published_at) %> ago</span> <span>by <%= post.user.email %></span>
+      <span class="flex items-center space-x-1" title="Publié le <%= post.published_at.strftime('%b %d, %Y %H:%M %p') %>">
+        <i class="fas fa-calendar-alt text-gray-400"></i>
+        <span><%= post.published_at.strftime('%b %d %Y') %></span> <span>par <%= post.user.full_name %></span>
       </span>
       <% if post.published_at < post.updated_at %>
-        <span class="flex items-center space-x-1" title="Last edited at <%= post.updated_at.strftime('%b %d, %Y %H:%M %p') %>">
-          <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-blue-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 00-3 3m0 0a3 3 0 00-3 3m6 0a3 3 0 003-3m-3-3a3 3 0 013-3m0 0a3 3 0 013-3m-3-3a3 3 0 013 3" />
-          </svg>
-          <span class="text-xs font-semibold text-blue-400">(Edited)</span>
+        <span class="flex items-center space-x-1" title="Dernière modification à <%= post.updated_at.strftime('%b %d, %Y %H:%M %p') %>">
+          <i class="fas fa-pencil-alt text-blue-400"></i>
+          <span class="text-xs font-semibold text-blue-400">(Modifié)</span>
         </span>
       <% end %>
     <% else %>
       <span class="flex items-center space-x-1">
-        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-9V6a9 9 0 00-9-9v9h9z" />
-        </svg>
-        <span>This post is not published yet</span>
+        <i class="fas fa-exclamation-circle text-gray-400"></i>
+        <span>Ce post n'est pas encore publié</span>
       </span>
     <% end %>
+
     <div id="<%= dom_id(post) %>_likes">
       <%= render 'likes/like', likeable: post %>
     </div>
+
     <div>
-      <p><strong>Views:</strong> <%= @post.post_views.count %></p>
-      <p><strong>Estimated Reading Time:</strong> <%= @post.reading_time %> minutes</p>
+      <p><strong>Vues:</strong> <%= @post.post_views.count %></p>
+      <p><strong>Temps de lecture :</strong> <%= @post.reading_time %> minutes</p>
     </div>
-  </div>
 
-  <p class="text-gray-800 text-base mb-4"><%= post.body %></p>
-
-  <div class="mb-6">
-    <strong>Tags:</strong>
-    <% post.tags.each do |tag| %>
-      <span class="inline-block bg-orange-400 rounded-full ml-2 px-3 py-1 text-sm font-semibold text-white cursor-pointer">
-        <%= tag.name %>
-      </span>
-      <% if @can_destroy_tag %>
-        <%= link_to "delete", tag_path(tag), method: :delete, data: { confirm: "Are you sure?" }, class: "text-xs bg-red-500 text-white rounded-full px-3 py-1 ml-2" %>
-      <% end %>
+    <% if @post.series %>
+      <p>Partie de la série <%= link_to @post.series.title, series_path(@post.series) %>.</p>
     <% end %>
   </div>
 
+  <!-- Content -->
+  <div class="trix-content mt-20" data-controller="code-highlight">
+    <%= @post.body.to_s.html_safe %>
+  </div>
+
+  <!-- Tags -->
+  <div class="mb-6">
+    <strong>Tags:</strong>
+    <% post.tags.each do |tag| %>
+      <span class="inline-block hover:underline text-sm font-semibold text-blue-700 cursor-pointer">
+        <%= "#" + tag.name %>
+      </span>
+    <% end %>
+  </div>
+
+  <!-- Action buttons -->
   <div class="flex justify-between items-start">
     <div>
       <% if @can_edit_post %>
-        <%= link_to "Edit", edit_post_path(post), class: "inline-block bg-blue-500 text-white rounded-full px-4 py-2" %>
+        <%= link_to edit_post_path(post), class: "inline-block bg-blue-500 text-white rounded-full px-4 py-2" do %>
+          <i class="fas fa-edit mr-2"></i> Modifier
+        <% end %>
       <% end %>
       <% if @can_destroy_post %>
-        <%= link_to "Delete", post_path(post), method: :delete, data: { confirm: "Are you sure?" }, class: "inline-block bg-red-500 text-white rounded-full px-4 py-2 ml-2" %>
+        <%= link_to post_path(post), method: :delete, data: { confirm: "Êtes-vous sûr ?" }, class: "inline-block bg-red-500 text-white rounded-full px-4 py-2 ml-2" do %>
+          <i class="fas fa-trash-alt mr-2"></i> Supprimer
+        <% end %>
       <% end %>
-      <%= link_to 'Report', new_report_path(reportable_id: post.id, reportable_type: 'Post'), class: "inline-block bg-yellow-500 text-white rounded-full px-4 py-2 ml-2" %>
+      <%= link_to new_report_path(reportable_id: post.id, reportable_type: 'Post'), class: "inline-block bg-yellow-500 text-white rounded-full px-4 py-2 ml-2" do %>
+        <i class="fas fa-flag mr-2"></i> Signaler
+      <% end %>
     </div>
 
     <!-- Share button -->
     <div>
       <button data-controller="share" data-action="click->share#share" class="inline-block bg-gray-500 text-white rounded-full px-4 py-2 ml-2">
-        Share
+        <i class="fas fa-share-alt mr-2"></i> Partager
       </button>
     </div>
   </div>

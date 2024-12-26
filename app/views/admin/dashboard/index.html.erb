@@ -1,4 +1,8 @@
 <!-- app/views/admin/dashboard/index.html.erb -->
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-zoom@1.0.0"></script>
+
 <div class="admin-dashboard max-w-4xl mx-auto my-10">
   <h1 class="text-4xl font-bold text-center mb-10">Admin Dashboard</h1>
 
@@ -22,7 +26,6 @@
     <div class="stat bg-purple-100 p-4 rounded-lg shadow">
       <%= link_to 'Manage All Posts', admin_posts_path, class: 'text-xl' %> (<%= @total_posts %>)
     </div>
-
 
     <div>
       <h2 class="text-2xl font-semibold mb-3">Recent Comments</h2>
@@ -53,11 +56,6 @@
     </div>
 
     <div>
-      <h2>Donations mensuelles</h2>
-      <%= line_chart @weekly_donations  %>
-    </div>
-
-    <div>
       <h2>Most Viewed Posts</h2>
       <ul>
         <% @most_viewed_posts.each do |post| %>
@@ -67,10 +65,20 @@
     </div>
   </div>
 
-  <!-- app/views/admin/dashboard/index.html.erb -->
-  <div class="donations-section">
-    <h2 class="text-2xl font-semibold mb-3">Tous les dons (<%= @total_donations %>)</h2>
+  <div>
+    <h2>Donations hebdomadaire</h2>
+    <canvas id="weeklyDonationsChart" width="400" height="200"></canvas>
+    <div class="flex justify-between mt-4">
+      <button id="prevWeek" class="bg-blue-500 text-white px-4 py-2">Previous Week</button>
+      <button id="nextWeek" class="bg-blue-500 text-white px-4 py-2">Next Week</button>
+      <button id="resetZoom" class="bg-red-500 text-white px-4 py-2">Reset Zoom</button>
+    </div>
+  </div>
 
+
+  <!-- Donations Section -->
+  <div class="donations-section">
+    <h2 class="text-2xl font-semibold mb-3">Tous les dons (<%= number_to_currency(@total_donations, unit: "€") %>)</h2>
     <table class="min-w-full bg-white">
       <thead>
         <tr>
@@ -84,9 +92,9 @@
         <% @donations.each do |donation| %>
           <tr>
             <td class="border px-4 py-2"><%= link_to donation.user.email, admin_user_path(donation.user) %></td>
-            <td class="border px-4 py-2"><%= donation.amount %> €</td>
+            <td class="border px-4 py-2"><%= number_to_currency(donation.amount / 100.0, unit: "€") %></td>
             <td class="border px-4 py-2"><%= donation.created_at.strftime("%d %B %Y") %></td>
-            <td class="border px-4 py-2"><%= donation.status.capitalize %></td>
+            <td class="border px-4 py-2"><%= donation.status.present? ? donation.status.capitalize : "Non défini" %></td>
           </tr>
         <% end %>
       </tbody>
@@ -94,3 +102,85 @@
   </div>
 
 </div>
+
+<script>
+  var currentWeekOffset = 0; // Starting from the current week
+  var myChart; // Declare chart globally
+
+  function updateChart(weekOffset) {
+    fetch(`/admin/dashboard/weekly_donations?week_offset=${weekOffset}`)
+      .then(response => response.json())
+      .then(data => {
+        myChart.data.labels = data.labels; // Update week labels (dates)
+        myChart.data.datasets[0].data = data.values; // Update donation amounts
+        myChart.update();
+      });
+  }
+
+  document.addEventListener("DOMContentLoaded", function() {
+    var ctx = document.getElementById('weeklyDonationsChart').getContext('2d');
+
+    // Initialize chart
+    myChart = new Chart(ctx, {
+      type: 'line',
+      data: {
+        labels: <%= @weekly_donations.keys.to_json.html_safe %>, // Initial labels (dates)
+        datasets: [{
+          label: 'Donations in €',
+          data: <%= @weekly_donations.values.to_json.html_safe %>, // Initial data
+          borderColor: 'rgba(75, 192, 192, 1)',
+          borderWidth: 1,
+          fill: false
+        }]
+      },
+      options: {
+        scales: {
+          x: {
+            title: {
+              display: true,
+              text: 'Date'
+            }
+          },
+          y: {
+            beginAtZero: true,
+            title: {
+              display: true,
+              text: 'Donations (€)'
+            }
+          }
+        },
+        plugins: {
+          zoom: {
+            pan: {
+              enabled: true,
+              mode: 'x',
+            },
+            zoom: {
+              enabled: true,
+              mode: 'x',
+              speed: 0.1 // Zoom speed
+            }
+          }
+        }
+      }
+    });
+
+    // Handle previous week
+    document.getElementById('prevWeek').addEventListener('click', function() {
+      currentWeekOffset -= 1;
+      updateChart(currentWeekOffset);
+    });
+
+    // Handle next week
+    document.getElementById('nextWeek').addEventListener('click', function() {
+      currentWeekOffset += 1;
+      updateChart(currentWeekOffset);
+    });
+
+    // Handle reset zoom
+    document.getElementById('resetZoom').addEventListener('click', function() {
+      myChart.resetZoom();  // Make sure this is available after initializing the plugin
+    });
+  });
+
+</script>

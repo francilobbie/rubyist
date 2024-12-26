@@ -62,10 +62,14 @@ gem "image_processing"
   gem 'omniauth-twitter'
   gem 'omniauth-github'
   gem 'omniauth-rails_csrf_protection'
-  gem "aws-sdk-s3", require: false
   gem 'chartkick'
   gem 'groupdate'
   gem 'sidekiq'
+  gem 'sassc-rails'
+  gem 'font-awesome-sass'
+  gem 'cloudinary', '~> 1.23.0'
+  gem 'activestorage-cloudinary-service', '~> 0.2.2'
+
 
 
 
@@ -107,8 +111,10 @@ end
 
 gem "dotenv-rails", "~> 3.1"
 
-gem "sendgrid-ruby", "~> 6.7"
+# gem "sendgrid-ruby", "~> 6.7"
 
-gem "mailgun-ruby", "~> 1.2"
+# gem "mailgun-ruby", "~> 1.2"
 
 gem "stripe", "~> 12.5"
+
+gem "pagy", "~> 9.0"
