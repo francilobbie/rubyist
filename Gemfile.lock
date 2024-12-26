@@ -81,7 +81,7 @@ GEM
     aws_cf_signer (0.1.3)
     base64 (0.2.0)
     bcrypt (3.1.20)
-    bigdecimal (3.1.6)
+    bigdecimal (3.1.9)
     bindex (0.8.1)
     bootsnap (1.17.1)
       msgpack (~> 1.2)
@@ -132,11 +132,12 @@ GEM
       railties (>= 5.0.0)
     faker (3.2.3)
       i18n (>= 1.8.11, < 2)
-    faraday (2.11.0)
-      faraday-net_http (>= 2.0, < 3.4)
+    faraday (2.12.2)
+      faraday-net_http (>= 2.0, < 3.5)
+      json
       logger
-    faraday-net_http (3.3.0)
-      net-http
+    faraday-net_http (3.4.0)
+      net-http (>= 0.5.0)
     ffi (1.16.3)
     ffi-compiler (1.3.2)
       ffi (>= 1.15.5)
@@ -174,12 +175,13 @@ GEM
     jbuilder (2.11.5)
       actionview (>= 5.0.0)
       activesupport (>= 5.0.0)
-    jwt (2.8.2)
+    json (2.9.1)
+    jwt (2.10.0)
       base64
     llhttp-ffi (0.5.0)
       ffi-compiler (~> 1.0)
       rake (~> 13.0)
-    logger (1.6.1)
+    logger (1.6.4)
     loofah (2.22.0)
       crass (~> 1.0.2)
       nokogiri (>= 1.12.0)
@@ -201,7 +203,7 @@ GEM
     multi_xml (0.7.1)
       bigdecimal (~> 3.1)
     mutex_m (0.2.0)
-    net-http (0.4.1)
+    net-http (0.6.0)
       uri
     net-imap (0.4.9.1)
       date
@@ -286,7 +288,7 @@ GEM
     pundit-matchers (1.9.0)
       rspec-rails (>= 3.0.0)
     racc (1.7.3)
-    rack (3.0.8)
+    rack (3.1.8)
     rack-protection (4.0.0)
       base64 (>= 0.1.0)
       rack (>= 3.0.0, < 4)
@@ -425,7 +427,7 @@ GEM
       railties (>= 6.0.0)
     tzinfo (2.0.6)
       concurrent-ruby (~> 1.0)
-    uri (0.13.1)
+    uri (1.0.2)
     version_gem (1.1.4)
     warden (1.2.9)
       rack (>= 2.0.9)
@@ -471,7 +473,7 @@ DEPENDENCIES
   importmap-rails
   jbuilder
   noticed (~> 1.6)
-  omniauth
+  omniauth (~> 2.0)
   omniauth-facebook
   omniauth-github
   omniauth-google-oauth2

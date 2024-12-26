@@ -56,7 +56,7 @@ gem "image_processing"
   gem 'cancancan', '~> 3.0'
   gem 'rolify'
   gem 'noticed', '~> 1.6'
-  gem 'omniauth'
+  gem 'omniauth', '~> 2.0'
   gem 'omniauth-google-oauth2'
   gem 'omniauth-facebook'
   gem 'omniauth-twitter'
