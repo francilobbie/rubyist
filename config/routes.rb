@@ -5,7 +5,14 @@ Rails.application.routes.draw do
     omniauth_callbacks: 'users/omniauth_callbacks'
   }
   # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
-  root "posts#index"
+  # root "posts#index"
+
+  # Root route
+  root "render#index"
+
+  # Health check route
+  get "up" => "rails/health#show", as: :rails_health_check
+
   resources :posts, only: [:index, :show, :new, :create, :edit, :update, :destroy] do
     resources :comments, only: [:create, :edit, :update, :destroy] do
       resources :likes, only: [:create, :destroy], defaults: { likeable: 'Comment' }
