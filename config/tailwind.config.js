@@ -2,17 +2,18 @@ const defaultTheme = require('tailwindcss/defaultTheme');
 
 module.exports = {
   content: [
-    './app/views/**/*.html.erb',        // Views (HTML templates)
+    './app/views/**/*.html.erb',        // Views
     './app/helpers/**/*.rb',           // Helpers
-    './app/javascript/**/*.js',        // JavaScript files
+    './app/javascript/**/*.js',        // JavaScript
     './app/assets/stylesheets/**/*.css', // CSS files
-    './app/assets/javascripts/**/*.js', // Additional JavaScript files
-    './config/**/*.rb',                // Config files
+    './app/assets/javascripts/**/*.js', // Additional JavaScript
+    './config/**/*.rb',                // Configurations
+    './app/components/**/*.erb',       // Optional custom components
   ],
   theme: {
     extend: {
       fontFamily: {
-        sans: ['Inter var', ...require('tailwindcss/defaultTheme').fontFamily.sans],
+        sans: ['Inter var', ...defaultTheme.fontFamily.sans],
       },
     },
   },
