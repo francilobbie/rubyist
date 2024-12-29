@@ -10,9 +10,6 @@ Rails.application.routes.draw do
   # Root route
   root "render#index"
 
-  # Health check route
-  get "up" => "rails/health#show", as: :rails_health_check
-
   resources :posts, only: [:index, :show, :new, :create, :edit, :update, :destroy] do
     resources :comments, only: [:create, :edit, :update, :destroy] do
       resources :likes, only: [:create, :destroy], defaults: { likeable: 'Comment' }
