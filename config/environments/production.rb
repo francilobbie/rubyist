@@ -123,5 +123,9 @@ Rails.application.configure do
     config.redis = { url: ENV['REDIS_URL'] }
   end
 
+  config.action_cable.url = 'wss://captain-ruby.onrender.com/cable'
+  config.action_cable.allowed_request_origins = ['https://captain-ruby.onrender.com']
+
+
 
 end

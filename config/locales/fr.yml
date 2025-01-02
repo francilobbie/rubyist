@@ -42,6 +42,11 @@ fr:
       destroy?: "Vous n'avez pas la permission de supprimer cet élément."
   activerecord: &activerecord
     errors:
+      models:
+          user:
+            attributes:
+              email:
+                taken: "L'adresse e-mail est déjà utilisée. Veuillez en essayer une autre."
       messages:
         record_invalid: "La validation a échoué : %{errors}"
         restrict_dependent_destroy:
