@@ -3,9 +3,9 @@
 @tailwind components;
 @tailwind utilities;
 
-.bg-red-500 {
+/* .bg-red-500 {
   @apply bg-red-500;
-}
+} */
 
 /*
 
@@ -17,3 +17,4 @@
 
 */
 @import 'actiontext.scss';
+@import "trix";
