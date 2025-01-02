@@ -26,7 +26,8 @@ module Rubyist
     #
     config.active_job.queue_adapter = :sidekiq
     config.i18n.default_locale = :fr
-
+    # config/application.rb
+    # config.assets.css_compressor = nil
 
   end
 end

@@ -69,6 +69,8 @@ gem "image_processing"
   gem 'font-awesome-sass'
   gem 'cloudinary', '~> 1.23.0'
   gem 'activestorage-cloudinary-service', '~> 0.2.2'
+  gem 'trix'
+
 
 
 
