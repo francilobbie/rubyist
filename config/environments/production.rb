@@ -1,3 +1,4 @@
+# config/environments/production.rb
 require "active_support/core_ext/integer/time"
 
 Rails.application.configure do
@@ -71,10 +72,27 @@ Rails.application.configure do
   # config.cache_store = :mem_cache_store
 
   # Use a real queuing backend for Active Job (and separate queues per environment).
-  # config.active_job.queue_adapter = :resque
+  config.active_job.queue_adapter = :sidekiq
   # config.active_job.queue_name_prefix = "rubyist_production"
 
   config.action_mailer.perform_caching = false
+
+  config.action_mailer.default_url_options = { host: 'captain-ruby.onrender.com', protocol: 'https' }
+  config.action_mailer.perform_deliveries = true
+  config.action_mailer.raise_delivery_errors = true
+  config.action_mailer.default_options = { from: ENV['EMAIL_ADDRESS'] }
+
+  config.action_mailer.delivery_method = :smtp
+  config.action_mailer.smtp_settings = {
+    address:              'smtp.gmail.com',
+    port:                 587,
+    domain:               'captain-ruby.onrender.com',
+    user_name:            ENV['EMAIL_ADDRESS'], # Set this in Render's environment variables
+    password:             ENV['EMAIL_PASSWORD'], # Set this in Render's environment variables
+    authentication:       'plain',
+    enable_starttls_auto: true
+  }
+
 
   # Ignore bad email addresses and do not raise email delivery errors.
   # Set this to true and configure the email server for immediate delivery to raise delivery errors.
@@ -97,6 +115,13 @@ Rails.application.configure do
   # ]
   # Skip DNS rebinding protection for the default health check endpoint.
   # config.host_authorization = { exclude: ->(request) { request.path == "/up" } }
-  puts "DATABASE_URL: #{ENV['DATABASE_URL']}"
+  Sidekiq.configure_server do |config|
+    config.redis = { url: ENV['REDIS_URL'] }
+  end
+
+  Sidekiq.configure_client do |config|
+    config.redis = { url: ENV['REDIS_URL'] }
+  end
+
 
 end
